@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<title>Apoapsys.com - Kevin M. Gill</title>
+	<meta charset="utf-8">
+		
+	<link href='http://fonts.googleapis.com/css?family=Average+Sans|Rationale' rel='stylesheet' type='text/css'>
+		
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	
+	<meta name="description" content="Apoapsys - WebGL Experiments From Kevin M. Gill"/>
+	<meta property="og:description" content="Apoapsys - WebGL Experiments From Kevin M. Gill" />
+		
+	<link rel="image_src" type="image/png" href="/img/logos/ApoapsysLogo.png" />
+	<meta property="og:image" content="/img/logos/ApoapsysLogo.png" />
+	
+	
+    <!-- Bootstrap core CSS -->
+	<link href="/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/lib/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+	
+	<link href="/lib/animate.css" rel="stylesheet">
+	
+	<script src="/lib/jquery/js/jquery-1.9.1.min.js"></script>
+		
+	<style>
+body {
+	margin: 10px;
+	background: #111111;
+}
+
+.title-text {
+	font-family: 'Rationale', sans-serif;
+	color: #AAAAAA;
+	font-size: 4em;;
+	margin-top: -20px;
+}
+.subtitle-text {
+	color: #AAAAAA;
+	padding-left: 20px;
+	max-width: 90%;
+}
+.row {
+	margin: 20px;
+}
+.thumbnail {
+		box-shadow: 3px 3px 5px #000000;
+}
+
+.share-buttons {
+	
+}
+
+.share-button {
+	float: right;
+	margin-right: 5px;
+}
+.container .jumbotron {
+	height: 332px;
+	padding: 0px;
+}
+
+
+
+.jumbotron-animated {
+	background-image: url(/img/headers/experiments_jumbotron_background_stars.jpg);
+	background-repeat:no-repeat;
+	background-position:center;
+}
+
+.jumbotron-static {
+	background-image: url(/img/headers/experiments_jumbotron_background.jpg);
+	background-repeat:no-repeat;
+	background-position:center;
+}
+
+.jumbotron-content {
+	position: absolute;
+	height: 432px;
+	padding: 20px;
+	top: 0px;
+}
+.logo-img {
+	width: 475px;
+	max-width: 90%;
+}
+.share-buttons {
+	padding-top: 50px;
+}
+.thumbnail {
+	margin-top: 10px;
+}
+.animation-thumbnail {
+	width:570px;
+	margin-left:auto;
+	margin-right:auto;
+}
+.images-thumbnail {
+	width:1000px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.images-thumbnail iframe {
+	margin-left:auto;
+	margin-right:auto;
+}
+.caption {
+	text-align: center;
+}
+
+.img-thumbnail-larger {
+	width: 500px;
+}
+
+#follow-me-on-twitter {
+	float: right;
+	background: transparent;
+	padding: 5px;
+}
+	</style>
+
+</head>
+<body>
+	<div class="container">
+		
+		<div class="jumbotron" id="jumbotron">
+			
+			<div class="jumbotron-content">
+
+				<img src="/img/logos/ApoapsysLogoTrans.png" class="logo-img"/>
+				<div class="subtitle-text">
+					<p>WebGL Experiments by <a href="http://www.apoapsys.com">Kevin M. Gill</a></p>
+				</div>
+			  
+			  
+				<div class="share-buttons">
+				
+				<div class="share-button">
+				
+				
+					<div id="fb-root"></div>
+					<script>(function(d, s, id) {
+					  var js, fjs = d.getElementsByTagName(s)[0];
+					  if (d.getElementById(id)) return;
+					  js = d.createElement(s); js.id = id;
+					  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+					  fjs.parentNode.insertBefore(js, fjs);
+					}(document, 'script', 'facebook-jssdk'));</script>
+				
+					<div class="fb-like" data-href="http://experiments.wthr.us" data-send="false" data-layout="button_count" data-width="300" data-show-faces="true" data-colorscheme="dark"></div>
+				
+				
+				</div>
+				
+				<div class="share-button">
+					<a href="https://twitter.com/share" class="twitter-share-button" data-via="kevinmgill" id="tweet-href"></a>
+					<script>
+						$("#tweet-href").text("Tweet");
+						!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+					</script>
+				</div>
+				
+				<div class="share-button">
+					<a href="http://www.tumblr.com/share" title="Share on Tumblr" style="display:inline-block; text-indent:-9999px; overflow:hidden; width:81px; height:20px; background:url('http://platform.tumblr.com/v1/share_1.png') top left no-repeat transparent;">Share on Tumblr</a>
+				</div>
+				
+				<div class="share-button">
+					<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="250"></div>
+
+					<script type="text/javascript">
+					
+					  (function() {
+						var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+						po.src = 'https://apis.google.com/js/plusone.js';
+						var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+					  })();
+					
+					</script>
+				</div>
+				
+				
+				
+				
+				</div>
+			</div>
+			<div id="follow-me-on-twitter">
+			<a href="https://twitter.com/kevinmgill" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @kevinmgill</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+			</div>
+		</div>
+	
+	</div>
+	
+	<div class="container">
+		<ul class="nav nav-pills">
+			<li id="pill-visualizations" class="active"><a href="#">WebGL Visualizations</a></li>
+			<li id="pill-animations"><a href="https://www.youtube.com/channel/UCkGggNDHP58Vb-b_cd31Scg">Animations</a></li>
+			<li id="pill-images"><a href="https://www.flickr.com/photos/kevinmgill/">Graphics</a></li>
+			<li id="pill-blog"><a href="http://blog.apoapsys.com">Blog</a></li>
+		</ul>
+	</div>
+	
+	<div id="visualizations" class="container">
+		
+		<div class="row">
+			<div class="col-sm-6 col-md-4">
+				<div class="thumbnail">
+					<img src="/img/thumbnails/planetmaker.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
+					<div class="caption">
+						<h3>PlanetMaker</h3>
+						<p>Create your own planet, real or imaginary</p>
+						<p><a href="http://planetmaker.apoapsys.com" class="btn btn-primary" role="button">Launch</a></p>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-sm-6 col-md-4">
+				<div class="thumbnail">
+					<img src="/img/thumbnails/apoapsyssolar.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
+					<div class="caption">
+						<h3>Apoapsys Solar</h3>
+						<p>Advanced solar system simulation (in development)</p>
+						<p><a href="http://solar.apoapsys.com" class="btn btn-primary" role="button">Launch</a></p>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-sm-6 col-md-4">
+				<div class="thumbnail">
+					<img src="/img/thumbnails/moonphases.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
+					<div class="caption">
+						<h3>Moon Phaser</h3>
+						<p>Realtime Moon positional, phase, & librations.</p>
+						<p><a href="http://moon.apoapsys.com" class="btn btn-primary" role="button">Launch</a></p>
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-6 col-md-4">
+				<div class="thumbnail">
+					<img src="/img/thumbnails/solarsyssim.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
+					<div class="caption">
+						<h3>Solar System Simulator</h3>
+						<p>Alternative interface to the NASA/JPL Solar System Simulator.</p>
+						<p><a href="http://solar.apoapsys.com/nasasolarsysfe.html" class="btn btn-primary" role="button">Launch</a></p>
+					</div>
+				</div>
+			</div>
+			
+			
+			<div class="col-sm-6 col-md-4">
+				<div class="thumbnail">
+					<img src="/img/thumbnails/orbitviewer.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
+					<div class="caption">
+						<h3>Orbit Viewer</h3>
+						<p>An interactive display of spacecraft trajectories and realtime locations.</p>
+						<p><a href="http://orbits.apoapsys.com" class="btn btn-primary" role="button">Launch</a></p>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-sm-6 col-md-4">
+				<div class="thumbnail">
+					<img src="/img/thumbnails/sattracker.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
+					<div class="caption">
+						<h3>Satellite Tracker</h3>
+						<p>Real-time and simulated satellite positions and tracking</p>
+						<p><a href="http://solar.apoapsys.com/satellitetracker.html" class="btn btn-primary" role="button">Launch</a></p>
+					</div>
+				</div>
+			</div>
+			
+			
+			
+			
+		</div>
+		
+		
+		<div class="row">
+			
+			<div class="col-sm-6 col-md-4">
+				<div class="thumbnail">
+					<img src="/img/thumbnails/lookuptool.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
+					<div class="caption">
+						<h3>Small Body Lookup Tool</h3>
+						<p>Detailed information on near-Earth asteroids</p>
+						<p><a href="http://solar.apoapsys.com/smallbodylookup.html" class="btn btn-primary" role="button">Launch</a></p>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-sm-6 col-md-4">
+				<div class="thumbnail">
+					<img src="/img/thumbnails/satellites.jpg" alt="..." class="img-thumbnail">
+					<div class="caption">
+						<h3>Satellites Viewer</h3>
+						<p>A realtime simulation of all tracked artificial satellites currently in Earth orbit</p>
+						<p><a href="http://satellites.apoapsys.com" class="btn btn-primary" role="button">Launch</a></p>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-sm-6 col-md-4">
+				<div class="thumbnail">
+					<img src="/img/thumbnails/pha.jpg" alt="..." class="img-thumbnail">
+					<div class="caption">
+						<h3>PHAntom Viewer</h3>
+						<p>An interactive display of known asteroids and comets designated as 
+						Potentially Hazardous Objects Each of the 1400+ objects is on an orbit which takes it within a very close approach to Earth at some point in time and, in
+						the case of an impact, carry the potential to cause significant or catastrophic damage.</p>
+						<p><a href="http://pha.apoapsys.com" class="btn btn-primary" role="button">Launch</a></p>
+					</div>
+				</div>
+			</div>
+			
+			
+			
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-6 col-md-4">
+				<div class="thumbnail">
+					<img src="/img/thumbnails/scaleplanets.jpg" alt="..." class="img-thumbnail">
+					<div class="caption">
+						<h3>Scale Planets</h3>
+						<p>An interactive model of the Sun, planets, and moons of our solar system, all to scale</p>
+						<p><a href="http://planets.wthr.us" class="btn btn-primary" role="button">Launch</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+	<div id="footer">
+		<div class="container">
+			<p class="pull-left">
+				&copy; <a href="http://www.apoapsys.com">Kevin M. Gill</a> 2015
+			</p>
+			<p class="pull-right">
+				<a href="#">Back to top</a>
+			</p>
+		</div>
+	</div>
+	
+	<script>
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-3932152-11', 'wthr.us');
+  ga('send', 'pageview', {
+	'dimension1' : 'Experiments'
+  });
+
+
+	</script>
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+    <script src="/lib/three.min.js"></script>
+	<script src="/lib/Detector.js"></script>
+    <script src="/src/loaders/MTLLoader.js"></script>
+    <script src="/src/loaders/MTLLoader.js"></script>
+    <script src="/src/loaders/OBJLoader.js"></script>
+    <script src="/src/loaders/OBJMTLLoader.js"></script>
+    <script>
+var container, camera, scene, renderer, object;
+
+	var windowHalfX = window.innerWidth / 2;
+	var windowHalfY = window.innerHeight / 2;
+
+function isUserMobile()
+{
+	return /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+}
+
+function animate() {
+
+	requestAnimationFrame( animate );
+	render();
+
+}
+
+function render() {
+
+	if (object) {
+		switch (object.def.rotateOn) {
+		case "X":
+			object.rotation.x += object.def.rotateBy;
+			break;
+		case "Y":
+			object.rotation.y += object.def.rotateBy;
+			break;
+		case "Z":
+			object.rotation.z += object.def.rotateBy;
+			break;
+		}; 
+	}
+		
+	
+	
+	camera.lookAt( new THREE.Vector3(0, 0, 0));
+	renderer.render( scene, camera );
+
+}
+
+var models = [
+	
+	{
+		obj : "/obj/juno/juno.obj",
+		mtl : "/obj/juno/juno.mtl",
+		position : [17, 7, 0],
+		rotation : [0, 15 * (Math.PI / 180), 90 * (Math.PI / 180), 'YXZ'],
+		rotateOn : 'X',
+		rotateBy : 0.2  * (Math.PI / 180),
+		scale : 1.0
+	},
+	{
+		obj : "/obj/voyager/voyager.obj",
+		mtl : "/obj/voyager/voyager.mtl",
+		position : [17, 7, 0],
+		rotation : [0, 140 * (Math.PI / 180), 0 * (Math.PI / 180), 'YXZ'],
+		rotateOn : 'Z',
+		rotateBy : 0.1 * (Math.PI / 180),
+		scale : 7.0
+	},
+	{
+		obj : "/obj/cassini/cassini.obj",
+		mtl : "/obj/cassini/cassini.mtl",
+		position : [17, 7, 0],
+		rotation : [90 * (Math.PI / 180), 140 * (Math.PI / 180), -45 * (Math.PI / 180), 'XYZ'],
+		rotateOn : 'X',
+		rotateBy : 0.1 * (Math.PI / 180),
+		scale : 1.5
+	},
+	{
+		obj : "/obj/iss/iss.obj",
+		mtl : "/obj/iss/iss.mtl",
+		position : [15, 5, 0],
+		rotation : [0 * (Math.PI / 180), 0 * (Math.PI / 180), 0 * (Math.PI / 180), 'XYZ'],
+		rotateOn : 'Y',
+		rotateBy : 0.2 * (Math.PI / 180),
+		scale : 4.0
+	},
+	{
+		obj : "/obj/pioneer/pioneer.obj",
+		mtl : "/obj/pioneer/pioneer.mtl",
+		position : [17, 8, 0],
+		rotation : [0 * (Math.PI / 180), 30 * (Math.PI / 180), 0 * (Math.PI / 180), 'XYZ'],
+		rotateOn : 'Z',
+		rotateBy : 0.1 * (Math.PI / 180),
+		scale : 3.0
+	},
+	{
+		obj : "/obj/kepler/kepler.obj",
+		mtl : "/obj/kepler/kepler.mtl",
+		position : [17, 8, 0],
+		rotation : [0 * (Math.PI / 180), 30 * (Math.PI / 180), 45 * (Math.PI / 180), 'XYZ'],
+		rotateOn : 'X',
+		rotateBy : 0.1 * (Math.PI / 180),
+		scale : 3.0
+	},
+	{
+		obj : "/obj/rosetta/rosetta.obj",
+		mtl : "/obj/rosetta/rosetta.mtl",
+		position : [17, 8, 0],
+		rotation : [20 * (Math.PI / 180), 0 * (Math.PI / 180), -30 * (Math.PI / 180), 'XYZ'],
+		rotateOn : 'Y',
+		rotateBy : 0.1 * (Math.PI / 180),
+		scale : 1.0
+	}
+	
+];
+
+
+function init(modelDef) {
+	var width = 1170;
+	var height = 700;
+	container = document.getElementById( 'jumbotron' )
+	
+	camera = new THREE.PerspectiveCamera( 45, width / height, 1, 2000 );
+	camera.position.z = 40;
+
+	scene = new THREE.Scene();
+
+	var ambient = new THREE.AmbientLight( 0x303030 );
+	scene.add( ambient );
+
+	var directionalLight = new THREE.DirectionalLight( 0xFFFFFF );
+	directionalLight.position.set( -10, 3, 10 ).normalize();
+	scene.add( directionalLight );
+
+	var loader = new THREE.OBJMTLLoader();
+	loader.load( modelDef.obj, modelDef.mtl, function ( model ) {
+		object = model;
+		object.scale.set(modelDef.scale, modelDef.scale, modelDef.scale);
+		object.def = modelDef;
+		object.position.y = modelDef.position[1];
+		object.position.x = modelDef.position[0];
+		object.position.z = modelDef.position[2];
+		object.rotation.set(object.def.rotation[0], object.def.rotation[1], object.def.rotation[2], object.def.rotation[3]);
+		object.traverse(function(obj) {
+			if (obj.material) {
+				obj.material.shading = THREE.SmoothShading;
+			}
+		});
+			
+		scene.add( object );
+
+	} );
+
+	//
+
+	renderer = new THREE.WebGLRenderer({antialias:true});
+	renderer.setSize( width,  height );
+	container.appendChild( renderer.domElement );
+	$(renderer.domElement).css("z-index", "1000");
+}
+	
+$(function() {
+	
+	
+	$(".btn").on({
+		mouseenter : function(event) {
+			$(this).addClass("animated pulse");
+		},
+		mouseleave : function(event) {
+			$(this).removeClass("animated pulse");
+		}
+	});
+	
+	$(".thumbnail").on({
+		mouseenter : function(event) {
+			$(this).addClass("animated pulse");
+		},
+		mouseleave : function(event) {
+			$(this).removeClass("animated pulse");
+		}
+	});
+	
+	
+	//$(".jumbotron").css("display", "block").addClass("animated bounceIn");
+	
+	
+	
+	var currentActivePill = "visualizations";
+	
+	$("#pill-visualizations").click(function(e) {
+		$("#pill-"+currentActivePill).removeClass("active");
+		$("#pill-visualizations").addClass("active");
+		
+		$("#"+currentActivePill).css("display", "none");
+		$("#visualizations").css("display", "block");
+		currentActivePill = "visualizations";
+	});
+	
+	$("#pill-animations").click(function(e) {
+		$("#pill-"+currentActivePill).removeClass("active");
+		$("#pill-animations").addClass("active");
+		$("#"+currentActivePill).css("display", "none");
+		$("#animations").css("display", "block");
+		currentActivePill = "animations";
+	});
+	
+	$("#pill-images").click(function(e) {
+		$("#pill-"+currentActivePill).removeClass("active");
+		$("#pill-images").addClass("active");
+		$("#"+currentActivePill).css("display", "none");
+		$("#images").css("display", "block");
+		currentActivePill = "images";
+	});
+	
+	
+
+	if (!isUserMobile() && (window.WebGLRenderingContext || Detector.webgl)) {
+		$(".jumbotron").addClass("jumbotron-animated");
+		init(models[Math.floor((Math.random()*models.length))]);
+		animate();
+	} else {
+		$(".jumbotron").addClass("jumbotron-static");
+		
+	}
+	
+
+	
+	
+	
+});	
+	
+	</script>
+</body>
+</html>

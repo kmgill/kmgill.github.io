@@ -1,0 +1,164 @@
+# Blender MTL File: 'Dawn_19.blend'
+# Material Count: 15
+
+newmtl None
+Ns 0
+Ka 0.200000 0.200000 0.200000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+
+newmtl None_Dawn_tex_01.psd
+Ns 0
+Ka 0.200000 0.200000 0.200000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd Dawn_tex_01.png
+
+newmtl black_krinkle
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.083826 0.083826 0.083826
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Dawn_tex_01.png
+map_Bump foil_n.png
+
+newmtl black_krinkle_NONE
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.083826 0.083826 0.083826
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump foil_n.png
+
+newmtl black_krinkle_foil_n.png
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.083826 0.083826 0.083826
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd foil_n.png
+map_Bump foil_n.png
+
+newmtl foil_gold
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.557647 0.412941 0.056471
+Ks 0.866667 0.850980 0.658824
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd foil_n.png
+map_Bump foil_n.png
+refl foil_gold_ramp.png
+
+newmtl foil_gold_Dawn_tex_01.psd
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.557647 0.412941 0.056471
+Ks 0.866667 0.850980 0.658824
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Dawn_tex_01.png
+map_Bump foil_n.png
+refl foil_gold_ramp.png
+
+newmtl foil_gold_foil_gold.png
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.557647 0.412941 0.056471
+Ks 0.866667 0.850980 0.658824
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd foil_gold.png
+map_Bump foil_n.png
+refl foil_gold_ramp.png
+
+newmtl foil_silver
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.578934 0.578934 0.578934
+Ks 1.000000 1.000000 1.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd foil_n.png
+map_Bump foil_n.png
+refl foil_silver_ramp.png
+
+newmtl foil_silver_2
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd foil_antenna.png
+map_Bump foil_antenna_n.png
+refl foil_silver_ramp.png
+
+newmtl foil_silver_2_foil_gold.png
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd foil_gold.png
+map_Bump foil_antenna_n.png
+refl foil_silver_ramp.png
+
+newmtl foil_silver_NONE
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.578934 0.578934 0.578934
+Ks 1.000000 1.000000 1.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump foil_n.png
+refl foil_silver_ramp.png
+
+newmtl shiny_panel
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Dawn_tex_01.png
+
+newmtl tex_01
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.693886 0.693886 0.693886
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Dawn_tex_01.png
+
+newmtl tex_01_NONE
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.693886 0.693886 0.693886
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Dawn_tex_01.png

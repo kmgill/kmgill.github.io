@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Orbit Viewer</title>
+		<meta charset="utf-8">
+		
+		
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<meta name="description" content="Orbit Viewer is an interactive display of spacecraft orbits and realtime locations."/>
+		<meta property="og:description" content="Orbit Viewer is an interactive display of spacecraft orbits and realtime locations." />
+		
+		<link rel="image_src" type="image/png" href="/OrbitViewerSnapshot1.png" />
+		<meta property="og:image" content="/OrbitViewerSnapshot1png" />
+		
+		
+		<link href='http://fonts.googleapis.com/css?family=Average+Sans|Rationale' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="lib/jquery/css/custom-theme/jquery-ui-1.10.2.custom.min.css">
+		<link href="lib/jquery/plugins/jquery.colorpicker.css" rel="stylesheet" type="text/css"/>
+		<link rel="stylesheet" href="planet.css">
+		
+		<script src="lib/three.min.js"></script>
+		<script src="lib/moment.min.js"></script>
+		<script src="lib/Detector.js"></script>
+		<script src="lib/stats.min.js"></script>
+		<script src="lib/json.js"></script>
+		<script src="lib/modernizr.js"></script>
+		<script src="/lib/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+		<script src="lib/jquery/js/jquery-1.9.1.min.js"></script>
+		<script src="lib/jquery/js/jquery-ui-1.10.2.custom.min.js"></script>
+		<script src="lib/jquery/plugins/jquery.colorpicker.js"></script>
+		
+		
+		<script src="lib/jquery/plugins/swatches/jquery.ui.colorpicker-pantone.js"></script>
+		<script src="lib/jquery/plugins/parts/jquery.ui.colorpicker-rgbslider.js"></script>
+		<script src="lib/jquery/plugins/parts/jquery.ui.colorpicker-memory.js"></script>
+		
+		<script src="lib/THREEx.screenshot.js"></script>
+		<script src="lib/THREEx.FullScreen.js"></script>
+		<script src="lib/THREEx.WindowResize.js"></script>
+		
+		<script src="postprocessing.js"></script>
+		<script src="shaders.js"></script>
+		<script src="loaders.js"></script>
+		<script src="planetmaker.js"></script>
+		<script src="orbitviewer.js"></script>
+		<style>
+#loading-screen {
+	background: #000000;
+	text-align: center;
+}
+
+#loading-content {
+	margin: auto;
+	
+}
+
+#loading-label {
+	font-size: 1.5em;
+	font-weight: bold;
+	font-style: italic;
+	font-family: 'Average Sans', sans-serif;
+}
+
+#loading-status {
+	font-size: 2.0em;
+	font-weight: bold;
+	font-family: 'Average Sans', sans-serif;
+}
+
+
+#loading-screen-graphic {
+	vertical-align: middle;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#date-container {
+	position: absolute;
+	top: 20px;
+	right: 10px;
+	color: #FFFFFF;
+	width: 250px;
+	font-size: 1.6em;
+}
+
+#asteroid-list {
+	position: absolute;
+	top: 45px;
+	right: 10px;
+	color: #FFFFFF;
+	width: 250px;
+	font-size: .9em;
+	z-index: 1000;
+	padding: 10px;
+}
+
+.control-sidebar-right {
+	width: 170px;
+}
+
+.control-sidebar-right .control-container {
+	width: 175px;
+}
+
+.control-sidebar-right .control-container ul {
+	width: 175px;
+}
+
+.control-sidebar-right .control-container li  {
+	margin: 2px;
+	height: 1.3em;
+}
+
+.control-sidebar-right .control-container-scrollbar-vertical {
+	width: 175px;
+}
+
+#event-container {
+	position: absolute;
+	display: none;
+	text-align: center;
+	margin-top: 20px;
+	background-color: #252525;
+	opacity: 0.9;
+	padding: 5px;
+	-webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow:    0px 0px 5px rgba(0, 0, 0, 0.75);
+	box-shadow:         0px 0px 5px rgba(0, 0, 0, 0.75);
+	border-radius: 10px;
+}
+
+#event-container .event-date {
+	font-weight: bold;
+}
+
+#event-container .event-title {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+
+.scene-object-label {
+	position: absolute;
+	text-align: center;
+	margin-top: 5px;
+	background: transparent;
+	padding: 0px;
+	font-weight: normal;
+	color: #FFFFFF;
+}
+
+		</style>
+		<script>
+
+			
+var targetedObject = null;
+var planets = {};
+var earthObject = null;
+var timer = null;
+
+var nearList = null;
+var tickController = null;
+var engine = null;
+
+var dateAndListController = null;
+
+var mouse = new THREE.Vector2(), INTERSECTED;
+
+var appOptions = {
+	guiOpacity : 0.9	
+};
+
+var modelOptions = {
+	scale : 500,
+	kmScalar : 0.000005,
+	timeWarp : 50000000,
+	highlightDistance : 0.15, // AU
+	startDate : (new Date()).getTime() + (new Date()).getTimezoneOffset() * 60000,
+	targetPlanet : "Earth",
+	displayNames : true,
+	rideAlong : false,
+	centerOnSun : false,
+	viewFromEarth : false,
+	leaveTrail : false,
+	orbitsVisible : true,
+	dateMarkersVisible : true,
+	focusPoint : "Object"
+};	
+
+function setLoadingStatus(status)
+{
+	$( "#loading-status" ).html(status);
+}
+
+function displayErrorMessage(title, body)
+{
+	console.error("Error: " + title + ": " + body);
+	
+	$( "#error-message-dialog" ).attr("title", title);
+	$( "#error-message-title" ).text(title);
+	$( "#error-message-body" ).text(body);
+	
+	$( "#error-message-dialog" ).dialog( "open" );
+	
+}
+
+
+
+function isUserMobile()
+{
+	return /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+}
+			
+
+
+jQuery.fn.center = function () {
+    this.css("position","absolute");
+    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
+                                                $(window).scrollTop()) + "px");
+    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + 
+                                                $(window).scrollLeft()) + "px");
+    return this;
+}
+
+function attachLabel(object, text)
+{
+
+	label = $("<div/>").attr("id", "name-label-" + text)
+							.addClass("scene-object-label")
+							.text(text)
+							.appendTo('body');
+		
+		
+	object.label = label;
+		
+	var updateTmp = object.update;
+	object.update = function() {
+		updateTmp.call(object);
+		var projector = new THREE.Projector();
+		var pos = object.position.clone();
+
+		if (!modelOptions.centerOnSun && targetedObject) {
+			var offset = targetedObject.getPosition().negate();
+			pos.add(offset);
+		}
+		
+		
+		projector.projectVector( pos, object.context.camera );
+
+		var x =  (pos.x + 1) / 2 * window.innerWidth - (object.label.width() / 2);
+		var y = (-pos.y + 1) / 2 * window.innerHeight;
+
+		object.label.css("top", parseInt(y) + "px");
+		object.label.css("left", parseInt(x) + "px");
+		
+		
+		if (pos.z > 1) {
+			object.label.css("display", "none");
+		} else {
+			object.label.css("display", "inline-block");
+		}
+
+	};
+
+}
+
+
+function addOrbitingPlanet(engine, orbit, texName, radius, speed, showRing, orbiting, tickController, name, type, iauRotation) {
+	if (!type) {
+		type = "major";
+	}
+	
+	var config = {
+		texture : texName,
+		radius : radius,
+		speed : speed,
+		showRing : showRing,
+		orbiting : orbiting,
+		name : name,
+		type : type,
+		kmScalar : modelOptions.kmScalar
+	};
+	var planet = new KMG.OrbitingPlanet( engine.context, config, orbit, tickController, iauRotation);
+
+	return planet;
+}
+
+
+
+
+
+function addToPrimaryScene(obj) {
+	engine.context.objects.push(obj);
+	engine.context.primaryScene.add(obj);
+}
+
+function addToSecondaryScene(obj) {
+	engine.context.objects.push(obj);
+	engine.context.secondaryScene.add(obj);
+}
+
+
+
+$(function() {
+
+	
+	var targetedObjectName = "maven";
+	if (AppEnv.getUrlVar("name")) {
+		targetedObjectName = AppEnv.getUrlVar("name");
+	}
+	
+	targetedObjectName = targetedObjectName.replace(/%20/g, " ");
+	targetedObjectName = targetedObjectName.replace(/#/g, "");
+	console.info("Initializing with name '" + targetedObjectName + "'");
+	
+	
+	$("body").on({
+		mousemove : function(event) {
+			event.preventDefault();
+			mouse.clientX = event.clientX;
+			mouse.clientY = event.clientY;
+			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+		}
+	});
+	
+	
+	setLoadingStatus("Setting up viewport&hellip;");
+
+	
+	var visibleAboutDialogSection = function() {
+		if ($( "#about-dialog-about" ).css("display") === "block") {
+			return $( "#about-dialog-about" );
+		} else if ($( "#about-dialog-instructions" ).css("display") === "block") {
+			return $( "#about-dialog-instructions" );
+		} else if ($( "#about-dialog-changes" ).css("display") === "block") {
+			return $( "#about-dialog-changes" );
+		} else {
+			return null;
+		}
+	};
+	
+	var onAboutDialogSection = function(section) {
+	
+		var visibleSection = visibleAboutDialogSection();
+		if (visibleSection !== null) {
+			var options = {};
+			visibleSection.hide( "fade", 200, function() {
+				$( "#about-dialog-"+section ).removeAttr( "style" ).hide().fadeIn(200);
+			});
+		} else {
+			$( "#about-dialog-"+section ).removeAttr( "style" ).hide().fadeIn(200);
+		}
+	};
+	
+	$( "#about-dialog-radios" ).buttonset();
+	$( "#radio_about" ).change(function(e) {
+		onAboutDialogSection("about");
+	});
+	$( "#radio_instructions" ).change(function(e) {
+		onAboutDialogSection("instructions");
+	});
+	$( "#radio_changes" ).change(function(e) {
+		onAboutDialogSection("changes");
+	});
+	$( "#about-dialog-about" ).css("display", "none");
+	$( "#about-dialog-instructions" ).css("display", "none");
+	$( "#about-dialog-changes" ).css("display", "none");
+	onAboutDialogSection("about");
+	$("input:radio[name='about_dialog_radio'][value='about']").prop("checked", true);
+	
+	
+	
+	$( "#dialog" ).dialog({
+		width: 600,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		}
+	});
+	$( "#about-link" ).click(function() {
+		
+		$( "#dialog" ).dialog( "open" );
+
+	});
+	
+	
+	$( "#error-message-dialog" ).dialog({
+		width: 600,
+		autoOpen: false,
+		modal: true,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		},
+		buttons: {
+			Ok : function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+
+	if (!window.WebGLRenderingContext || !Detector.webgl) {
+		Detector.addGetWebGLMessage();
+	}
+
+	setLoadingStatus("Building Solar System...");
+	var config = KMG.Util.extend({}, KMG.DefaultConfig);
+	config.lightingType = "Point";
+	config.lensFlareEnabled = false;
+	config.postprocessingEnabled = false;
+	config.displayLocalStar = false;
+	config.initWithShadows = false;
+	config.displayClouds = false;
+	config.displayAtmosphere = false;
+	config.scaleSurface = .02;
+	config.texture = "Sun";
+	config.ambientIntensity = 255.0;
+	config.emissiveIntensity = 255.0;
+	config.enableCityLights = false;
+	config.shininess = 0;
+	config.flattening = 0;
+	config.starQuantity = 9.5;
+	config.noPlanet = true;
+	config.noFog = true;
+	var tex = {
+		name : "",
+		texture : "",
+		bumpMap : "",
+		normalMap : "",
+		specularMap : "",
+		enabled : true
+	};
+	
+	KMG.textures.push(KMG.Util.extend({ name : "asteroid", texture : "/img/planets_small/asteroid.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "mercury", texture : "/img/planets_small/mercury.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "venus", texture : "/img/planets_small/venus.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "earth", texture : "/img/planets_small/earth.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "mars", texture : "/img/tx_composite.adjusted.1024x512.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "asteroid", texture : "/img/planets_small/asteroid.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "jupiter", texture : "/img/planets_small/jupiter.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "saturn", texture : "/img/planets_small/saturn.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "uranus", texture : "/img/planets_small/uranus.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "neptune", texture : "/img/planets_small/neptune.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "pluto", texture : "/img/planets_small/pluto.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "moon", texture : "/img/planets_small/moon.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "titan", texture : "/img/planets_small/titan.jpg"}, tex));
+	
+	var sceneReadyCallback = function() {
+		
+	};
+	var contextLostCallback = function(event) {
+		console.error("UI: WebGL Context Lost, displaying notification");
+		displayErrorMessage("WebGL Error", "WebGL Context Lost! Please refresh to restart the application");
+	};
+	var sceneCallbacks = {
+		sceneReadyCallback : sceneReadyCallback,
+		contextLostCallback : contextLostCallback
+	};
+	
+	engine = new KMG.Planet(document.getElementById( 'container' ), config, sceneCallbacks);
+	var context = engine.context;
+		
+	
+	
+	tickController = new KMG.TimeBasedTickController(modelOptions.timeWarp);
+	context.objects.push(tickController);
+
+	var sun = new KMG.CentralSunObject(context, {});
+	attachLabel(sun, "Sun");
+	addToPrimaryScene(sun);
+	planets["Sun"] = sun;
+
+	
+	var constellations = new KMG.ConstellationLines(context, {});
+	addToSecondaryScene(constellations);
+	
+	
+
+	planets["Mercury"] = addOrbitingPlanet(engine, KMG.CustomOrbits.mercury(), "mercury", 6371.1 * .3829, modelOptions.speed, false, null, tickController, "Mercury", "major", null);
+	planets["Venus"] = addOrbitingPlanet(engine, KMG.CustomOrbits.venus(), "venus", 6371.1 * .95, modelOptions.speed, false, null, tickController, "Venus", "major", null);
+	planets["Earth"] = addOrbitingPlanet(engine, KMG.CustomOrbits.earth(), "earth", 6371.1, modelOptions.speed, false, null, tickController, "Earth", "major", new KMG.IAUEarthRotation());
+
+	planets["Moon"] = addOrbitingPlanet(engine, KMG.CustomOrbits.moon(), "moon", 6371.1 * 0.273, modelOptions.speed, false, planets["Earth"].planet, tickController, "Moon", "minor", new KMG.IAULunarRotation());
+	planets["Mars"] = addOrbitingPlanet(engine, KMG.CustomOrbits.mars(), "mars", 6371.1 * .50, modelOptions.speed, false, null, tickController, "Mars", "major", new KMG.IAUMarsRotation());
+	planets["Ceres"] = addOrbitingPlanet(engine, KMG.CustomOrbits.ceres(), "asteroid", 487.3, modelOptions.speed, false, null, tickController, "Ceres", "minor", null);
+	planets["Vesta"] = addOrbitingPlanet(engine, KMG.CustomOrbits.vesta(), "asteroid", 557.2, modelOptions.speed, false, null, tickController, "Vesta", "minor", null);
+	planets["Jupiter"] = addOrbitingPlanet(engine, KMG.CustomOrbits.jupiter(), "jupiter", 6371.1 * 11.209, modelOptions.speed, false, null, tickController, "Jupiter", "major", null);
+	// Ganymede
+	// Europa
+	// Io
+	// Callisto
+	
+	planets["Saturn"] = addOrbitingPlanet(engine, KMG.CustomOrbits.saturn(), "saturn", 6371.1 * 9.4492, modelOptions.speed, true, null, tickController, "Saturn", "major", new KMG.IAUSaturnRotation());
+	planets["Titan"] = addOrbitingPlanet(engine, KMG.CustomOrbits.titan(), "titan", 2576, modelOptions.speed, false, planets["Saturn"].planet, tickController, "Titan", "minor", null);
+	planets["Uranus"] = addOrbitingPlanet(engine, KMG.CustomOrbits.uranus(), "uranus", 6371.1 * 4, modelOptions.speed, false, null, tickController, "Uranus", "major", null);
+	planets["Neptune"] = addOrbitingPlanet(engine, KMG.CustomOrbits.neptune(), "neptune", 6371.1 * 3.883, modelOptions.speed, false, null, tickController, "Neptune", "major", null);
+	
+	// Add for the sake of displaying New Horizons...
+	planets["Pluto"] = addOrbitingPlanet(engine, KMG.CustomOrbits.pluto(), "pluto", 6371.1 * 0.18, modelOptions.speed, false, null, tickController, "Pluto", "minor");
+	planets["Haumea"] = addOrbitingPlanet(engine, KMG.CustomOrbits.haumea(), "asteroid", 650, modelOptions.speed, false, null, tickController, "Haumea", "minor");
+	planets["Sedna"] = addOrbitingPlanet(engine, KMG.CustomOrbits.sedna(), "asteroid", 995, modelOptions.speed, false, null, tickController, "Sedna", "minor");
+	planets["Makemake"] = addOrbitingPlanet(engine, KMG.CustomOrbits.makemake(), "asteroid", 1434, modelOptions.speed, false, null, tickController, "Makemake", "minor");
+	planets["Eris"] = addOrbitingPlanet(engine, KMG.CustomOrbits.eris(), "asteroid", 1163, modelOptions.speed, false, null, tickController, "Eris", "minor");
+	for (var key in planets) {
+		addToPrimaryScene(planets[key]);
+	
+	}
+	
+	
+	setLoadingStatus("Loading Orbit Database...");
+	
+	
+		
+		
+	
+
+	var sceneScript = new function() {
+		var scope = this;
+		var planet, config, context;
+		
+		var isVisible = false;
+		
+
+		function getFocusPointVector() {
+			var focusPoint;
+			
+			if (modelOptions.focusPoint == "Sun") {
+				focusPoint = new THREE.Vector3(0, 0, 0);
+			} else if (modelOptions.focusPoint != "Object") {
+				focusPoint = planets[modelOptions.focusPoint].planet.position.clone().negate();
+			} else {
+				focusPoint = (targetedObject) ? targetedObject.getPosition().negate() : new THREE.Vector3(0, 0, 0);
+			}
+
+			return focusPoint;
+		}
+		
+		this.onScriptInitialize = function(_planet, _config, _context) {
+			planet = _planet;
+			config = _config;
+			context = _context;
+			
+		};
+		
+	
+		
+		this.onFrameHandler = function(planet, config, context) {
+		
+			tickController.speed = 1 + (1000000 * modelOptions.tickDelayGui);
+			
+			if (!targetedObject) {
+				return;
+			}
+			
+			var focusPointVector = getFocusPointVector();
+			for (var key in planets) {
+				var planet = planets[key];
+				planet.config.focusPoint = focusPointVector;
+				
+			}
+			
+			
+			targetedObject.config.focusPoint = focusPointVector;
+			targetedObject.config.rideAlong = modelOptions.rideAlong;
+			targetedObject.config.leaveTrail = modelOptions.leaveTrail;
+			targetedObject.config.orbitsVisible = modelOptions.orbitsVisible;
+			targetedObject.config.dateMarkersVisible = modelOptions.dateMarkersVisible;
+			
+			var dist = targetedObject.getDistanceTo(new THREE.Vector3(0, 0, 0));
+			var velocity = targetedObject.getVelocityOnTick();
+			
+			var milesPerHour = velocity * 2.23694;
+			
+			$("#date-container").html(moment(tickController.tickDate).format("LLL") 
+				+ "<br/>Distance: " + KMG.Math.round(dist) + " AU"
+				+ "<br/><span title=\"" + KMG.Math.round(milesPerHour) + " mph\"> Velocity: " + KMG.Math.round(velocity / 1000) + " km/s</span>");// (" + KMG.Math.round(milesPerHour) + " mph)");
+			
+			
+			
+			
+			return true;
+			
+		};
+		
+		this.onRenderHandler = function(planet, config, context) {
+			
+			
+			
+			for (var key in planets) {
+				var planet = planets[key];
+				if (planet.onMousePosition) {
+					planet.onMousePosition(mouse.x, mouse.y);
+				}
+			}
+			
+
+			context.primaryScene.position = getFocusPointVector();
+			context.primaryScene.updateMatrix();
+
+			if (targetedObject) {
+				var eventObj = targetedObject.isMouseOverDateOfInterest(mouse.x, mouse.y);
+				
+				if (eventObj) {
+					$("#event-container").html(
+						"<span class='event-date'>" + KMG.Util.formatJulianDay(eventObj.date, true, "ll") + "</span><br/>"
+						+ "<span class='event-title'>" + eventObj.title + "</span>"
+					).css("top", ""+mouse.clientY+"px").css("left", ""+mouse.clientX+"px").css("display", "inline-block");
+				} else {
+					$("#event-container").css("display", "none");
+				}
+			}
+	
+		};
+	};
+	
+	
+	engine.applySceneScriptInstance(sceneScript);
+
+	var guiChangeListener = function() {
+		
+	};
+	gui = new KMG.GUI(config, guiChangeListener);
+		
+	gui.onVisibilityChanged = function(visible) {
+		var setDisplay = visible ? "block" : "none";
+		$("#page-title-container").css("display", setDisplay);
+		$("#inline-instructions").css("display", setDisplay);
+		$("#instructions-link-container").css("display", setDisplay);
+		$("#stats").css("display", setDisplay);
+		$("#share-buttons").css("display", setDisplay);
+		$("#ce-left").css("display", setDisplay);
+	};
+	
+	var optionsGui = gui.left.createBlock("Options", appOptions, function() {
+		gui.setOpacity(appOptions.guiOpacity);
+	});
+	optionsGui.setExpandedState(KMG.Closed);
+	optionsGui.addAction('Hide Controls', function() {
+		gui.setVisible(false);
+	});
+	optionsGui.addRange('guiOpacity', 'GUI Transparency:', 0.0, 1.0, 0.01);
+	
+	var missionLinksGui = gui.right.createBlock("Mission Links", {});
+	
+	var spacecraftGui = gui.right.createBlock("Spacecraft", {});
+
+	var cometsGui = gui.right.createBlock("Comets", {});
+	var asteroidsGui = gui.right.createBlock("Asteroids", {});
+	
+	var modelGui = gui.left.createBlock("Model", modelOptions, function() {
+		targetedObject.config.rideAlong = modelOptions.rideAlong;
+		context.controls._update();
+	});
+	modelGui.addDateTime('startDate', 'Start Date (UTC):');
+	modelGui.addAction('Reset to Start Date', function(e) {
+		tickController.resetToDate(modelOptions.startDate);
+	});
+	modelGui.addAction('Start Animation', function(e, btn) {
+		if (tickController.isActive()) {
+			btn.button( "option", "label", "Resume" );
+			tickController.stop();
+		} else {
+			btn.button( "option", "label", "Pause" );
+			tickController.start();
+		}
+	});
+	modelOptions.tickDelayGui = .10;
+	modelGui.addRange('tickDelayGui', 'Animation Speed', 0, 1, .01);
+	modelGui.addToggle('leaveTrail', 'Leave Trails:');
+	modelGui.addToggle('orbitsVisible', 'Show Orbit Lines:');
+	modelGui.addToggle('dateMarkersVisible', 'Show Date Markers:');
+	//modelGui.addToggle('centerOnSun', 'Center on Sun:');
+	modelGui.addSelect('focusPoint', "Focus Point:", ["Object", "Sun", "Earth", "Moon", "Mars", "Jupiter", "Saturn"]);
+	// Reenable when the stars are properly lined up
+	//modelGui.addToggle('viewFromEarth', 'View From Earth:');
+	
+	/* // Disabling the 'Ride Along' option for now...
+	modelGui.addToggle('rideAlong', 'Ride Along:');
+	modelGui.addSelect('targetPlanet', 'Look Towards:', ["Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]);
+	*/
+	
+	
+	
+	engine.context.controls.rotate(30 * (Math.PI / 180), 0);
+	engine.context.controls.setMinDistance(0.013);
+	engine.context.controls.setMaxDistance(500000000000000000);
+	engine.context.controls.setDistance(2 * KMG.AU_TO_KM * modelOptions.kmScalar);
+	
+	engine.start();
+	
+	KMG.keyCommandBindManager.engine = engine;
+	var bindResult = KMG.keyCommandBindManager.bindAll();
+	if (bindResult.screenshot) {
+		document.getElementById('inline-instructions').innerHTML	+= ", <i>f</i> for fullscreen.";
+	}
+	
+	
+	// Loading list of available spacecraft & comets into GUI links
+	$.ajax({
+		url: "/api/tracked/list/?max=-1",
+		dataType: "json",
+		error: function( jqXHR, textStatus, errorThrown ) {
+			console.warn("Error: " + errorThrown);
+		
+		},
+		success: function(data, textStatus, jqxhr) {
+			
+		}
+	}).done(function(data) {
+		
+		data.sort(function(a,b){return a.name.localeCompare(b.name)});
+		
+		for (var i = 0; i < data.length; i++) {
+
+			var entry = data[i];
+			
+			if (entry.enabled === false) {
+				continue;
+			}
+			
+			if (entry.type == "spacecraft") {
+				spacecraftGui.addLink("/orbitviewer.html?name=" + entry.id, entry.name);
+			} else if (entry.type == "comet") {
+				cometsGui.addLink("/orbitviewer.html?name=" + entry.id, entry.name);
+			} else if (entry.type == "asteroid") {
+				asteroidsGui.addLink("/orbitviewer.html?name=" + entry.id, entry.name);
+			}
+
+		}
+	
+	});
+	
+	
+	
+	//var apiBaseUrl = (AppEnv.isDevMode()) ? "http://dev.wthr.us" : "";
+	
+	// Load current targeted object data
+	$.ajax({
+		url: "/api/data/" + targetedObjectName,
+		//url: apiBaseUrl + "/api/horizons/" + targetedObjectName,
+		dataType: "json",
+		error: function( jqXHR, textStatus, errorThrown ) {
+			console.warn("Error: " + errorThrown);
+		
+		},
+		success: function(data, textStatus, jqxhr) {
+			
+		}
+	}).done(function(data) {
+		
+		setLoadingStatus("Rendering Orbiting Object...");
+
+		var config = {
+			kmScalar : modelOptions.kmScalar
+		};
+		
+		var centerObject = null;
+		if (data.orbiting) {
+			centerObject = planets[data.orbiting].planet;
+		}
+		
+		var vectorsOrbiting;
+		if (data.vectors.orbiting) {
+			vectorsOrbiting = planets[data.vectors.orbiting].planet;
+		} else {
+			vectorsOrbiting = centerObject;
+		}
+		
+		var elementsOrbiting;
+		if (data.elements.orbiting) {
+			elementsOrbiting = planets[data.elements.orbiting].planet;
+		} else {
+			elementsOrbiting = centerObject;
+		}
+		
+		
+		targetedObject = new KMG.OrbitingObject(context, config, data, tickController, vectorsOrbiting, elementsOrbiting, centerObject);
+		addToPrimaryScene(targetedObject);
+		
+		var initialEyeDistance = (data.initialEyeDistance) ? data.initialEyeDistance : 2.0;
+		engine.context.controls.setDistance(initialEyeDistance * KMG.AU_TO_KM * modelOptions.kmScalar);
+		
+		
+		if (data.links.length == 0) {
+			missionLinksGui.setVisible(false);
+		} else {		
+			for (var i = 0; i < data.links.length; i++) {
+				var link = data.links[i];
+				
+				var firstLinkText = (data.type == "spacecraft") ? "Mission Homepage" : "Information";
+				
+				var text = (i == 0) ? firstLinkText : ("Link #" + (i + 1));
+				missionLinksGui.addLink(link, text, text, "_BLANK");
+			}
+		}
+
+		$( "#page-title-link" ).text($( "#page-title-link" ).text() + " - " + data.name);
+		$( "#loading-screen" ).css("display", "none");
+
+	});
+	
+});
+		</script>
+		
+			</head>
+	<body>
+
+		<div id="container"></div>
+		<div id="debug-message"></div>
+		
+		
+		<div id="date-container"></div>
+		
+		<div id="event-container"></div>
+
+		<div id="no-webgl-for-you">
+			<div id="h5p-message"></div>
+			<script>window.h5please=function(a){ document.getElementById("h5p-message").innerHTML=a.html }</script>
+			<script async src="http://api.html5please.com/webgl+canvas.json?callback=h5please&texticon&html"></script>
+		</div>
+		
+		
+		
+		<div id="page-title-container" class="hide-on-embedded">
+			<a href="http://orbits.wthr.us/" id="page-title-link">Orbit Viewer</a>
+		</div>
+		
+		<div id="instructions-link-container" class="hide-on-embedded">
+			<a href="#" id="about-link">[ About/Instructions ]</a>
+		</div>
+
+		<div id="inline-instructions" class="hide-on-embedded">
+			Press <i>p</i> for screenshot
+		</div>
+		
+		<div id="error-message-dialog" title="Error">
+			<div class="dialog-section">
+				<p>
+					<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 50px 0;"></span>
+					<div id="error-message-title">Title</div>
+					<div id="error-message-body">Body</div>
+				</p>
+			</div>
+		</div>
+		
+		
+		
+		
+		<div id="dialog" title="About Orbit Viewer">
+			<h1><a href="/">Orbit Viewer</a></h1>
+			
+			<div class="dialog-section">
+				
+				
+				<div id="about-dialog-radios">
+					<input type="radio" id="radio_about" name="about_dialog_radio" value="about" checked="checked"/><label for="radio_about">About</label>
+					<input type="radio" id="radio_instructions" name="about_dialog_radio" value="instructions" /><label for="radio_instructions">Instructions</label>
+				</div>
+				
+				<div id="about-dialog-about">
+					<div class="dialog-subsection">
+						<b><em>About:</em></b> 
+						
+						<p>
+						Orbit Viewer is an interactive display of spacecraft orbits and realtime locations. Data is used from the JPL Horizons system.
+						</p>
+
+						
+						<p>
+						This is built as a WebGL experiment using <a href="http://threejs.org/" target="_BLANK">Three.js</a> and is expected
+						to work in the latest versions of Google Chrome, Firefox, & Internet Explorer 11.
+						</p>
+					</div>
+					
+					<div class="dialog-subsection">
+						<b><em>Sources:</em></b> 
+						<ul>
+							<li>Orbital Elements: <a href="http://ssd.jpl.nasa.gov/sbdb_query.cgi" target="_BLANK">NASA/JPL</a></li>
+							<li>Planet Textures: <a href="http://www.shatters.net/celestia/" target="_BLANK">Celestia</a>, NASA</li>
+							<li>Sun Texture: <a href="http://www.celestiamotherlode.net/catalog/show_addon_details.php?addon_id=629" target="_BLANK">Runar Thorvaldsen</a></li>
+							<li>Tycho Star Map: <a href="http://maps.jpl.nasa.gov/stars.html" target="_BLANK">Caltech/JPL</a></li>
+							<li>Hipparcos Star Map: <a href="http://maps.jpl.nasa.gov/stars.html" target="_BLANK">Caltech/JPL</a></li>
+							<li>Yale Bright Star Map: <a href="http://maps.jpl.nasa.gov/stars.html" target="_BLANK">Caltech/JPL</a></li>
+							<li>Constellation Lines: <a href="http://www.midnightkite.com/index.aspx?AID=0&URL=StarChartFAQ" target="_BLANK">Dan Bruton, Star Chart</a></li>
+						</ul>
+					</div>
+
+
+					
+					<div class="dialog-section">
+						&copy; 2013 <a href="https://plus.google.com/113761354606401247247/about" target="_BLANK">Kevin M. Gill</a>. All Rights Reserved.
+					</div>
+				</div>
+				
+				<div id="about-dialog-instructions">
+					<div class="dialog-subsection">
+						<b><em>Instructions:</em></b> 
+						
+						<p>
+					
+						</p>
+						
+						<ul>
+							<li> Click 'Start' to begin the animation, then control with 'Pause' and 'Resume'.</li>
+							<li> To move to a specific date, set the 'Start Date', then click 'Reset to Start Date'.</li>
+							<li> Adjust the animation speed using 'Animation Speed'.</li>
+							<li> Use 'Targeted Planet' to change which planet is being watched. Note that the asteroid list is optimized
+								for Earth resulting in possibly incomplete lists for other planets.</li>
+						</ul>
+						
+							<b><em>View Controls:</em></b>
+						Orbit Viewer uses mouse and keyboard based navigation controls, similar to those in Google Earth.
+						<ul>
+							<li><b>Rotating:</b> Rotate the scene by left-clicking and dragging with the mouse</li>
+							<li><b>Pitch/Roll:</b> Control the pitch & roll of the scene by holding down shift while left-clicking and
+					dragging with the mouse.</li>
+							<li><b>Panning:</b> Pan the scene (offsetting the planet from the center, similar to turning your head away from
+					the object of focus) by holding down Ctrl while left-clicking and dragging with the mouse.</li>
+							<li><b>Zooming:</b> Zoom either with the scroll-wheel or by right-clicking and dragging the mouse up or down.</li>
+						</ul>
+					</div>
+				</div>
+				
+				
+				
+				
+				
+				
+			</div>
+			
+			
+		</div>
+		
+		
+		
+		<div id="share-buttons" class="hide-on-embedded">
+			
+			<div class="share-button">
+			
+			
+				<div id="fb-root"></div>
+				<script> if (!AppEnv.isDevMode()) {(function(d, s, id) {
+				  var js, fjs = d.getElementsByTagName(s)[0];
+				  if (d.getElementById(id)) return;
+				  js = d.createElement(s); js.id = id;
+				  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+				  fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));}</script>
+			
+				<div class="fb-like" data-href="http://orbits.apoapsys.com" data-send="false" data-layout="button_count" data-width="300" data-show-faces="true" data-colorscheme="dark"></div>
+			
+			
+			</div>
+			
+			<div class="share-button">
+				<a href="https://twitter.com/share" class="twitter-share-button" data-via="kevinmgill" id="tweet-href"></a>
+				<script>
+				if (!AppEnv.isDevMode()) {
+					$("#tweet-href").text("Tweet");
+					!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+				}	
+				</script>
+			</div>
+
+			<div class="share-button">
+				<!-- Place this tag where you want the +1 button to render. -->
+				<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="150"></div>
+
+				<!-- Place this tag after the last +1 button tag. -->
+				<script type="text/javascript">
+				
+				  (function() {
+				  if (!AppEnv.isDevMode()) {
+					var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+					po.src = 'https://apis.google.com/js/plusone.js';
+					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+					}
+				  })();
+				
+				</script>
+			</div>
+			
+			
+			
+			
+		</div>
+		
+	
+		<a id="ce-left" href="http://www.chromeexperiments.com/detail/orbit-viewer/" class="hide-on-embedded" alt="This is a Chrome Experiment" title="This is a Chrome Experiment">
+			<span>This is a Chrome Experiment</span>
+		</a>
+		
+		
+		<div id="loading-screen">
+		
+			<div id="loading-content">
+				<img src="/img/sprites/PIA17516_500.jpg" id="loading-screen-graphic" title="" />
+				<div id="loading-label">Loading&hellip;</div>
+				<div id="loading-status">Building Solar System&hellip;</div>
+			</div>
+
+		</div>
+		
+
+		<div id="loading-spinner">
+			<img src/img/spinner.gif" />
+		</div>
+		
+		
+		<script>
+if (!AppEnv.isDevMode() && !AppEnv.noAnalytics()) {
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-3932152-11', 'wthr.us');
+  ga('send', 'pageview', {
+	'dimension1' : 'Orbit Viewer'
+  });
+
+}
+		</script>
+		
+	</body>
+</html>

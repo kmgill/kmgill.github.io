@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>PHAntom Viewer</title>
+		<meta charset="utf-8">
+		
+		
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<meta name="description" content="PHAntom Viewer is an interactive display of known asteroids and comets designated as 
+						Potentially Hazardous Objects Each of the 1400+ objects is on an orbit which takes it within a very close approach to Earth at some point in time and, in
+						the case of an impact, carry the potential to cause significant or catastrophic damage."/>
+		<meta property="og:description" content="PHAntom Viewer is an interactive display of known asteroids and comets designated as 
+						Potentially Hazardous Objects Each of the 1400+ objects is on an orbit which takes it within a very close approach to Earth at some point in time and, in
+						the case of an impact, carry the potential to cause significant or catastrophic damage." />
+		
+		<link rel="image_src" type="image/png" href="/PHAntomViewerSnapshot0.png" />
+		<meta property="og:image" content="/PHAntomViewerSnapshot0.png" />
+		
+		
+		<link href='http://fonts.googleapis.com/css?family=Average+Sans|Rationale' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="lib/jquery/css/custom-theme/jquery-ui-1.10.2.custom.min.css">
+		<link rel="stylesheet" href="planet.css">
+		
+		<script src="lib/three.min.js"></script>
+		<script src="lib/moment.min.js"></script>
+		<script src="lib/Detector.js"></script>
+		<script src="lib/stats.min.js"></script>
+		<script src="lib/json.js"></script>
+		<script src="lib/modernizr.js"></script>
+		<script src="/lib/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+		<script src="lib/jquery/js/jquery-1.9.1.min.js"></script>
+		<script src="lib/jquery/js/jquery-ui-1.10.2.custom.min.js"></script>
+		<script src="lib/jquery/plugins/jquery.colorpicker.js"></script>
+		<link href="lib/jquery/plugins/jquery.colorpicker.css" rel="stylesheet" type="text/css"/>
+		
+		<script src="lib/jquery/plugins/swatches/jquery.ui.colorpicker-pantone.js"></script>
+		<script src="lib/jquery/plugins/parts/jquery.ui.colorpicker-rgbslider.js"></script>
+		<script src="lib/jquery/plugins/parts/jquery.ui.colorpicker-memory.js"></script>
+		
+		<script src="lib/THREEx.screenshot.js"></script>
+		<script src="lib/THREEx.FullScreen.js"></script>
+		<script src="lib/THREEx.WindowResize.js"></script>
+		
+		<script src="postprocessing.js"></script>
+		<script src="shaders.js"></script>
+		<script src="planetmaker.js"></script>
+		<script src="pha.js"></script>
+		<style>
+#loading-screen {
+	background: #000000;
+	text-align: center;
+}
+
+#loading-content {
+	margin: auto;
+	
+}
+
+#loading-label {
+	font-size: 1.5em;
+	font-weight: bold;
+	font-style: italic;
+	font-family: 'Average Sans', sans-serif;
+}
+
+#loading-status {
+	font-size: 2.0em;
+	font-weight: bold;
+	font-family: 'Average Sans', sans-serif;
+}
+
+
+#loading-screen-graphic {
+	vertical-align: middle;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#date-container {
+	position: absolute;
+	top: 20px;
+	right: 10px;
+	color: #FFFFFF;
+	width: 250px;
+	font-size: 1.6em;
+}
+
+#asteroid-list {
+	position: absolute;
+	top: 45px;
+	right: 10px;
+	color: #FFFFFF;
+	width: 250px;
+	font-size: .9em;
+	z-index: 1000;
+	padding: 10px;
+}
+
+		</style>
+		<script>
+var asteroids = [];
+var planets = {};
+var earthObject = null;
+var timer = null;
+
+var nearList = null;
+var tickController = null;
+var engine = null;
+
+var dateAndListController = null;
+
+var appOptions = {
+	guiOpacity : 0.9	
+};
+
+var modelOptions = {
+	scale : 500,
+	kmScalar : 0.000005,
+	timeWarp : 50000000,
+	highlightDistance : 0.15, // AU
+	startDate : (new Date()).getTime() + (new Date()).getTimezoneOffset() * 60000,
+	targetPlanet : "Earth",
+	displayNames : true
+};	
+
+function setLoadingStatus(status)
+{
+	$( "#loading-status" ).html(status);
+}
+
+function displayErrorMessage(title, body)
+{
+	console.error("Error: " + title + ": " + body);
+	
+	$( "#error-message-dialog" ).attr("title", title);
+	$( "#error-message-title" ).text(title);
+	$( "#error-message-body" ).text(body);
+	
+	$( "#error-message-dialog" ).dialog( "open" );
+	
+}
+
+
+
+function isUserMobile()
+{
+	return /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+}
+			
+
+
+jQuery.fn.center = function () {
+    this.css("position","absolute");
+    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
+                                                $(window).scrollTop()) + "px");
+    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + 
+                                                $(window).scrollLeft()) + "px");
+    return this;
+}
+
+
+
+
+function addOrbitingPlanet(engine, orbit, texName, radius, speed, showRing, orbiting, tickController) {
+
+	var orbitScale = KMG.AU_TO_KM * modelOptions.kmScalar;
+
+	var planetConfig = {};//KMG.Util.clone(orbitConfig);
+	planetConfig.scale = orbitScale;
+	planetConfig.segments = 512;
+	planetConfig.opacity = 0.1;
+	
+	addToPrimaryScene(new KMG.OrbitPathLine(engine.context, planetConfig, orbit, orbiting));
+	
+	
+	var config = KMG.Util.extend({radius:radius, fog:false, scale:modelOptions.kmScalar, texture:texName, color:0xFFFFFF}, KMG.DefaultTexturedSphereOptions);
+	var planet = new KMG.TexturedSphereObject(engine.context, config);
+	addToPrimaryScene(planet);
+	
+	var dotConfig = {
+		opacity : 1.0,
+		color : 0xFFFFFF,
+		size : 2,
+		texture : 'img/sprites/circle_50x50.png'
+	};
+	
+	var planetDot = new KMG.DotPlotObject(engine.context, dotConfig);
+	addToPrimaryScene(planetDot);
+	
+
+
+	var orbitals = [planet, planetDot];
+
+	var rotator = new KMG.ObjectRotator(engine.context, planet, 0.5);
+	
+	if (showRing) {
+		var ring = new KMG.RingObject(engine.context, {
+			ringInnerRadius : 74500 * modelOptions.kmScalar,
+			ringOutterRadius : 140220 * modelOptions.kmScalar,
+			targetObject : planet,
+			displayRing : true
+		});
+		addToPrimaryScene(ring);
+		orbitals.push(ring);
+	}
+	
+	var orbiter = new KMG.EllipticalOrbiter(engine.context, orbitals, orbitScale, speed, orbit, orbiting, tickController);
+	planet.orbiter = orbiter;
+	return planet;
+}
+
+
+
+function rgbToHex(r, g, b) {
+	return (new THREE.Color()).setRGB(r, g, b).getHex();
+}
+
+function getOrbitColor(f)
+{
+	var r = (1 * f) + (0 * (1 - f));
+	var g = (0 * f) + (1 * (1 - f));
+	var b = 0;
+	return rgbToHex(r, g, b);
+}
+
+
+
+function addOrbitingAsteroid(context, elements, speed, f, tickController) {
+	
+	var orbitScale = KMG.AU_TO_KM * modelOptions.kmScalar;
+	
+	
+	var orbit = new KMG.EllipticalOrbit(elements);
+	
+	var orbitConfig = KMG.Util.clone(elements);
+	orbitConfig.scale = orbitScale;
+	orbitConfig.segments = 512;
+	orbitConfig.opacity = 0.1;
+	orbitConfig.color = 0x00FF00;
+	orbitConfig.lineThickness = 1.5;
+
+	var dotConfig = {
+		opacity : 0.1,
+		color : 0xFFFFFF,
+		//size : 40,
+		//texture : 'img/sprites/vesta.png'
+		texture : 'img/sprites/circle_50x50.png'
+	};
+	
+	var asteroid = new KMG.DotPlotObject(context, dotConfig);
+	addToPrimaryScene(asteroid);
+	
+	var orbitPathLine = new KMG.OrbitPathLine(context, orbitConfig, orbit);
+	addToPrimaryScene(orbitPathLine);
+	var orbiter = new KMG.EllipticalOrbiter(context, asteroid, orbitScale, speed, orbit, null, tickController);
+	
+	asteroid.orbit = orbit;
+	asteroid.orbitConfig = orbitConfig;
+	asteroid.nameSprite = null;
+	asteroid.orbitPathLine = orbitPathLine;
+	asteroids.push(asteroid);
+}
+
+function addToPrimaryScene(obj) {
+	engine.context.objects.push(obj);
+	engine.context.primaryScene.add(obj);
+}
+
+function addToSecondaryScene(obj) {
+	engine.context.objects.push(obj);
+	engine.context.secondaryScene.add(obj);
+}
+
+KMG.DateAndListController = function() {
+
+	var dateText = $("#date-container");						
+	var nearList = $("#asteroid-list ");
+	
+	var mouseIsOver = false;
+	
+	$("#asteroid-list ").on({
+		mouseenter : function() {
+			mouseIsOver = true;
+		},
+		mouseleave : function() {
+			mouseIsOver = false;
+		}
+	});
+ 
+	var scope = this;
+	
+	var lastDate = 0;
+	
+	this.setDate = function(date) {
+	
+		if (lastDate != date.getTime()) {
+			lastDate = date.getTime();
+			dateText.text(moment(date).format("LLL"));
+		}
+	};
+	
+	this.clearList = function() {
+		if (!mouseIsOver) {
+			nearList.html("");
+		}
+	};
+	
+	this.addAsteroid = function(asteroid) {
+		if (!mouseIsOver) {
+			var sstr = asteroid.orbitConfig.name.substring(asteroid.orbitConfig.name.indexOf("(")+1, asteroid.orbitConfig.name.indexOf(")"));
+			var href = "http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=" + sstr + "#content";
+			var nearObjName = $("<li/>");
+			var dist = Math.round(asteroid.distance * 10000) / 10000;
+			var a = $("<a/>").attr("href", href)
+									.attr("target", "_BLANK")
+									.text(asteroid.orbitConfig.name + " " + dist + " AU")
+									.appendTo(nearObjName);
+			nearObjName.appendTo(nearList);
+		}
+	};
+	
+
+};
+
+
+$(function() {
+
+	
+	
+	setLoadingStatus("Setting up viewport&hellip;");
+
+	
+	var visibleAboutDialogSection = function() {
+		if ($( "#about-dialog-about" ).css("display") === "block") {
+			return $( "#about-dialog-about" );
+		} else if ($( "#about-dialog-instructions" ).css("display") === "block") {
+			return $( "#about-dialog-instructions" );
+		} else if ($( "#about-dialog-changes" ).css("display") === "block") {
+			return $( "#about-dialog-changes" );
+		} else {
+			return null;
+		}
+	};
+	
+	var onAboutDialogSection = function(section) {
+	
+		var visibleSection = visibleAboutDialogSection();
+		if (visibleSection !== null) {
+			var options = {};
+			visibleSection.hide( "fade", 200, function() {
+				$( "#about-dialog-"+section ).removeAttr( "style" ).hide().fadeIn(200);
+			});
+		} else {
+			$( "#about-dialog-"+section ).removeAttr( "style" ).hide().fadeIn(200);
+		}
+	};
+	
+	$( "#about-dialog-radios" ).buttonset();
+	$( "#radio_about" ).change(function(e) {
+		onAboutDialogSection("about");
+	});
+	$( "#radio_instructions" ).change(function(e) {
+		onAboutDialogSection("instructions");
+	});
+	$( "#radio_changes" ).change(function(e) {
+		onAboutDialogSection("changes");
+	});
+	$( "#about-dialog-about" ).css("display", "none");
+	$( "#about-dialog-instructions" ).css("display", "none");
+	$( "#about-dialog-changes" ).css("display", "none");
+	onAboutDialogSection("about");
+	$("input:radio[name='about_dialog_radio'][value='about']").prop("checked", true);
+	
+	
+	
+	$( "#dialog" ).dialog({
+		width: 600,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		}
+	});
+	$( "#about-link" ).click(function() {
+		
+		$( "#dialog" ).dialog( "open" );
+
+	});
+	
+	
+	$( "#error-message-dialog" ).dialog({
+		width: 600,
+		autoOpen: false,
+		modal: true,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		},
+		buttons: {
+			Ok : function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+
+	if (!window.WebGLRenderingContext || !Detector.webgl) {
+		Detector.addGetWebGLMessage();
+	}
+	
+	dateAndListController = new KMG.DateAndListController();
+	setLoadingStatus("Building Solar System...");
+	var config = KMG.Util.extend({}, KMG.DefaultConfig);
+	config.lightingType = "Point";
+	config.lensFlareEnabled = false;
+	config.postprocessingEnabled = false;
+	config.displayLocalStar = false;
+	config.initWithShadows = false;
+	config.displayClouds = false;
+	config.displayAtmosphere = false;
+	config.scaleSurface = .02;
+	config.texture = "Sun";
+	config.ambientIntensity = 255.0;
+	config.emissiveIntensity = 255.0;
+	config.enableCityLights = false;
+	config.shininess = 0;
+	config.flattening = 0;
+	//config.backgroundType = "image";
+	//config.backgroundImage = "Yale Bright Star Map";
+	//config.backgroundImageType = "sphere";
+	config.noPlanet = true;
+	//config.noStars = true;
+	//config.noBackground = true;
+	
+	var tex = {
+		name : "",
+		texture : "",
+		bumpMap : "",
+		normalMap : "",
+		specularMap : "",
+		enabled : true
+	};
+	
+	KMG.textures.push(KMG.Util.extend({ name : "asteroid", texture : "/img/planets_small/asteroid.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "mercury", texture : "/img/planets_small/mercury.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "venus", texture : "/img/planets_small/venus.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "earth", texture : "/img/planets_small/earth.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "mars", texture : "/img/planets_small/mars.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "jupiter", texture : "/img/planets_small/jupiter.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "saturn", texture : "/img/planets_small/saturn.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "uranus", texture : "/img/planets_small/uranus.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "neptune", texture : "/img/planets_small/neptune.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "pluto", texture : "/img/planets_small/pluto.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "moon", texture : "/img/planets_small/moon.jpg"}, tex));
+	
+	
+	var sceneReadyCallback = function() {
+		
+	};
+	var contextLostCallback = function(event) {
+		console.error("UI: WebGL Context Lost, displaying notification");
+		displayErrorMessage("WebGL Error", "WebGL Context Lost! Please refresh to restart the application");
+	};
+	var sceneCallbacks = {
+		sceneReadyCallback : sceneReadyCallback,
+		contextLostCallback : contextLostCallback
+	};
+	
+	engine = new KMG.Planet(document.getElementById( 'container' ), config, sceneCallbacks);
+	var context = engine.context;
+		
+	
+	
+	tickController = new KMG.TimeBasedTickController(modelOptions.timeWarp);
+	context.objects.push(tickController);
+	
+	//var background = new KMG.StarMapSphereObject(context, {});
+	//addToPrimaryScene(background);
+	
+	var sun = new KMG.CentralSunObject(context, {});
+	addToPrimaryScene(sun);
+	
+	
+	var constellations = new KMG.ConstellationLines(context, {});
+	addToSecondaryScene(constellations);
+
+	planets["Mercury"] = addOrbitingPlanet(engine, KMG.CustomOrbits.mercury(), "mercury", 6371.1 * .3829, modelOptions.speed, false, null, tickController);
+	planets["Venus"] = addOrbitingPlanet(engine, KMG.CustomOrbits.venus(), "venus", 6371.1 * .95, modelOptions.speed, false, null, tickController);
+	planets["Earth"] = addOrbitingPlanet(engine, KMG.CustomOrbits.earth(), "earth", 6371.1, modelOptions.speed, false, null, tickController);
+
+	planets["Moon"] = addOrbitingPlanet(engine, KMG.CustomOrbits.moon(), "moon", 6371.1 * 0.273, modelOptions.speed, false, planets["Earth"], tickController);
+	planets["Mars"] = addOrbitingPlanet(engine, KMG.CustomOrbits.mars(), "mars", 6371.1 * .50, modelOptions.speed, false, null, tickController);
+	planets["Jupiter"] = addOrbitingPlanet(engine, KMG.CustomOrbits.jupiter(), "jupiter", 6371.1 * 11.209, modelOptions.speed, false, null, tickController);
+	planets["Saturn"] = addOrbitingPlanet(engine, KMG.CustomOrbits.saturn(), "saturn", 6371.1 * 9.4492, modelOptions.speed, true, null, tickController);
+	planets["Uranus"] = addOrbitingPlanet(engine, KMG.CustomOrbits.uranus(), "uranus", 6371.1 * 4, modelOptions.speed, false, null, tickController);
+	planets["Neptune"] = addOrbitingPlanet(engine, KMG.CustomOrbits.neptune(), "neptune", 6371.1 * 3.883, modelOptions.speed, false, null, tickController);
+	planets["Pluto"] = addOrbitingPlanet(engine, KMG.CustomOrbits.pluto(), "pluto", 6371.1 * 0.18, modelOptions.speed, false, null, tickController);
+	
+	setLoadingStatus("Loading Asteroid Database...");
+	
+	
+		
+		
+	
+
+	var sceneScript = new function() {
+		var scope = this;
+		var planet, config, context;
+		
+		var isVisible = false;
+		
+		this.onScriptInitialize = function(_planet, _config, _context) {
+			planet = _planet;
+			config = _config;
+			context = _context;
+			
+		};
+		
+		
+		
+		var viewerAsteroid = null;
+		this.onFrameHandler = function(planet, config, context) {
+			
+			config.displayLocalStar = false;
+			
+			context.primaryScene.position = planets[modelOptions.targetPlanet].position.clone().negate();
+			context.primaryScene.updateMatrix();
+			
+			context.secondaryScene.position = planets[modelOptions.targetPlanet].position.clone().negate();
+			context.secondaryScene.updateMatrix();
+			
+			tickController.speed = 1 + (100000 * modelOptions.tickDelayGui);
+
+			dateAndListController.setDate(tickController.tickDate);
+			dateAndListController.clearList();
+			
+			if (asteroids.length == 0 || !planets[modelOptions.targetPlanet]) {
+				return;
+			}
+			
+			var highlightMaxAU = modelOptions.highlightDistance * KMG.AU_TO_KM * modelOptions.kmScalar;
+			
+			
+			var nearEarthList = [];
+			
+			for (var i = 0; i < asteroids.length; i++) {
+				var ast = asteroids[i];
+				
+
+				
+				var dist = ast.position.distanceTo(planets[modelOptions.targetPlanet].position);
+				ast.distance = dist / (KMG.AU_TO_KM * modelOptions.kmScalar);
+				var color = 0x00FF00;
+				var opacity = 0.0;
+				//console.info("Distance: " + dist);
+				if (dist < highlightMaxAU) {
+					
+					if (!ast.nameSprite) {
+						ast.nameSprite = new KMG.BillBoardTextObject(context, ast.orbitConfig.name, {});
+						context.primaryScene.add(ast.nameSprite);
+					}
+					ast.nameSprite.position = ast.position;
+					
+					if (ast.nameSprite.visible && !modelOptions.displayNames) {
+						ast.nameSprite.setVisibility(false);
+					} else if (!ast.nameSprite.visible && modelOptions.displayNames) {
+						ast.nameSprite.setVisibility(true);
+					}
+					
+					var f = (highlightMaxAU - dist) / (highlightMaxAU);
+					opacity += (0.75 * f);
+					color = getOrbitColor(f);
+					nearEarthList.push(ast);
+				} else {
+					if (ast.nameSprite) {
+						context.primaryScene.remove(ast.nameSprite);
+						ast.nameSprite = null;
+					}
+				}
+				ast.orbitConfig.opacity = opacity;
+				ast.orbitConfig.color = color;
+				ast.config.color = color;
+				ast.config.opacity = opacity;
+			}
+			
+			nearEarthList.sort(function(a,b){return a.distance - b.distance});
+			for (var i = 0; i < nearEarthList.length; i++) {
+				var ast = nearEarthList[i];
+				dateAndListController.addAsteroid(ast);
+			}
+			
+			return true;
+			
+		};
+		
+		this.onRenderHandler = function(planet, config, context) {
+
+		};
+	};
+	
+	
+	engine.applySceneScriptInstance(sceneScript);
+
+	var guiChangeListener = function() {
+		
+	};
+	gui = new KMG.GUI(config, guiChangeListener);
+		
+	gui.onVisibilityChanged = function(visible) {
+		var setDisplay = visible ? "block" : "none";
+		$("#page-title-container").css("display", setDisplay);
+		$("#inline-instructions").css("display", setDisplay);
+		$("#instructions-link-container").css("display", setDisplay);
+		$("#stats").css("display", setDisplay);
+		$("#share-buttons").css("display", setDisplay);
+		$("#ce").css("display", setDisplay);
+	};
+	
+	var optionsGui = gui.left.createBlock("Options", appOptions, function() {
+		gui.setOpacity(appOptions.guiOpacity);
+	});
+	optionsGui.setExpandedState(KMG.Closed);
+	optionsGui.addAction('Hide Controls', function() {
+		gui.setVisible(false);
+	});
+	optionsGui.addRange('guiOpacity', 'GUI Transparency:', 0.0, 1.0, 0.01);
+	
+	
+	var modelGui = gui.left.createBlock("Model", modelOptions);
+	modelGui.addDateTime('startDate', 'Start Date (UTC):');
+	modelGui.addAction('Reset to Start Date', function(e) {
+		tickController.resetToDate(modelOptions.startDate);
+	});
+	modelGui.addAction('Start Animation', function(e, btn) {
+		if (tickController.isActive()) {
+			btn.button( "option", "label", "Resume" );
+			tickController.stop();
+		} else {
+			btn.button( "option", "label", "Pause" );
+			tickController.start();
+		}
+	});
+	modelOptions.tickDelayGui = .5;
+	modelGui.addRange('tickDelayGui', 'Animation Speed', 0, 1, .01);
+	modelGui.addRange('highlightDistance', 'Max Distance (AU)', 0.0, 2.0, 0.01);
+	modelGui.addSelect('targetPlanet', 'Targeted Planet:', ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"]);
+	modelGui.addToggle('displayNames', 'Display Names:');
+	
+	
+	
+	
+	
+	
+	engine.context.controls.rotate(30 * (Math.PI / 180), 0);
+	engine.context.controls.setMinDistance(5);
+	engine.context.controls.setMaxDistance(500000000000000000);
+	engine.context.controls.setDistance(2 * KMG.AU_TO_KM * modelOptions.kmScalar);
+	
+	engine.start();
+	
+	KMG.keyCommandBindManager.engine = engine;
+	var bindResult = KMG.keyCommandBindManager.bindAll();
+	if (bindResult.screenshot) {
+		document.getElementById('inline-instructions').innerHTML	+= ", <i>f</i> for fullscreen.";
+	}
+	
+	
+	
+	$.ajax({
+		url: "/api/pha/list/",
+		//url: "/data/horizons/potentially_hazardous_objects.json",
+		//dataType: "script",
+		success: function(data, textStatus, jqxhr) {
+		
+		
+			var maxPhaMoid = 0.0499965;
+			var minPhaMoid = 4.75136e-05;
+			
+			setLoadingStatus("Rendering " + data.length + " Asteroids...");
+			
+			setTimeout(function() {
+				var c = 0;
+				for (var i = 0; i < data.length; i++) {
+					var neObject = data[i];
+					var f = (maxPhaMoid - neObject.moid) / (maxPhaMoid - minPhaMoid);
+					addOrbitingAsteroid(context, neObject, modelOptions.speed, f, tickController);
+					c++;
+
+				}
+				
+				setLoadingStatus("Ready...");
+				console.info("Added " + c + " objects");
+				$( "#loading-screen" ).css("display", "none");
+			}, 100);
+			
+		}
+	});
+	//$( "#loading-screen" ).css("display", "none");
+});
+		</script>
+		
+			</head>
+	<body>
+
+		<div id="container"></div>
+		<div id="debug-message"></div>
+		
+		
+		<div id="date-container"></div>
+		<div id="asteroid-list"></div>
+		
+		<div id="no-webgl-for-you">
+			<div id="h5p-message"></div>
+			<script>window.h5please=function(a){ document.getElementById("h5p-message").innerHTML=a.html }</script>
+			<script async src="http://api.html5please.com/webgl+canvas.json?callback=h5please&texticon&html"></script>
+		</div>
+		
+		
+		
+		<div id="page-title-container" class="hide-on-embedded">
+			<a href="http://pha.wthr.us/" id="page-title-link">PHAntom Viewer</a>
+		</div>
+		
+		<div id="instructions-link-container" class="hide-on-embedded">
+			<a href="#" id="about-link">[ About/Instructions ]</a>
+		</div>
+
+		<div id="inline-instructions" class="hide-on-embedded">
+			Press <i>p</i> for screenshot
+		</div>
+		
+		<div id="error-message-dialog" title="Error">
+			<div class="dialog-section">
+				<p>
+					<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 50px 0;"></span>
+					<div id="error-message-title">Title</div>
+					<div id="error-message-body">Body</div>
+				</p>
+			</div>
+		</div>
+		
+		
+		
+		
+		<div id="dialog" title="About PHAViewer">
+			<h1><a href="/">PHAntom Viewer</a></h1>
+			
+			<div class="dialog-section">
+				
+				
+				<div id="about-dialog-radios">
+					<input type="radio" id="radio_about" name="about_dialog_radio" value="about" checked="checked"/><label for="radio_about">About</label>
+					<input type="radio" id="radio_instructions" name="about_dialog_radio" value="instructions" /><label for="radio_instructions">Instructions</label>
+				</div>
+				
+				<div id="about-dialog-about">
+					<div class="dialog-subsection">
+						<b><em>About:</em></b> 
+						
+						<p>
+						PHAntom Viewer is an interactive display of known asteroids and comets designated as 
+						"<a href="http://en.wikipedia.org/wiki/Potentially_hazardous_object" target="_BLANK">Potentially Hazardous Objects</a>." This means
+						that each object is on an orbit which takes it within a very close approach to Earth at some point in time and, in
+						the case of an impact, carry the potential to cause significant or catastrophic damage. 
+						</p>
+						
+						<p>
+						Orbital information on more than 1,400 "PHOs" and the planets are obtained from the NASA/Jet Propulsion Laboratory
+						periodically to keep the list current. Orbits as portrayed are static and effects from gravitational influences, such as 
+						a close encounter with Earth or Jupiter, have not yet been implemented. While planet and asteroid orbits are to scale, 
+						the planet sizes and Moon orbit have been exaggerated.
+						</p>
+						
+						<p>
+						This is built as a WebGL experiment using <a href="http://threejs.org/" target="_BLANK">Three.js</a> and is expected
+						to work in the latest versions of Google Chrome, Firefox, & Internet Explorer 11.
+						</p>
+					</div>
+					
+					<div class="dialog-subsection">
+						<b><em>Sources:</em></b> 
+						<ul>
+							<li><i>PHAntom Viewer</i> name: <a href="http://astroengine.com/" target="_BLANK">Ian O'Neill</a></li>
+							<li>Orbital Elements: <a href="http://ssd.jpl.nasa.gov/sbdb_query.cgi" target="_BLANK">NASA/JPL</a></li>
+							<li>Planet Textures: <a href="http://www.shatters.net/celestia/" target="_BLANK">Celestia</a>, NASA</li>
+							<li>Sun Texture: <a href="http://www.celestiamotherlode.net/catalog/show_addon_details.php?addon_id=629" target="_BLANK">Runar Thorvaldsen</a></li>
+							<li>Tycho Star Map: <a href="http://maps.jpl.nasa.gov/stars.html" target="_BLANK">Caltech/JPL</a></li>
+							<li>Hipparcos Star Map: <a href="http://maps.jpl.nasa.gov/stars.html" target="_BLANK">Caltech/JPL</a></li>
+							<li>Yale Bright Star Map: <a href="http://maps.jpl.nasa.gov/stars.html" target="_BLANK">Caltech/JPL</a></li>
+						</ul>
+					</div>
+
+
+					
+					<div class="dialog-section">
+						&copy; 2013 <a href="https://plus.google.com/113761354606401247247/about" target="_BLANK">Kevin M. Gill</a>. All Rights Reserved.
+					</div>
+				</div>
+				
+				<div id="about-dialog-instructions">
+					<div class="dialog-subsection">
+						<b><em>Instructions:</em></b> 
+						
+						<p>
+						Asteroids and comets that come within the configured maximum distance window (default of .15 AU, or 22.5 million kilometers) 
+						are shown. They are colored from green to red as the object approaches Earth, with bright red indicating a very
+						close approach. Objects within the distance window will be displayed in the list on the top right.
+						</p>
+						
+						<ul>
+							<li> Click 'Start' to begin the animation, then control with 'Pause' and 'Resume'.</li>
+							<li> To move to a specific date, set the 'Start Date', then click 'Reset to Start Date'.</li>
+							<li> Adjust the animation speed using 'Animation Speed'.</li>
+							<li> Use 'Targeted Planet' to change which planet is being watched. Note that the asteroid list is optimized
+								for Earth resulting in possibly incomplete lists for other planets.</li>
+						</ul>
+						
+							<b><em>View Controls:</em></b>
+						PHAntom Viewer uses mouse and keyboard based navigation controls, similar to those in Google Earth.
+						<ul>
+							<li><b>Rotating:</b> Rotate the scene by left-clicking and dragging with the mouse</li>
+							<li><b>Pitch/Roll:</b> Control the pitch & roll of the scene by holding down shift while left-clicking and
+					dragging with the mouse.</li>
+							<li><b>Panning:</b> Pan the scene (offsetting the planet from the center, similar to turning your head away from
+					the object of focus) by holding down Ctrl while left-clicking and dragging with the mouse.</li>
+							<li><b>Zooming:</b> Zoom either with the scroll-wheel or by right-clicking and dragging the mouse up or down.</li>
+						</ul>
+					</div>
+				</div>
+				
+				
+				
+				
+				
+				
+			</div>
+			
+			
+		</div>
+		
+		
+		
+		<div id="share-buttons" class="hide-on-embedded">
+			
+			<div class="share-button">
+			
+			
+				<div id="fb-root"></div>
+				<script> if (!AppEnv.isDevMode()) {(function(d, s, id) {
+				  var js, fjs = d.getElementsByTagName(s)[0];
+				  if (d.getElementById(id)) return;
+				  js = d.createElement(s); js.id = id;
+				  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+				  fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));}</script>
+			
+				<div class="fb-like" data-href="http://pha.apoapsys.com" data-send="false" data-layout="button_count" data-width="300" data-show-faces="true" data-colorscheme="dark"></div>
+			
+			
+			</div>
+			
+			<div class="share-button">
+				<a href="https://twitter.com/share" class="twitter-share-button" data-via="kevinmgill" id="tweet-href"></a>
+				<script>
+				if (!AppEnv.isDevMode()) {
+					$("#tweet-href").text("Tweet");
+					!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+				}	
+				</script>
+			</div>
+
+			
+			<div class="share-button">
+				<!-- Place this tag where you want the +1 button to render. -->
+				<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="150"></div>
+
+				<!-- Place this tag after the last +1 button tag. -->
+				<script type="text/javascript">
+				
+				  (function() {
+				  if (!AppEnv.isDevMode()) {
+					var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+					po.src = 'https://apis.google.com/js/plusone.js';
+					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+					}
+				  })();
+				
+				</script>
+			</div>
+			
+			
+			
+			
+		</div>
+		
+		<!--
+		<a id="ce" href="http://www.chromeexperiments.com/detail/planetmaker/?f=" class="hide-on-embedded">
+			<span>This is a Chrome Experiment</span>
+		</a>
+		-->
+		
+		<div id="loading-screen">
+		
+			<div id="loading-content">
+				<img src="/img/sprites/asteroid_looming_over_earth.jpg" id="loading-screen-graphic" title="This particular asteroid, 243 Ida, is not in a Near Earth Orbit." />
+				<div id="loading-label">Loading&hellip;</div>
+				<div id="loading-status">Building Solar System&hellip;</div>
+			</div>
+
+		</div>
+		
+
+		<div id="loading-spinner">
+			<img src/img/spinner.gif" />
+		</div>
+		
+		
+		<script>
+if (!AppEnv.isDevMode() && !AppEnv.noAnalytics()) {
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-3932152-11', 'wthr.us');
+  ga('send', 'pageview', {
+	'dimension1' : 'PHA'
+  });
+
+}
+		</script>
+		
+	</body>
+</html>

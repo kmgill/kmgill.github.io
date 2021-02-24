@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Apoapsys Small Body Lookup Tool</title>
+		<meta charset="utf-8">
+		
+		
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<meta name="description" content=""/>
+		<meta property="og:description" content="" />
+		
+
+		<link href='http://fonts.googleapis.com/css?family=Average+Sans|Rationale' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="/lib/jquery/css/custom-theme/jquery-ui-1.10.2.custom.min.css">
+		<link href="/lib/jquery/plugins/jquery.colorpicker.css" rel="stylesheet" type="text/css"/>
+		<link rel="stylesheet" href="/lib/jquery/plugins/magnific-popup.css"> 
+		
+		<link rel="stylesheet" href="/planet.css" />
+		<link rel="stylesheet" href="/smallbodylookup.css" />
+		
+		<script src="/lib/jquery/js/jquery-1.9.1.min.js"></script>
+		<script src="/lib/jquery/js/jquery-ui-1.10.2.custom.min.js"></script>
+		<script src="/lib/jquery/plugins/jquery.colorpicker.js"></script>
+		<script src="/lib/jquery/plugins/jquery.magnific-popup.min.js"></script>
+		
+		
+		<script src="/lib/moment.min.js"></script>
+		
+		
+		<script src="/lib/three.min.js"></script>
+		<script src="/solarsystem.js"></script>
+		
+		<script src="/lib/jquery/plugins/swatches/jquery.ui.colorpicker-pantone.js"></script>
+		<script src="/lib/jquery/plugins/parts/jquery.ui.colorpicker-rgbslider.js"></script>
+		<script src="/lib/jquery/plugins/parts/jquery.ui.colorpicker-memory.js"></script>
+		
+		<style>
+			
+			
+			
+		</style>
+		<script>
+
+var columnDefinitions;
+var earthOrbit = KMG.CustomOrbits.earth();
+var sunMovement = KMG.CustomOrbits.sun();
+var currentData;
+
+function fmt(v, decimals) {
+	if (!decimals) {
+		decimals = 10000000;
+	}
+	return Math.floor(v * decimals) / decimals;
+}
+
+function currentDistance(o0, o1) {
+	var now = KMG.Util.julianNow();
+	var p0 = o0.positionAtTime(now);
+	
+	var p1 = o1.positionAtTime(now);
+	
+	return p0.distanceTo(p1);
+}
+
+function currentDistanceFromEarthAU(orbit) {
+	return currentDistance(earthOrbit, orbit);
+}
+
+function currentDistanceFromSunAU(orbit) {
+	return currentDistance(sunMovement, orbit);
+}
+
+function appendOrbitalElementsRow(title, field, value, uncertainty, units) {
+	
+
+	$('#orbital-elements-table > tbody:last').append('<tr class="data-row"><td class="data-table-label field_' + field + '" field="' + field + '">' + title + '</td>' + 
+													'<td class="data-table-value">' + (typeof(value) == 'number' ? fmt(value) : value) + '</td>' + 
+													'<td class="data-table-value">' + ((uncertainty !== undefined) ? fmt(uncertainty) : '') + '</td>' + 
+													'<td class="data-table-value">' + ((units) ? units : '') + '</td>' +
+													'</tr>');	
+
+}
+
+function populateOrbitalElementsTable(data) {
+	
+	$("#orbital-elements-table").find("tr").remove();
+	
+	$('#orbital-elements-table > tbody:last').append('<tr><th class="data-table-label-center">Element</th>' + 
+													'<th class="data-table-label-center">Value</th>' + 
+													'<th class="data-table-label-center">Uncertainty</th>' + 
+													'<th class="data-table-label-center">Units</th>' +
+													'</tr>');	
+													
+	appendOrbitalElementsRow('epoch', 'epoch', data.elements.data.epoch, undefined, 'JED');
+	appendOrbitalElementsRow('equinox', 'equinox', data.equinox);
+	appendOrbitalElementsRow('e', 'e', data.elements.data.eccentricity, data.elements.uncertainty.sigma_e, '');
+	appendOrbitalElementsRow('a', 'a', data.elements.data.semiMajorAxis, data.elements.uncertainty.sigma_a, 'AU');
+	appendOrbitalElementsRow('q', 'q', data.elements.data.q, data.elements.uncertainty.sigma_q, 'AU');
+	appendOrbitalElementsRow('i', 'i', data.elements.data.inclination, data.elements.uncertainty.sigma_i, 'deg');
+	appendOrbitalElementsRow('node', 'om', data.elements.data.ascendingNode, data.elements.uncertainty.sigma_om, 'deg');
+	appendOrbitalElementsRow('peri', 'w', data.elements.data.argOfPeriapsis, data.elements.uncertainty.sigma_w, 'deg');
+	appendOrbitalElementsRow('M', 'ma', data.elements.data.meanAnomalyAtEpoch, data.elements.uncertainty.sigma_ma, 'deg');
+	appendOrbitalElementsRow('t<sub>p</sub>', 'tp', data.elements.data.tp, data.elements.uncertainty.sigma_tp, 'JED');
+	appendOrbitalElementsRow('period', 'per', data.elements.data.period, data.elements.uncertainty.sigma_per, 'yr');
+	appendOrbitalElementsRow('n', 'n', data.elements.data.n, data.elements.uncertainty.sigma_n, 'deg/d');
+	appendOrbitalElementsRow('Q', 'ad', data.elements.data.ad, data.elements.uncertainty.sigma_ad, 'AU');
+	appendOrbitalElementsRow('Earth MOID', 'moid', data.moid, undefined, 'AU');
+	appendOrbitalElementsRow('t_jup', 't_jup', data.jupiterTisserandInvariant, undefined, '');
+	
+	
+
+}
+
+function appendOrbitalDeterminationRow(title, field, value) {
+	
+
+	$('#orbital-determination-table > tbody:last').append('<tr class="data-row">' + 
+													'<td class="data-table-label field_' + field + '" field="' + field + '">' + title + '</td>' + 
+													'<td class="data-table-value">' + value + '</td>' + 
+													'</tr>');
+	
+
+}
+
+function populateOrbitalDeterminationTable(data) {
+
+	$("#orbital-determination-table").find("tr").remove();
+		
+	appendOrbitalDeterminationRow("obs. used (total)", "n_obs_used", data.numObsUsed);
+	appendOrbitalDeterminationRow("data-arc span", "data_arc", data.dataArc);
+	appendOrbitalDeterminationRow("first obs. used", "first_obs", data.firstObs);
+	appendOrbitalDeterminationRow("condition code", "condition_code", data.conditionCode);
+	appendOrbitalDeterminationRow("data source", "source", data.source);
+	appendOrbitalDeterminationRow("producer", "producer", data.producer);
+	appendOrbitalDeterminationRow("solution date", "soln_date", data.solnDate);
+}
+
+
+
+function populatePhysicalParamsTable(data) {
+
+	$("#physical-param-table").find("tr").remove();
+		
+	
+	$('#physical-param-table > tbody:last').append('<tr><td class="data-table-label-left">Parameter</td>' + 
+													'<td class="data-table-label-left">Symbol</td>' + 
+													'<td class="data-table-label-left">Value</td>' + 
+													'<td class="data-table-label-left">Units</td>' +
+													'<td class="data-table-label-left">Sigma</td>' +
+													'<td class="data-table-label-left">Reference</td>' +
+													'<td class="data-table-label-left">Notes</td>' +
+													'</tr>');	
+	
+	for (var symbol in data.phys) {
+		var param = data.phys[symbol];
+
+		
+		var columnDef = columnDefinitions.defs[symbol];
+		
+		
+		
+		$('#physical-param-table > tbody:last').append('<tr class="data-row">' + 
+													'<td class="data-table-label-left  field_' + symbol + '">' + columnDef.title + '</td>' + 
+													'<td class="data-table-value">' + symbol + '</td>' + 
+													'<td class="data-table-value">' + param.value + '</td>' + 
+													'<td class="data-table-value">' + columnDef.units + '</td>' + 
+													'<td class="data-table-value">' + ((param.sigma != "") ? param.sigma : "n/a") + '</td>' + 
+													'<td class="data-table-value">' + param.ref + '</td>' + 
+													'<td class="data-table-value">' + param.notes + '</td>' + 
+													'</tr>');	
+		
+		
+	}
+	
+		
+}
+
+function appendCloseApproachDetailRow(title, field, value) {
+	
+	$('#close-approach-detail-table > tbody:last').append('<tr class="data-row">' + 
+																	'<td class="data-table-label field_' + field + '">' + title + '</td>' + 
+																	'<td class="data-table-value">' + (typeof(value) == 'number' ? fmt(value) : value) + '</td>' +
+																	'</tr>');
+}
+
+function populateCloseApproachTable(data) {
+
+	$("#close-approach-table").find("tr").remove();
+		
+	if (data.closeApproaches) {
+		$('#close-approach-table > tbody:last').append('<tr><td class="data-table-label-left">Date</td>' + 
+														'<td class="data-table-label-left">Time Uncertainty</td>' + 
+														'<td class="data-table-label-left">Body</td>' + 
+														'<td class="data-table-label-left">Nominal Dist. (AU)</td>' +
+														'<td class="data-table-label-left">Min. Dist. (AU)</td>' +
+														'<td class="data-table-label-left">Max. Dist. (AU)</td>' +
+														'<td class="data-table-label-left">V-relative (km/s)</td>' +
+														'</tr>');
+		
+		for (var i = 0; i < data.closeApproaches.length; i++) {
+			var approach = data.closeApproaches[i];
+			
+			
+			var guid = KMG.GUID.guid();
+			
+			var a = "<a href='#' id='" + guid + "' iter='" + i + "'>" + moment(KMG.Util.julianToDate(approach.jd)).format("lll") + "</a>";
+			
+			$('#close-approach-table > tbody:last').append('<tr class="data-row">' + 
+														'<td class="data-table-value">' + a + '</td>' + 
+														'<td class="data-table-value">' + approach.t_sigma_f + '</td>' +
+														'<td class="data-table-value">' + approach.body + '</td>' +
+														'<td class="data-table-value">' + fmt(approach.dist) + '</td>' +
+														'<td class="data-table-value">' + fmt(approach.dist_min) + '</td>' +
+														'<td class="data-table-value">' + fmt(approach.dist_max) + '</td>' +
+														'<td class="data-table-value">' + fmt(approach.v_rel) + '</td>' +
+														'</tr>');
+
+/*		
+cd			Date/Time (TDB)	
+t_sigma_f	Time Uncertainty (days_HH:MM)	
+body		Body	
+dist		Nominal Distance (AU)	
+dist_min	Minimum Distance (AU)	
+dist_max	Maximum Distance (AU)	
+v_rel		V-relative (km/s)	
+v_inf		V-infinity (km/s)	
+jd			JD (TDB)	
+t_sigma		Time Uncertainty (minutes)	
+s_major		Semi-major axis (km)	
+s_minor		Semi-minor axis (km)	
+theta		range-LOV angle (deg)	
+n_sig		N-sigma	
+bplane		BP	
+orbit_id	Orbit Ref.	
+ref			Reference	
+
+*/
+			
+			
+			$( "#" + guid ).click(function(e) {
+				e.preventDefault();
+				
+				var iter = $(this).attr("iter");
+				var approach = currentData.closeApproaches[iter];
+				
+				$("#close-approach-detail-table").find("tr").remove();
+				
+				
+				appendCloseApproachDetailRow("Date/Time (TDB)", "cd", approach.cd);
+				appendCloseApproachDetailRow("Time Uncertainty (days_HH:MM)", "t_sigma_f", approach.t_sigma_f);
+				appendCloseApproachDetailRow("Body", "body", approach.body);
+				appendCloseApproachDetailRow("Nominal Distance (AU)", "dist", approach.dist);
+				appendCloseApproachDetailRow("Minimum Distance (AU)", "dist_min", approach.dist_min);
+				appendCloseApproachDetailRow("Maximum Distance (AU)", "dist_max", approach.dist_max);
+				appendCloseApproachDetailRow("V-relative (km/s)", "v_rel", approach.v_rel);
+				appendCloseApproachDetailRow("V-infinity (km/s)", "v_inf", approach.v_inf);
+				appendCloseApproachDetailRow("JD (TDB)", "jd", approach.jd);
+				appendCloseApproachDetailRow("Time Uncertainty (minutes)", "t_sigma", approach.t_sigma);
+				appendCloseApproachDetailRow("Semi-major axis (km)", "s_major", approach.s_major);
+				appendCloseApproachDetailRow("Semi-minor axis (km)", "s_minor", approach.s_minor);
+				appendCloseApproachDetailRow("range-LOV angle (deg)", "theta", approach.theta);
+				appendCloseApproachDetailRow("N-sigma", "n_sig", approach.n_sig);
+				appendCloseApproachDetailRow("BP", "bplane", approach.bplane);
+				appendCloseApproachDetailRow("Orbit Ref.", "orbit_id", approach.orbit_id);
+				appendCloseApproachDetailRow("Reference", "ref", approach.ref);												
+				
+				
+				$( "#close-approach-dialog" ).dialog("open");
+				
+			});										
+		}
+	} else {
+		$('#close-approach-table > tbody:last').append('<tr><td class="data-table-label-center">No Close Approach Data</td></tr>');
+	}
+	
+}
+
+function loadImage(data) {
+
+	$("#image-container").find("img").remove();	
+	if (data._attachments) {
+		$( "#image-outter-row" ).css("display", "block");
+		$( "#image-outter-row" ).addClass("only-with-data");
+		for (var name in data._attachments) {
+			
+			var url = "/api/attachment/" + data._id + "?name=" + name;
+			
+			var guid = KMG.GUID.guid();
+			
+			var a = $("<a/>").attr("href", url)
+							.attr("id", guid)
+							.attr("title", data.imageCredit)
+							.appendTo($( "#image-container" ));
+			
+			var img = $("<img/>").attr("src", url)
+					.attr("id", guid)
+					.attr("rel", "lightbox")
+					.attr("data-lightbox", "image-1")
+					.attr("title", data.imageCredit)
+					.appendTo(a);
+			
+			if (data.imageSource) {
+				$( "#image-credit" ).html("<a href='" + data.imageSource + "' target='_BLANK'>" + data.imageCredit + "</a>");
+			} else {
+				$( "#image-credit" ).text(data.imageCredit);
+			}
+			
+			
+			$('#' + guid).magnificPopup({type:'image'});
+			
+			break; // Only load one image for now...
+		}
+	} else {
+		$( "#image-outter-row" ).css("display", "none");
+		$( "#image-outter-row" ).removeClass("only-with-data");
+	}
+		
+	
+}
+
+function translateClass(c) {
+	switch (c) {
+	case "AMO": 
+		return "Amor";
+	case "APO":
+		return "Apollo";
+	case "ATE":
+		return "Atens";
+	case "IEO":
+		return "Atiras";
+	default: 
+		return c;
+	};
+	
+}
+
+
+function fetchCurrentDistances(id) {
+	
+	$.ajax({
+		url: "/api/position/?objects=sun,earth," + id,
+		dataType: "json",
+		error: function( jqXHR, textStatus, errorThrown ) {
+			console.warn("Error: " + errorThrown);
+		
+		},
+		success: function(data, textStatus, jqxhr) {
+			
+		}
+	}).done(function(data) {
+		
+		var sun, earth, orbit;
+		
+		for (var i = 0; i < data.data[0].positions.length; i++) {
+			var pos = data.data[0].positions[i];
+			if (pos.object == "sun") {
+				sun = new THREE.Vector3(pos.vector.x, pos.vector.y, pos.vector.z);
+			}
+			if (pos.object == "earth") {
+				earth = new THREE.Vector3(pos.vector.x, pos.vector.y, pos.vector.z);
+			}
+			if (pos.object == id) {
+				orbit = new THREE.Vector3(pos.vector.x, pos.vector.y, pos.vector.z);
+			}
+			
+		}
+		
+		if (sun && earth && orbit) {
+			var sunDistance = sun.distanceTo(orbit);
+			var earthDistance = earth.distanceTo(orbit);	
+
+			
+			$("#current-distance-earth-cell").text(fmt(earthDistance) + " AU (" + fmt(earthDistance * KMG.AU_TO_KM, 100) + " km)");
+			$("#current-distance-sun-cell").text(fmt(sunDistance) + " AU (" + fmt(sunDistance * KMG.AU_TO_KM, 100) + " km)");
+			
+		}
+		
+		
+	});
+};
+
+
+function load(id) {
+	console.info("Loading " + id);
+	
+	$.ajax({
+		url: "/api/data/" + id,
+		dataType: "json",
+		error: function( jqXHR, textStatus, errorThrown ) {
+			console.warn("Error: " + errorThrown);
+		
+		},
+		success: function(data, textStatus, jqxhr) {
+			
+		}
+	}).done(function(data) {
+		
+		currentData = data;
+		$("#object-name").text(data.fullName);
+		
+		var classification = translateClass(data.group);
+		if (data.neo && !data.pha) {
+			classification += " [NEO]";
+		} else if (data.neo && data.pha) {
+			classification += " [NEO, PHA]";
+		} else if (!data.neo && !data.pha) {
+			classification += " [PHA]";
+		}
+		
+		
+		
+		$("#locate-cell").html("<a href='http://solar.apoapsys.com/track/" + id + "' target='_BLANK' class='visuals-links'>[ Location in Sky ]</a>");
+		$("#orbit-cell").html("<a href='http://solar.apoapsys.com/#loadecObjects=&customObjects=" + id + "&focusPoint=" + data.name + "&scale=0.3&orientation=-0.7,0.0,0.0,0.7' target='_BLANK' class='visuals-links'>[ View Orbit ]</a>");
+		$("#classification-cell").text(classification);
+		$("#spkid-cell").text(data.spkid);
+		
+		$("#jpl-link-cell").html("<a href='http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=" + data.name.replace(/[\(\)]/g, "") + "' target='_BLANK' class='visuals-links'>[ More Info @ (NASA/JPL) ]</a>");
+		
+		populateOrbitalElementsTable(data);
+		populateOrbitalDeterminationTable(data);
+		populatePhysicalParamsTable(data);
+		populateCloseApproachTable(data);
+		loadImage(data);
+		
+		
+		fetchCurrentDistances(id);
+		//var orbit = new KMG.EllipticalOrbit(data.elements.data); 
+		
+		/*
+		var distanceAU = currentDistanceFromEarthAU(orbit);
+		var distanceKM = distanceAU * KMG.AU_TO_KM;
+		$("#current-distance-earth-cell").text(fmt(distanceAU) + " AU (" + fmt(distanceKM, 100) + " km)");
+		
+		
+		var distanceAU = currentDistanceFromSunAU(orbit);
+		var distanceKM = distanceAU * KMG.AU_TO_KM;
+		$("#current-distance-sun-cell").text(fmt(distanceAU) + " AU (" + fmt(distanceKM, 100) + " km)");
+		*/
+		
+		for (var field in columnDefinitions.defs) {
+			var def = columnDefinitions.defs[field];
+			var el = $(".field_" + field);
+			if (el && el.length > 0) {
+				
+				var label = el.text();
+				var guid = KMG.GUID.guid();
+				el.html("<a href='#' id='" + guid + "' field='" + field + "'>" + label + "</a>");
+				$("#" + guid).click(function(e) {
+					e.preventDefault();
+					var label = $(this).text();
+					var field = $(this).attr("field");
+					console.info("Clicked " + label + " (" + field + ")");
+					
+					var def = columnDefinitions.defs[field];
+					
+					
+					
+					$( "#definition-title" ).text(def.title);
+					$( "#definition-description" ).text(def.description);
+					$( "#definition-units" ).text(def.units);
+					$( "#definition-dialog" ).dialog("open");
+					
+					//definition-dialog
+					//definition-title
+					//definition-description
+					
+					
+				});
+				
+			}
+		}
+		
+		
+		
+		$(".only-with-data").css("display", "block");
+		
+		document.title = data.fullName + " | Apoapsys Small Body Lookup Tool";
+		
+		initialUrl = document.location.href.split(/[?#]/)[0];
+		window.history.pushState({id:id}, data.fullName, initialUrl + "?id=" + id); 
+	});
+}
+
+
+function getIdFromQueryString() {
+	return AppEnv.getUrlVar("id");
+}
+
+
+$(function() {
+	
+	$(".only-with-data").css("display", "none");
+	
+	
+	$( "#about-dialog" ).dialog({
+		width: 500,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		}
+	});
+	$( "#about-link" ).click(function(e) {
+		e.preventDefault();
+		$( "#about-dialog" ).dialog("open");
+	});
+	$( "#about-close-button" ).button().click(function(e) {
+		$( "#about-dialog" ).dialog("close");
+	});
+	
+	
+	
+	
+	$( "#close-approach-dialog" ).dialog({
+		width: 700,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		}
+	});
+	$( "#close-approach-close-button" ).button().click(function(e) {
+		$( "#close-approach-dialog" ).dialog("close");
+	});
+	
+	
+	
+	
+	$( "#definition-dialog" ).dialog({
+		width: 500,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		}
+	});
+	$( "#definition-close-button" ).button().click(function(e) {
+		$( "#definition-dialog" ).dialog("close");
+	});
+	
+	$( "#search-input" ).autocomplete({
+		source: "/api/neo/list/",
+		minLength: 0,
+		delay : 0,
+		data: {
+			max: 15
+		},
+		select: function( event, ui ) {
+			$("#search-submit").button({disabled:false});
+		},
+		change: function( event, ui ) {
+			
+		},
+		search: function( event, ui ) {
+			$("#search-submit").button({disabled:true});
+		}
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+		item.value = item.id + " - " + item.name;
+		item.label = item.id + " - " + item.name;
+		return $( "<li>" )
+			.attr( "data-value", item.value )
+			.append( $( "<a>" ).text( item.label ) )
+			.appendTo( ul );
+    };
+	
+	 $("#search-submit").button({disabled:true}).click(function(e) {
+		console.info("Submitted with value: " + $( "#search-input" ).val());
+		var fullname = $( "#search-input" ).val();
+		var id = fullname.split(" - ")[0];
+		var name = fullname.split(" - ")[1];
+		
+		load(id);
+		
+	});
+	
+	
+	$.ajax({
+		url: "/api/data/sbdb-column-defs",
+		dataType: "json",
+		error: function( jqXHR, textStatus, errorThrown ) {
+			console.warn("Error: " + errorThrown);
+		
+		},
+		success: function(data, textStatus, jqxhr) {
+			
+		}
+	}).done(function(data) {
+		
+		columnDefinitions = data;
+		$("#search-input").prop("disabled", false);
+		
+		var qs = getIdFromQueryString();
+		if (qs && qs.length > 0) {
+			load(qs);
+		}
+	});
+	
+	
+	window.onpopstate = function(event) {
+		if (event.state) {
+			load(event.state.id);
+		}
+	};
+});		
+		
+		
+		
+		</script>
+	</head>
+	<body>
+	
+	
+		
+		<!---<div id="container"></div>-->
+		
+		
+		<div class="outter-container">
+			
+			<div class="container-row">
+				<div id="page-title-container-inline" class="hide-on-embedded">
+					<a href="http://solar.apoapsys.com/" id="page-title-link">Small Body Lookup Tool [beta]</a>
+				</div>	
+
+			</div>
+			
+			
+			<div class="container-row">
+				<div id="search-container" class="box-container box-wide">
+					<label for="search-input">Search:</label>
+					<input type="text" id="search-input" disabled=true placeholder="Asteroid Name or ID"></input>
+					<input type="button" id="search-submit" value="Submit" />
+					
+					<a href="#" id="about-link" class="top-link">[About]</a>
+					
+				</div>
+				
+
+			</div>
+			
+			<div class="container-row only-with-data">
+				<div id="top-data-container" class="box-container box-wide">
+					<div class="box-header" id="object-name" ></div>
+					<table  class="data-table">
+						<tbody>
+							<tr>
+								<td class="data-table-value-right" id="locate-cell" style="width:50%" colspan="2">
+								
+								</td>
+								<td class="data-table-value" id="orbit-cell" colspan="2">
+								
+								</td>
+							</tr>
+							<tr>
+								<td class="data-table-value-center" id="jpl-link-cell" colspan="4">
+								
+								</td>
+							</tr>
+							<tr>
+								<td class="data-table-label">
+									Classification:
+								</td>
+								<td class="data-table-value" id="classification-cell">
+									
+								</td>
+								<td class="data-table-label">
+									SPK-ID:
+								</td>
+								<td class="data-table-value" id="spkid-cell">
+									
+								</td>
+							</tr>
+							<tr>
+								<td class="data-table-label" style="width:50%" colspan="2">
+									Current Distance from Sun:
+								</td>
+								<td class="data-table-value" id="current-distance-sun-cell" colspan="2">
+								
+								</td>
+							</tr>
+							<tr>
+								<td class="data-table-label" style="width:50%" colspan="2">
+									Current Distance from Earth:
+								</td>
+								<td class="data-table-value" id="current-distance-earth-cell" colspan="2">
+								
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				
+				</div>
+				
+			</div>
+			<div class="container-row only-with-data">
+			
+				<div id="orbital-elements-container" class="box-container">
+					<div class="box-header">Orbital Elements</div>
+					<div id="orbital-elements-data">
+						<table id="orbital-elements-table" class="data-table">
+							<tbody>
+							</tbody>
+						</table>
+						
+					</div>
+				</div>
+				
+				<div id="orbital-determination-container" class="box-container">
+					<div class="box-header">Orbit Determination</div>
+					<div id="orbital-determination-data">
+					
+						<table id="orbital-determination-table" class="data-table">
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div class="container-row only-with-data">
+				<div id="physical-param-container" class="box-container box-wide">
+					<div class="box-header">Physical Parameters</div>
+					
+					
+					<div id="physical-param-data">
+					
+						<table id="physical-param-table" class="data-table">
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div id="image-outter-row" class="container-row only-with-data">
+				<div id="image-container" class="box-container box-wide">
+					<div class="box-header">Image</div>
+					
+					<div id="image-container"></div>
+					<div>Credit: <span id="image-credit"></span></div>
+				</div>
+			</div>
+			
+			<div class="container-row only-with-data">
+				<div id="close-approach-container" class="box-container box-wide">
+					<div class="box-header">Close Approaches</div>
+					
+					
+					<div id="close-approach-data">
+					
+						<table id="close-approach-table" class="data-table">
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div class="container-row">
+				<table class="data-table">
+					<tbody>
+						<tr>
+							<td>
+								&copy; <a href="http://www.apoapsys.com">Kevin M. Gill</a> 2014
+							</td>
+							<td>
+								<a href="#">Back to top</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<div id="definition-dialog" title="Definition">
+			<div class="dialog-section">
+				<p>
+					<div><span id="definition-title" class="definition-term-label"></span></div>
+					<div><span class="definition-label">Definition: </span><span id="definition-description"></span></div>
+					<div><span class="definition-label">Units: </span><span id="definition-units"></span></div>
+				</p>
+				<p>
+					<input type="button" value="Close" id="definition-close-button"/>
+				</p>
+			</div>
+		</div>
+		
+		<div id="close-approach-dialog" title="Close Approach">
+			<div class="dialog-section">
+				<div id="close-approach-detail-data">
+					<table id="close-approach-detail-table" class="data-table">
+						<tbody>
+						</tbody>
+					</table>
+				
+				</div>
+				<p>
+					<input type="button" value="Close" id="close-approach-close-button"/>
+				</p>
+			</div>
+
+		</div>
+		
+		
+		<div id="about-dialog" title="About">
+			<h1><a href="/">Small Body Lookup Tool</a></h1>
+			
+			<div class="dialog-section">
+				A tool for viewing information about near-Earth asteroids. Data courtesy 
+				<a href="http://ssd.jpl.nasa.gov/sbdb.cgi" target="_BLANK">JPL Small-Body Database</a> from the
+				JPL Solar System Dynamics group. Data is refreshed daily.
+			</div>
+			
+			<div class="dialog-section">
+				&copy; <a href="http://www.apoapsys.com">Kevin M. Gill</a> 2014
+			</div>
+			
+			<p>
+				<input type="button" value="Close" id="about-close-button"/>
+			</p>
+		</div>
+		
+				<script>
+			
+if (!AppEnv.isDevMode() && !AppEnv.noAnalytics()) {
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-3932152-11', 'apoapsys.com');
+  ga('send', 'pageview', {
+	'dimension1' : 'Small Body Lookup Tool'
+  });
+
+}
+
+	</script>
+	</body>
+</html>

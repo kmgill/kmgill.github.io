@@ -1,0 +1,270 @@
+[
+	{
+		"name" : "Sun",
+		"symbol" : "☉",
+		"center" : "",
+		"fetchElements" : false,
+		"search" : "10",
+		"type" : "planet",
+		"customOrbit" : "CustomSunOrbit",
+		"customRotation" : "IAUSunRotation",
+		"lightEmitting" : true,
+		"radius" : 696342,
+		"flattening" : 9.1e-6,
+		"id" : 1000000
+	},
+	{
+		"name" : "Mercury",
+		"symbol" : "☿",
+		"center" : "10",
+		"search" : "199",
+		"type" : "planet",
+		"customOrbit" : "CustomMercuryOrbit",
+		"customRotation" : "IAUMercuryRotation",
+		"fetchElements" : false,
+		"radius" : 2440,
+		"flattening" : 0.0,
+		"id" : 1000100
+	},
+	{
+		"name" : "Venus",
+		"symbol" : "♀",
+		"center" : "10",
+		"search" : "299",
+		"type" : "planet",
+		"customOrbit" : "CustomVenusOrbit",
+		"customRotation" : "IAUVenusRotation",
+		"fetchElements" : false,
+		"radius" : 6051.8,
+		"flattening" : 0.0,
+		"id" : 1000200
+	},
+	{
+		"name" : "Earth",
+		"symbol" : "ⴲ",
+		"center" : "10",
+		"search" : "399",
+		"type" : "planet",
+		"radius" : 6378.1,
+		"flattening" : 0.0033528,
+		"customRotation": "IAUEarthRotation", 
+		"customOrbit" : "CustomEarthOrbit",
+		"fetchElements" : false,
+		"id" : 1000300,
+		"moons" : [
+			{ "name" : "Moon", "symbol" : "☾", "center" : "399", "search" : "301", "type" : "moon", "radius" : 1735.97, "customOrbit" : "CustomMoonOrbit", "fetchElements" : false, "customRotation" : "IAULunarRotation", "flattening" : 0.00125, "id" : 1000301 }
+		]
+	},
+	{
+		"name" : "Mars",
+		"symbol" : "♂",
+		"center" : "10",
+		"search" : "499",
+		"type" : "planet",
+		"radius" : 3389.9,
+		"customRotation": "IAUMarsRotation", 
+		"customOrbit" : "CustomMarsOrbit",
+		"fetchElements" : false,
+		"flattening" : 0.00589,
+		"id" : 1000400,
+		"moons" : [
+			{ "name" : "Phobos", "center" : "499", "search" : "401", "type" : "moon", "radius" : 11.1, "flattening" : 0.0, "id" : 1000401 },
+			{ "name" : "Deimos", "center" : "499", "search" : "402", "type" : "moon", "radius" : 6.0, "flattening" : 0.0, "id" : 1000402 }
+		]
+	},
+	{ "name" : "Ceres", "center" : "10", "search" : "NAME=Ceres", "type" : "minorplanet", "radius" : 476.2, "flattening" : 0.0, "id" : 1000500 },
+	{ "name" : "Vesta", "center" : "10", "search" : "NAME=Vesta", "type" : "minorplanet", "radius" : 265, "flattening" : 0.0, "id" : 1000600 },
+	{ "name" : "67P/Churyumov-Gerasimenko", "center" : "10", "search" : "900645", "type" : "minorplanet", "radius" : 2, "flattening" : 0.0, "id" : 900645 },
+	{
+		"name" : "Jupiter",
+		"symbol" : "♃",
+		"center" : "10",
+		"search" : "599",
+		"type" : "planet",
+		"radius" : 69911,
+		"flattening" : 0.06487,
+		"customRotation": "IAUJupiterRotation", 
+		"customOrbit" : "CustomJupiterOrbit",
+		"fetchElements" : false,
+		"id" : 1000700,
+		"moons" : [
+			{ "name" : "Io", "center" : "599", "search" : "501", "type" : "moon", "radius" : 1821.3, "customOrbit" : "CustomIoOrbit", "customRotation" : "IAUIoRotation", "flattening" : 0.0, "id" : 1000701 },
+			{ "name" : "Europa", "center" : "599", "search" : "502", "type" : "moon", "radius" : 1565, "customOrbit" : "CustomEuropaOrbit", "customRotation" : "IAUEuropaRotation", "flattening" : 0.0, "id" : 1000702 },
+			{ "name" : "Ganymede", "center" : "599", "search" : "503", "type" : "moon", "radius" : 2634, "customOrbit" : "CustomGanymedeOrbit", "customRotation" : "IAUGanymedeRotation", "flattening" : 0.0, "id" : 1000703 },
+			{ "name" : "Callisto", "center" : "599", "search" : "504", "type" : "moon", "radius" : 2403, "customOrbit" : "CustomCallistoOrbit", "customRotation" : "IAUCallistoRotation", "flattening" : 0.0, "id" : 1000704 },
+			
+			{ "name" : "Amalthea", "center" : "599", "search" : "505", "type" : "moon", "radius" : 131, "flattening" : 0.0, "id" : 1000705 },
+			{ "name" : "Himalia", "center" : "599", "search" : "506", "type" : "moon", "radius" : 85, "flattening" : 0.0, "id" : 1000706 },
+			{ "name" : "Elara", "center" : "599", "search" : "507", "type" : "moon", "radius" : 40, "flattening" : 0.0, "id" : 1000707 },
+			{ "name" : "Pasiphae", "center" : "599", "search" : "508", "type" : "moon", "radius" : 18, "flattening" : 0.0, "id" : 1000708 },
+			{ "name" : "Sinope", "center" : "599", "search" : "509", "type" : "moon", "radius" : 14, "flattening" : 0.0, "id" : 1000709 },
+			{ "name" : "Lysithea", "center" : "599", "search" : "510", "type" : "moon", "radius" : 12, "flattening" : 0.0, "id" : 1000710 },
+			
+			{ "name" : "Carme", "center" : "599", "search" : "511", "type" : "moon", "radius" : 15, "flattening" : 0.0, "id" : 1000711 },
+			{ "name" : "Ananke", "center" : "599", "search" : "512", "type" : "moon", "radius" : 10, "flattening" : 0.0, "id" : 1000712 },
+			{ "name" : "Leda", "center" : "599", "search" : "513", "type" : "moon", "radius" : 5, "flattening" : 0.0, "id" : 1000713 },
+			{ "name" : "Thebe", "center" : "599", "search" : "514", "type" : "moon", "radius" : 50, "flattening" : 0.0, "id" : 1000714 },
+			{ "name" : "Adrastea", "center" : "599", "search" : "515", "type" : "moon", "radius" : 10, "flattening" : 0.0, "id" : 1000715 },
+			{ "name" : "Metis", "center" : "599", "search" : "516", "type" : "moon", "radius" : 20, "flattening" : 0.0, "id" : 1000716 }
+			
+			
+			
+			
+		]
+	},
+	{
+		"name" : "Saturn",
+		"symbol" : "♄",
+		"center" : "10",
+		"search" : "699",
+		"type" : "planet",
+		"radius" : 58232,
+		"customRotation": "IAUSaturnRotation", 
+		"customOrbit" : "CustomSaturnOrbit",
+		"fetchElements" : false,
+		"flattening" : 0.09796,
+		"id" : 1000800,
+		"ring" : {
+			"innerRadius" : 74500,
+			"outterRadius" : 140220,
+			"rotation" : [90, 0, 0]
+		},
+		"moons" : [
+			{ "name" : "Mimas", "center" : "699", "search" : "601", "type" : "moon", "radius" : 198.8, "flattening" : 0.0, "id" : 1000801 },
+			{ "name" : "Enceladus", "center" : "699", "search" : "602", "type" : "moon", "radius" : 252.3, "flattening" : 0.0, "id" : 1000802 },
+			{ "name" : "Tethys", "center" : "699", "search" : "603", "type" : "moon", "radius" : 536.3, "flattening" : 0.0, "id" : 1000803 },
+			{ "name" : "Dione", "center" : "699", "search" : "604", "type" : "moon", "radius" : 562.5, "flattening" : 0.0, "id" : 1000804 },
+			{ "name" : "Rhea", "center" : "699", "search" : "605", "type" : "moon", "radius" : 764.5, "flattening" : 0.0, "id" : 1000805 },
+			{ "name" : "Titan", "center" : "699", "search" : "606", "type" : "moon", "radius" : 2575.5, "flattening" : 0.0, "customRotation" : "IAUTitanRotation", "id" : 1000806 },
+			{ "name" : "Hyperion", "center" : "699", "search" : "607", "type" : "moon", "radius" : 133, "flattening" : 0.0, "id" : 1000807 },
+			{ "name" : "Iapetus", "center" : "699", "search" : "608", "type" : "moon", "radius" : 734.5, "flattening" : 0.0, "id" : 1000808 },
+			{ "name" : "Phoebe", "center" : "699", "search" : "609", "type" : "moon", "radius" : 106.6, "flattening" : 0.0, "id" : 1000809 },
+			{ "name" : "Janus", "center" : "699", "search" : "610", "type" : "moon", "radius" : 95, "flattening" : 0.0, "id" : 1000810 },
+			{ "name" : "Epimetheus", "center" : "699", "search" : "611", "type" : "moon", "radius" : 55, "flattening" : 0.0, "id" : 1000811 },
+			{ "name" : "Helene", "center" : "699", "search" : "612", "type" : "moon", "radius" : 16, "flattening" : 0.0, "id" : 1000812 },
+			{ "name" : "Telesto", "center" : "699", "search" : "613", "type" : "moon", "radius" : 12.5, "flattening" : 0.0, "id" : 1000813 },
+			{ "name" : "Calypso", "center" : "699", "search" : "614", "type" : "moon", "radius" : 15, "flattening" : 0.0, "id" : 1000814 },
+			{ "name" : "Atlas", "center" : "699", "search" : "615", "type" : "moon", "radius" : 17, "flattening" : 0.0, "id" : 1000815 },
+			{ "name" : "Prometheus", "center" : "699", "search" : "616", "type" : "moon", "radius" : 74, "flattening" : 0.0, "id" : 1000816 },
+			{ "name" : "Pandora", "center" : "699", "search" : "617", "type" : "moon", "radius" : 55, "flattening" : 0.0, "id" : 1000817 },
+			{ "name" : "Pan", "center" : "699", "search" : "618", "type" : "moon", "radius" : 10, "flattening" : 0.0, "id" : 1000818 }
+		]
+	},
+	{
+		"name" : "Uranus",
+		"symbol" : "♅",
+		"center" : "10",
+		"search" : "799",
+		"type" : "planet",
+		"customOrbit" : "CustomUranusOrbit",
+		"customRotation" : "IAUUranusRotation",
+		"fetchElements" : false,
+		"radius" : 25362,
+		"flattening" : 0.0229,
+		"id" : 1000900,
+		"ring" : {
+			"innerRadius" : 38000,
+			"outterRadius" : 98000,
+			"rotation" : [0, 90, 90]
+		},
+		"moons" : [
+			{ "name" : "Ariel", "center" : "799", "search" : "701", "type" : "moon", "radius" : 577.9, "flattening" : 0.0, "id" : 1000901 },
+			{ "name" : "Umbriel", "center" : "799", "search" : "702", "type" : "moon", "radius" : 584.7, "flattening" : 0.0, "id" : 1000902 },
+			{ "name" : "Titania", "center" : "799", "search" : "703", "type" : "moon", "radius" : 788.9, "flattening" : 0.0, "id" : 1000903 },
+			{ "name" : "Oberon", "center" : "799", "search" : "704", "type" : "moon", "radius" : 761.4, "flattening" : 0.0, "id" : 1000904 },
+			{ "name" : "Miranda", "center" : "799", "search" : "705", "type" : "moon", "radius" : 234.2, "flattening" : 0.0, "id" : 1000905 },
+			{ "name" : "Cordelia", "center" : "799", "search" : "706", "type" : "moon", "radius" : 13, "flattening" : 0.0, "id" : 1000906 },
+			{ "name" : "Ophelia", "center" : "799", "search" : "707", "type" : "moon", "radius" : 16, "flattening" : 0.0, "id" : 1000907 },
+			{ "name" : "Bianca", "center" : "799", "search" : "708", "type" : "moon", "radius" : 22, "flattening" : 0.0, "id" : 1000908 },
+			{ "name" : "Cressida", "center" : "799", "search" : "709", "type" : "moon", "radius" : 33, "flattening" : 0.0, "id" : 1000909 },
+			{ "name" : "Desdemona", "center" : "799", "search" : "710", "type" : "moon", "radius" : 29, "flattening" : 0.0, "id" : 1000910 },
+			{ "name" : "Juliet", "center" : "799", "search" : "711", "type" : "moon", "radius" : 42, "flattening" : 0.0, "id" : 1000911 },
+			{ "name" : "Portia", "center" : "799", "search" : "712", "type" : "moon", "radius" : 55, "flattening" : 0.0, "id" : 1000912 },
+			{ "name" : "Rosalind", "center" : "799", "search" : "713", "type" : "moon", "radius" : 29, "flattening" : 0.0, "id" : 1000913 },
+			{ "name" : "Belinda", "center" : "799", "search" : "714", "type" : "moon", "radius" : 34, "flattening" : 0.0, "id" : 1000914 },
+			{ "name" : "Puck", "center" : "799", "search" : "715", "type" : "moon", "radius" : 77, "flattening" : 0.0, "id" : 1000915 },
+			{ "name" : "Caliban", "center" : "799", "search" : "716", "type" : "moon", "radius" : 30, "flattening" : 0.0, "id" : 1000916 },
+			{ "name" : "Sycorax", "center" : "799", "search" : "717", "type" : "moon", "radius" : 60, "flattening" : 0.0, "id" : 1000917 }
+		]
+	},
+	{
+		"name" : "Neptune",
+		"symbol" : "♆",
+		"center" : "10",
+		"search" : "899",
+		"type" : "planet",
+		"customOrbit" : "CustomNeptuneOrbit",
+		"customRotation" : "IAUNeptuneRotation",
+		"fetchElements" : false,
+		"radius" : 24624,
+		"flattening" : 0.0171,
+		"id" : 1001000,
+		"ring" : {
+			"innerRadius" : 40900,
+			"outterRadius" : 62932,
+			"rotation" : [90, 0, 0]
+		},
+		
+		"moons" : [
+			{ "name" : "Triton", "center" : "899", "search" : "801", "type" : "moon", "radius" : 1352.6, "flattening" : 0.0, "id" : 1001001 }
+		]
+	},
+	{
+		"name" : "Pluto",
+		"symbol" : "♇",
+		"center" : "10",
+		"search" : "999",
+		"type" : "minorplanet",
+		"radius" : 1195,
+		"flattening" : 0.0,
+		"id" : 1001100,
+		"moons" : [
+			{ "name" : "Charon", "center" : "999", "search" : "901", "type" : "moon", "radius" : 605, "flattening" : 0.0, "id" : 1001101 },
+			{ "name" : "Nix", "center" : "999", "search" : "902", "type" : "moon", "radius" : 50, "flattening" : 0.0, "id" : 1001102 },
+			{ "name" : "Hydra", "center" : "999", "search" : "903", "type" : "moon", "radius" : 50, "flattening" : 0.0, "id" : 1001103 },
+			{ "name" : "Kerberos", "center" : "999", "search" : "904", "type" : "moon", "radius" : 50, "flattening" : 0.0, "id" : 1001104 },
+			{ "name" : "Styx", "center" : "999", "search" : "905", "type" : "moon", "radius" : 50, "flattening" : 0.0, "id" : 1001105 }
+		]
+	},
+	{
+		"name" : "Makemake",
+		"center" : "10",
+		"search" : "NAME=MAKEMAKE",
+		"type" : "minorplanet",
+		"radius" : 715,
+		"flattening" : 0.0,
+		"id" : 1001200
+	},
+	{
+		"name" : "Sedna",
+		"center" : "10",
+		"search" : "NAME=Sedna",
+		"type" : "minorplanet",
+		"radius" : 995,
+		"flattening" : 0.0,
+		"id" : 1001300
+	},
+	{
+		"name" : "Haumea",
+		"center" : "10",
+		"search" : "NAME=Haumea",
+		"type" : "minorplanet",
+		"radius" : 620,
+		"flattening" : 0.0,
+		"id" : 1001400
+	},
+	{
+		"name" : "Eris",
+		"center" : "10",
+		"search" : "NAME=Eris",
+		"type" : "minorplanet",
+		"radius" : 1163,
+		"flattening" : 0.0,
+		"id" : 1001500
+	}
+
+
+
+
+
+]

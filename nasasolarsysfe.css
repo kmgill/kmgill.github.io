@@ -1,0 +1,214 @@
+
+body {
+	color: #808080;
+	font-family: 'Average Sans', sans-serif;
+	margin: 0px;
+	overflow: auto;
+	-webkit-backface-visibility: hidden;
+	font-size: 11px;
+	background: #050505;
+
+}
+
+label {
+	vertical-align: middle;
+	font-size: 1.3em;
+	font-weight: bold;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.79);
+	line-height: 2.0em;
+}
+
+select {
+	vertical-align: middle;
+}
+
+#social-media-links {
+float: left;
+	text-align: left;
+	width: 200px;
+	border: 0px;
+	padding: 0px;
+	margin: 0px;
+	height: 30px;
+	padding-left: 10px;
+}
+
+ .social-button {
+	float: left;
+	padding-right: 5px;
+}
+
+ .social-button div{
+	vertical-align: top;
+	padding: 0px;
+	margin: 0px;
+ }
+
+.ui-datepicker-trigger {
+	vertical-align: middle;
+	margin-left: 2px;
+}
+
+.sim-image-error {
+	font-weight: bold;
+	color: #FF0000;
+	display: block;
+	margin-bottom: 20px;
+}
+
+.sim-image-title {
+	font-weight: bold;
+	margin-top: 10px;
+}
+
+#animation-container  img {
+	width: 450px;
+}
+
+#presets-container {
+	font-weight: bold;
+	font-size: 1.3em;
+	padding-left: 10px;
+}
+
+#presets-container  a {
+	margin-left: 10px;
+}
+
+#page-title-container-inline {
+	display: inline-block;
+	padding: 6px 5px 5px 10px;
+	text-align: left;
+	font-size: 40px;
+	font-weight: bold;
+	text-shadow: 1px 1px 7px rgba(150, 150, 150, 0.79);
+	font-family: 'Rationale', sans-serif;
+}
+
+.beta-tag {
+	color: #FF0000;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 1.7em;
+}
+
+#simulation-container {
+	float: right;
+	text-align: center;
+}
+
+#progress-status {
+	display: none;
+	width: 100%;
+	margin-top: 30px;
+	text-align: center;
+}
+
+#animation-button-group {
+	text-align: center;
+	margin: 20px auto 20px auto;
+}
+
+#progress-text {
+	margin-left: auto;
+	margin-right: auto;
+	margin: 20px;
+}
+
+#animation-container {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+#animation-canvas-buffer {
+	width: 800px;
+	height: 450px;
+	display: none;
+}
+
+#animation-spinner {
+	margin: auto;
+	vertical-align: middle;
+}
+
+#animation-temp-buffer {
+	display: none;
+}
+
+#simulation_image_container {
+	margin: 10px;
+}
+
+#simulation_image_container img {
+	width: 450px;
+	margin-bottom: 20px;
+	margin-top: 20px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#animation-quality-slider {
+	width: 150px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.simulation-image {
+	width: 450px;
+}
+
+.outter-container {
+	margin-top: 10px;
+	padding: 0px;
+	width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+	background: #050505;/* url(/img/headers/orbit-lines.png) no-repeat left -200px top -100px;*/
+}
+
+.container-row {
+	width: 900px;
+	display: block;
+	text-align: left;
+}
+
+
+
+.box-container {
+	background-color: #252525;
+	opacity: 0.9;
+	margin: 10px;
+	padding: 10px;
+	width: 100px;
+	text-align: left;
+	box-shadow: 0 4px 6px -5px hsl(0, 0%, 40%), inset 0px 4px 6px -5px black;
+	border-radius: .5em;
+	display: inline-block;
+	height: 100%;
+}
+
+.option-div {
+
+}
+
+.box-wide {
+	width: 840px;
+}
+
+.box-half {
+	width: 350px;
+}
+
+.box-sim-results {
+	width: 470px;
+}
+
+.box-header {
+	font-weight: bold;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 1.5em;
+	padding: 6px;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.79);
+}

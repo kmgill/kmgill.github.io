@@ -1,0 +1,107 @@
+*******************************************************************************
+JPL/HORIZONS                 3554 Amun (1986 EB)           2013-Oct-03 13:53:23
+Rec #:  3554 (+COV)   Soln.date: 2013-Aug-05_09:18:14   # obs: 1538 (1986-2013)
+ 
+FK5/J2000.0 helio. ecliptic osc. elements (au, days, deg., period=Julian yrs): 
+ 
+  EPOCH=  2454992.5 ! 2009-Jun-10.00 (CT)          Residual RMS= .33527        
+   EC= .2804851620881125   QR= .700649048663621    TP= 2455114.7951072413      
+   OM= 358.6626756694626   W=  359.3948465265065   IN= 23.36282704313199       
+   A= .973779846843719     MA= 234.5640617152444   ADIST= 1.246910645023817    
+   PER= .96095             N= 1.025682365          ANGMOM= .016293673          
+   DAN= .7006599999999999  DDN= 1.24688            L= 358.1071434              
+   B= -.2399673            MOID= .25129601         TP= 2009-Oct-10.2951072413  
+ 
+Asteroid physical parameters (km, seconds, rotational period in hours):        
+   GM= n.a.                RAD= 1.24               ROTPER= 2.53001             
+   H= 15.82                G= .150                 B-V= .707                   
+                           ALBEDO= .1284           STYP= n.a.                  
+ 
+ASTEROID comments: 
+1: soln ref.= JPL#226, OCC=0
+2: source=ORB
+*******************************************************************************
+
+
+
+*******************************************************************************
+Revised: Sep 18, 2013                  Earth                                399
+ 
+PHYSICAL PROPERTIES:
+ Mean radius, km          = 6371.01+-0.01   Mass, 10^24 kg = 5.97219+-0.0006
+ Equ. radius, km          = 6378.14+-0.01   Mass layers:
+ Polar axis, km           = 6356.752          Atmos          = 5.1   x 10^18 kg
+ Flattening               = 1/298.257         oceans         = 1.4   x 10^21 kg
+ Density, gm cm^-3        = 5.515             crust          = 2.6   x 10^22 kg
+ J2  (GEM T2, 1990)       = 0.0010826265      mantle         = 4.043 x 10^24 kg
+ gp, m s^-2 (polar)       = 9.8321863685      outer core     = 1.835 x 10^24 kg
+ ge, m s^-2 (equatorial)  = 9.7803267715      inner core     = 9.675 x 10^22 kg
+ go, m s^-2               = 9.82022         Fluid core rad   = 3480 km
+ GM, km^3 s^-2            = 398600.440      Inner core rad   = 1215 km
+ Mean rot. rate, rad s^-1 = 7.292115*10^-5  Surface Area:
+ Sidereal period, hr      = 23.93419          land           = 1.48 x 10^8 km
+ Mean solar day, days     = 1.002738          sea            = 3.62 x 10^8 km
+ Moment of inertia        = 0.3308          Love no., k2     = 0.299
+ Mean Temperature, K      = 270             Atm. pressure    = 1.0 bar
+ Solar constant, W/m^2    = 1367.6          Vis. mag. V(1,0) = -3.86
+ Volume, 10^10 km^3       = 108.321         Geometric albedo = 0.367 
+
+DYNAMICAL CHARACTERISTICS:
+ Obliquity to orbit, deg  = 23.45           Sidereal period  = 1.0000174  yrs
+ Orbit velocity, km s^-1  = 29.7859         Sidereal period  = 365.25636  days
+ Mean daily motion, n     = 0.9856474 deg/d Escape velocity  = 11.186 km s^-1
+ Hill's sphere radius     = 234.9           Magnetic moment  = 0.61 gauss Rp^3
+*******************************************************************************
+
+*******************************************************************************
+ Revised : Sep 12, 1996                  Sun                                 10
+ Physical: May 29, 2012
+
+ PHYSICAL PROPERTIES:
+  GM (10^11 km^3/s^2)   = 1.32712440018   Mass (10^30 kg)       =    1.9891
+  Radius (photosphere)  = 6.963(10^5) km  Angular diam at 1 AU  = 1919.3"
+  Solar Radius (IAU)    = 6.955(10^5) km  Mean density          = 1.408 g/cm^3
+  Surface gravity       =  274.0 m/s^2    Moment of inertia     = 0.059
+  Escape velocity       =  617.7 km/s     Adopted sidereal per  = 25.38 d
+  Pole (RA,DEC in deg.) =  286.13,63.87   Obliquity to ecliptic = 7 deg 15'        
+  Solar constant (1 AU) = 1367.6 W/m^2    Solar lumin.(erg/s)   =  3.846(10^33)
+  Mass-energy conv rate = 4.3(10^12 gm/s) Effective temp (K)    =  5778
+  Surf. temp (photosphr)= 6600 K (bottom) Surf. temp (photosphr)=  4400 K (top)
+  Photospheric depth    = ~400 km         Chromospheric depth   = ~2500 km
+  Sunspot cycle         = 11.4 yr         Cycle 22 sunspot min. =  1991 A.D.
+
+  Motn. rel to nrby strs= apex : RA=271 deg; DEC=+30 deg
+                          speed: 19.4 km/s = 0.0112 AU/day
+  Motn. rel to 2.73K BB = apex : l=264.7+-0.8; b=48.2+-0.5
+                          speed: 369 +-11 km/s
+*******************************************************************************
+
+
+*******************************************************************************
+JPL/HORIZONS                      1P/Halley                2013-Oct-03 13:57:13
+Rec #:900033 (+COV)   Soln.date: 2001-Aug-02_13:51:39   # obs: 7428 (1835-1994)
+ 
+FK5/J2000.0 helio. ecliptic osc. elements (au, days, deg., period=Julian yrs): 
+ 
+  EPOCH=  2449400.5 != 1994-Feb-17.0000000 (CT)   RMSW= n.a.                   
+   EC= .9671429084623044   QR= .5859781115169086   TP= 2446467.3953170511      
+   OM= 58.42008097656843   W= 111.3324851045177    IN= 162.2626905791606       
+   A= 17.83414429255373    MA= 38.384264476436     ADIST= 35.08231047359055    
+   PER= 75.315892782197    N= .013086564           ANGMOM= .01846886           
+   DAN= 1.77839            DDN= .8527              L= 306.1250589              
+   B= 16.4859355           MOID= .0637815          TP= 1986-Feb-05.8953170511  
+ 
+Comet physical (GM= km^3/s^2; RAD= km):                                        
+   GM= n.a.                RAD= 5.5                                            
+   M1=  5.5      M2=  13.6     k1=  8.     k2=  5.      PHCOF=  .030           
+ 
+Comet non-gravitational force model (AMRAT=m^2/kg;A1-A3=au/d^2;DT=days;R0=au): 
+   AMRAT=  0.                                      DT=  0.                     
+   A1= 2.69646383822D-10   A2= 1.554613374174D-10  A3= 0.                      
+ Standard model:                                                               
+   ALN=  .1112620426   NK=  4.6142   NM=  2.15     NN=  5.093    R0=  2.808    
+ 
+COMET comments 
+1: soln ref.= JPL#J863/77, data arc: 1835-08-21 to 1994-01-11
+2: k1=8.0, k2=5.0, phase coef.=0.03;
+*******************************************************************************

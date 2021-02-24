@@ -1,0 +1,261 @@
+
+
+body {
+	color: #808080;
+	font-family: 'Average Sans', sans-serif;
+	margin: 0px;
+	overflow: auto;
+	-webkit-backface-visibility: hidden;
+	font-size: 11px;
+	background: #050505;
+
+}
+
+label {
+	vertical-align: middle;
+	font-size: 1.3em;
+	font-weight: bold;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.79);
+
+}
+
+#search-container {
+
+	padding: 10px;
+}
+
+.top-link {
+	vertical-align: middle;
+	font-size: 1.3em;
+}
+
+
+
+#search-container input[type="text"] {
+	vertical-align: middle;
+	width: 250px;
+	border: 1px solid;
+	height: 1.4em;
+	border-radius: .5em;
+	box-shadow: 0 4px 6px -5px hsl(0, 0%, 40%), inset 0px 4px 6px -5px black;
+	padding-left: 3px;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+}
+
+#search-container label {
+	font-size: 1.5em;
+	vertical-align: middle;
+	font-weight: bold;
+	margin-right: 5px;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.79);
+}
+
+.visuals-links {
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.79);
+}
+
+.outter-container {
+	margin-top: 10px;
+	padding: 0px;
+	width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+	background: #050505;/* url(/img/headers/orbit-lines.png) no-repeat left -200px top -100px;*/
+}
+
+.container-row {
+	width: 900px;
+	display: block;
+	text-align: left;
+}
+
+#page-title-container-inline {
+	display: inline-block;
+	padding: 6px 5px 5px 10px;
+	text-align: left;
+	font-size: 40px;
+	font-weight: bold;
+	text-shadow: 1px 1px 7px rgba(150, 150, 150, 0.79);
+	font-family: 'Rationale', sans-serif;
+}
+
+
+
+#social-media-links {
+	float: right;
+	text-align: right;
+	width: 500px;
+	border: 0px;
+	padding: 0px;
+	margin: 0px;
+}
+
+ .social-button {
+	float: right;
+	padding-right: 5px;
+}
+
+ .social-button div{
+	vertical-align: top;
+	padding: 0px;
+	margin: 0px;
+ }
+
+ 
+.box-container {
+	background-color: #252525;
+	opacity: 0.9;
+	margin: 10px;
+	padding: 10px;
+	width: 100px;
+	text-align: center;
+	box-shadow: 0 4px 6px -5px hsl(0, 0%, 40%), inset 0px 4px 6px -5px black;
+	border-radius: .5em;
+	display: inline-block;
+	height: 100%;
+}
+
+.box-wide {
+	width: 840px;
+}
+
+
+
+
+#object-name {
+	font-size: 1.8em;
+}
+
+#orbital-elements-container {
+	width: 400px;
+}
+
+.box-header {
+	font-weight: bold;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 1.5em;
+	padding: 6px;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.79);
+}
+
+#orbital-determination-container {
+	width: 400px;
+	
+}
+
+.data-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+
+
+.data-table tr.data-row:hover {
+	background-color: #353535;
+}
+
+.data-table-label, .data-table-label-center, .data-table-label-left {
+	text-align: right;
+	font-size: 1.3em;
+	font-weight: bold;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.79);
+	vertical-align: middle;
+}
+
+.data-table-label-center {
+	text-align: center;
+}
+
+.data-table-label-left {
+	text-align: left;
+}
+
+.data-table-value, .data-table-value-center, .data-table-value-right {
+	text-align: left;
+	font-size: 1.3em;
+	padding-left: 15px;
+	padding-right: 15px;
+	vertical-align: middle;
+}
+
+.data-table-value-center {
+	text-align: center;
+}
+
+.data-table-value-right {
+	text-align: right;
+}
+
+.definition-term-label {
+	font-size: 1.3em;
+	font-weight: bold;
+}
+
+.definition-label {
+	font-weight: bold;
+}
+
+#image-container img {
+	width: 350px;
+}
+
+.resource-image {
+	display: none;
+}
+
+
+#map {
+	width: 840px;
+	height: 420px;
+	cursor:none;
+}
+
+.config-table {
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+.dialog-section fieldset {
+	width: 45%;
+	display: inline;
+	vertical-align: top;
+}
+.config-table label {
+	vertical-align: middle;
+	font-size: 1.3em;
+	font-weight: bold;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.79);
+}
+
+.config-table input, select {
+	vertical-align: middle;
+}
+.config-table td {
+	text-align: left;
+}
+
+.satellite-delete-link {
+	vertical-align: middle;
+	padding-left: 6px;
+    filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 10+, Firefox on Android */
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
+}
+
+.satellite-delete-link:hover {
+	opacity:1;
+	filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 1 0\'/></filter></svg>#grayscale");
+    -webkit-filter: grayscale(0%);
+}
+
+.time-box {
+	margin: 5px;
+}
+
+#realtime-datetime {
+	vertical-align: middle;
+	font-size: 1.8em;
+	font-weight: bold;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.79);
+}

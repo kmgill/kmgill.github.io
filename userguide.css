@@ -1,0 +1,40 @@
+body {
+  padding-top: 50px;
+}
+.content-container {
+  padding: 40px 15px;
+  text-align: left;
+}
+
+
+.sidebar {
+	padding: 25px 10px 10px 10px;
+
+}
+
+.img-figure {
+	float: right;
+	display: inline-block;
+}
+
+.height-waster-200{
+	height: 200px;
+}
+
+.panel-body-code {
+	background: #f5f5f5;
+}
+
+.panel-body-code .prettyprint {
+	border:0px;
+	margin:0px;
+}
+
+.panel-default {
+	margin-top: 20px;
+}
+
+.nav-sidebar .list-group .list-group-item {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}

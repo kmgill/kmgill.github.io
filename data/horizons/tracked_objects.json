@@ -1,0 +1,1639 @@
+[
+
+	{
+		"id" : "dawn",
+		"search" : "DAWN",
+		"name" : "DAWN",
+		"displayFuture" : true,
+		"links" : ["http://dawn.jpl.nasa.gov/"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"model" : {
+			"file" : "dawn",
+			"scale" : 0.5
+		},
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2007-09-28)}",
+				"title" : "Launch"
+			},
+			{
+				"date" : "{toJulianDate(2009-02-04)}",
+				"title" : "Flyby of Mars"
+			},
+			{
+				"date" : "{toJulianDate(2011-07-01)}",
+				"title" : "Arrival at Vesta"
+			}
+		
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "1d",
+			"center" : "500@sun",
+			"start" : "2015-01-27 13:00",
+			"stop" : "{NOW}"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+	
+	{
+		"id" : "soho",
+		"search" : "-21",
+		"name" : "SOHO",
+		"displayFuture" : true,
+		"links" : ["http://sohowww.nascom.nasa.gov/about/about.html"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(1995-12-02)}",
+				"title" : "Launch"
+			}
+		
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "1998-09-25 19:00",
+			"stop" : "2012-01-30 23:50"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "2012-01-29 23:50",
+			"stop" : "2012-01-30 23:50"
+		}
+	},
+
+	{
+		"id" : "kepler",
+		"search" : "-227",
+		"name" : "Kepler",
+		"displayFuture" : true,
+		"links" : ["http://kepler.nasa.gov/"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"model" : {
+			"file" : "kepler",
+			"scale" : 1.0
+		},
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2009-03-07 05:00)}",
+				"title" : "Launch"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "2009-03-07 05:00",
+			"stop" : "{TOMORROW}"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+	
+	
+	{
+		"id" : "maven",
+		"search" : "MAVEN",
+		"name" : "MAVEN",
+		"displayFuture" : true,
+		"links" : ["http://lasp.colorado.edu/home/maven/", "http://mars.jpl.nasa.gov/programmissions/missions/future/maven/", "http://www.ulalaunch.com/site/docs/missionbooklets/AV/av_maven_mob.pdf"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"datesOfInterest" : [],
+		"orbiting" : "Mars",
+		"applyParentObliquity" : true,
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "1d",
+			"center" : "500@499",
+			"orbiting" : "Mars",
+			"start" : "2015-01-01 20:00",
+			"stop" : "{TOMORROW}"
+		},
+		"elements" : {
+			"center" : "499",
+			"orbiting" : "Mars",
+			"referencePlane" : "body",
+			"start" : "{YESTERDAY}",
+			"stop" : "{NOW}"
+		}
+	},
+	
+	{
+		"id" : "spitzer",
+		"search" : "-79",
+		"name" : "Spitzer Space Telescope",
+		"displayFuture" : true,
+		"links" : ["http://spitzer.caltech.edu/"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"datesOfInterest" : [],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "2003-08-25 06:30",
+			"stop" : "{TOMORROW}"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+	
+	{
+		"id" : "voyagerI",
+		"search" : "-31",
+		"name" : "Voyager I Spacecraft",
+		"displayFuture" : false,
+		"links" : ["http://www.jpl.nasa.gov/missions/current/voyager.html"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"model" : {
+			"file" : "voyager",
+			"scale" : 1.0
+		},
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(1977-09-05 16:00)}",
+				"title" : "Launch"
+			},
+			{
+				"date" : "{toJulianDate(2012-08-25)}",
+				"title" : "Exit from Solar System"
+			}
+		
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "1977-09-05 14:00",
+			"stop" : "{TOMORROW}"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "voyagerII",
+		"search" : "-32",
+		"name" : "Voyager II Spacecraft",
+		"displayFuture" : false,
+		"links" : ["http://www.jpl.nasa.gov/missions/current/voyager.html"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"model" : {
+			"file" : "voyager",
+			"scale" : 1.0
+		},
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(1977-08-20 15:35)}",
+				"title" : "Launch"
+			},
+			{
+				"date" : "{toJulianDate(1979-07-09)}",
+				"title" : "Encounter with Jupiter"
+			},
+			{
+				"date" : "{toJulianDate(1981-08-26)}",
+				"title" : "Encounter with Saturn"
+			},
+			{
+				"date" : "{toJulianDate(1986-01-24)}",
+				"title" : "Encounter with Uranus"
+			}
+			,
+			{
+				"date" : "{toJulianDate(1989-08-25)}",
+				"title" : "Encounter with Neptune"
+			}
+		
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "1977-08-20 15:35",
+			"stop" : "{TOMORROW}"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	
+
+	
+
+	
+
+	{
+		"id" : "rosetta",
+		"search" : "-226",
+		"name" : "Rosetta",
+		"displayFuture" : true,
+		"links" : ["http://www.esa.int/export/SPECIALS/Rosetta/"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"orbiting" : "67P/Churyumov-Gerasimenko",
+		"model" : {
+			"file" : "rosetta",
+			"scale" : 1.0
+		},
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2004-03-02 09:30)}",
+				"title" : "Launch"
+			},
+			{
+				"date" : "{toJulianDate(2014-08-01)}",
+				"title" : "Arrival to comet 67P/Churyumov-Gerasimenko"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "1d",
+			"center" : "500@1000012",
+			"referencePlane" : "eclip",
+			"start" : "2014-01-02",
+			"stop" : "2015-03-15"
+		},
+		"elements" : {
+			"orbiting" : "67P/Churyumov-Gerasimenko",
+			"center" : "10",
+			"start" : "{YESTERDAY}",
+			"stop" : "{NOW}"
+		}
+	},
+
+	{
+		"id" : "stereo-a",
+		"search" : "-234",
+		"name" : "STEREO Ahead",
+		"displayFuture" : true,
+		"links" : ["http://stereo.gsfc.nasa.gov/"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2006-10-26 00:05)}",
+				"title" : "Launch"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "2006-10-26 00:05",
+			"stop" : "{TOMORROW}"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "stereo-b",
+		"search" : "-235",
+		"name" : "STEREO Behind",
+		"displayFuture" : true,
+		"links" : ["http://stereo.gsfc.nasa.gov/"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2006-10-26 01:05)}",
+				"title" : "Launch"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "2006-10-26 01:05",
+			"stop" : "{TOMORROW}"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "newhorizons",
+		"search" : "-98",
+		"name" : "New Horizons",
+		"displayFuture" : false,
+		"links" : ["http://pluto.jhuapl.edu/index.php"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"start" : 2456623.5,
+		"stop" : 2458084.500000,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2006-01-19 19:55)}",
+				"title" : "Launch"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "2006-01-19 19:55",
+			"stop" : "{TOMORROW}"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "pioneer10",
+		"search" : "-23",
+		"name" : "Pioneer 10",
+		"displayFuture" : false,
+		"links" : ["http://nssdc.gsfc.nasa.gov/nmc/tmp/1972-012A.html"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"model" : {
+			"file" : "pioneer",
+			"scale" : 1.0
+		},
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(1972-03-03 02:05)}",
+				"title" : "Launch"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "1972-03-03 02:05",
+			"stop" : "{TOMORROW}"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "pioneer11",
+		"search" : "-24",
+		"name" : "Pioneer 11",
+		"displayFuture" : false,
+		"links" : ["http://nssdc.gsfc.nasa.gov/nmc/tmp/1973-019A.html"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"model" : {
+			"file" : "pioneer",
+			"scale" : 1.0
+		},
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(1973-04-06 02:30)}",
+				"title" : "Launch"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "1973-04-06 02:30",
+			"stop" : "{TOMORROW}"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "epoxi",
+		"search" : "-140",
+		"name" : "EPOXI",
+		"displayFuture" : true,
+		"links" : ["http://www.nasa.gov/epoxi", "http://deepimpact.jpl.nasa.gov/"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"model" : {
+			"file" : "epoxi",
+			"scale" : 1.0
+		},
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2005-01-12 19:25)}",
+				"title" : "Launch"
+			},
+			{
+				"date" : "{toJulianDate(2010-11-04)}",
+				"title" : "Encounter with Hartley 2"
+			},
+			{
+				"date" : "{toJulianDate(2013-08-08)}",
+				"title" : "Communications lost"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "2005-01-12 19:25",
+			"stop" : "{TOMORROW}"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "juno",
+		"search" : "-61",
+		"name" : "Juno",
+		"displayFuture" : true,
+		"links" : ["http://www.nasa.gov/mission_pages/juno/main/index.html"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"model" : {
+			"file" : "juno",
+			"scale" : 0.1
+		},
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2011-08-05 18:15)}",
+				"title" : "Launch"
+			},
+			{
+				"date" : "{toJulianDate(2013-10-10)}",
+				"title" : "Fly-by of Earth"
+			}
+		
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "2011-08-05 18:15",
+			"stop" : "{TOMORROW}"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "cassini",
+		"search" : "-82",
+		"name" : "Cassini",
+		"displayFuture" : false,
+		"links" : ["http://saturn.jpl.nasa.gov/"],
+		"type" : "spacecraft",
+		"orbiting" : "Saturn",
+		"enabled" : true,
+		"initialEyeDistance" : 7.32369465053e-02,
+		"applyParentObliquity" : true,
+		"model" : {
+			"file" : "cassini",
+			"scale" : 0.1
+		},
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(1997-10-15 09:30)}",
+				"title" : "Launch"
+			},
+			{
+				"date" : "{toJulianDate(1999-08-18)}",
+				"title" : "Flyby of Earth (Gravity assist)"
+			},
+			{
+				"date" : "{toJulianDate(2000-01-23)}",
+				"title" : "Flyby of 2685 Masursky (Incidental)"
+			},
+			{
+				"date" : "{toJulianDate(2000-12-30)}",
+				"title" : "Flyby of Jupiter (Gravity assist)"
+			},
+			{
+				"date" : "{toJulianDate(2004-07-01 02:48)}",
+				"title" : "Saturn Orbital Insertion"
+			},
+			{
+				"date" : "{toJulianDate(2005-01-14)}",
+				"title" : "Landing of Huygens probe on Titan"
+			},
+			{
+				"date" : "{toJulianDate(2013-07-19)}",
+				"title" : "The Day the Earth Smiled"
+			}
+			
+
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "6h",
+			"center" : "500@699",
+			"orbiting" : "Saturn",
+			"referencePlane" : "body",
+			"start" : "2014-01-01",
+			"stop" : "2015-06-01"
+		},
+		"elements" : {
+			"center" : "699",
+			"orbiting" : "Saturn",
+			"referencePlane" : "body",
+			"start" : "{YESTERDAY}",
+			"stop" : "{NOW}"
+		}
+	},
+
+	{
+		"id" : "ison",
+		"search" : "C/2012 S1",
+		"name" : "Comet ISON",
+		"displayFuture" : false,
+		"links" : ["http://en.wikipedia.org/wiki/C/2012_S1"],
+		"type" : "comet",
+		"enabled" : false,
+		"start" : 2455197.500000,
+		"stop" : 2457023.50000,
+		"datesOfInterest" : [
+			{ 
+				"date" : "{toJulianDate(2013-09-01)}",
+				"title" : "Visible in telescopes"
+			},
+			{
+				"date" : "{toJulianDate(2013-10-01)}",
+				"title" : "Closest approach to Mars"
+			},
+			{
+				"date" : "{toJulianDate(2013-11-15)}",
+				"title" : "Visible to naked eye"
+			},
+			{
+				"date" : 2456625.2762111304,
+				"title" : "Solar Perihelion"
+			},
+			{
+				"date" : "{toJulianDate(2013-12-26)}",
+				"title" : "Closest approach to Earth"
+			},
+			{
+				"date" : "{toJulianDate(2014-01-15)}",
+				"title" : "No longer visible to naked eye"
+			}
+		],	
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "6h",
+			"center" : "500@sun",
+			"start" : "2010-01-01",
+			"stop" : "2015-01-01"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "marsorbiter",
+		"search" : "-3",
+		"name" : "Mars Orbiter Mission",
+		"displayFuture" : true,
+		"links" : ["http://www.isro.org/mars/home.aspx", "http://www.isro.gov.in"],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"applyParentObliquity" : false,
+		"orbiting" : "Mars",
+		"model" : {
+			"file" : "generic",
+			"scale" : 0.1
+		},
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2013-11-05 09:55)}",
+				"title" : "Launch"
+			},
+			{
+				"date" : "{toJulianDate(2013-11-30)}",
+				"title" : "Move to heliocentric Mars transfer orbit"
+			}
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5m",
+			"center" : "500@499",
+			"orbiting" : "Earth",
+			"start" : "2013-11-05 09:55",
+			"stop" : "2013-11-30"
+		},
+		"elements" : {
+			"interval" : "1d",
+			"center" : "499",
+			"orbiting" : "Mars",
+			"referencePlane" : "eclip",
+			"start" : "2015-03-15",
+			"stop" : "2015-03-16"
+		}
+	},
+
+	{
+		"id" : "lovejoy",
+		"search" : "C/2013 R1",
+		"name" : "Lovejoy (C/2013 R1)",
+		"displayFuture" : false,
+		"links" : [],
+		"type" : "comet",
+		"enabled" : true,
+		"start" : 2455197.500000,
+		"stop" : 2457023.50000,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2013-11-01)}",
+				"title" : "Visible to the naked eye"
+			},
+			{
+				"date" : "{toJulianDate(2013-11-19)}",
+				"title" : "Closest approach to Earth"
+			},
+			{
+				"date" : "{toJulianDate(2013-12-22)}",
+				"title" : "Closest approach to the Sun"
+			}
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "6h",
+			"center" : "500@sun",
+			"start" : "2010-01-01",
+			"stop" : "2015-01-01"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "linear",
+		"search" : "C/2012 X1",
+		"name" : "LINEAR (C/2012 X1)",
+		"displayFuture" : false,
+		"links" : [],
+		"type" : "comet",
+		"enabled" : true,
+		"start" : 2455197.500000,
+		"stop" : 2457023.50000,
+		"datesOfInterest" : [],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "6h",
+			"center" : "500@sun",
+			"start" : "2010-01-01",
+			"stop" : "2015-01-01"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "nevski",
+		"search" : "P/2013 V3",
+		"name" : "Nevski (P/2013 V3)",
+		"displayFuture" : false,
+		"links" : [],
+		"type" : "comet",
+		"enabled" : true,
+		"start" : 2455197.500000,
+		"stop" : 2457023.50000,
+		"datesOfInterest" : [],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "6h",
+			"center" : "500@sun",
+			"start" : "2010-01-01",
+			"stop" : "2015-01-01"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "halley",
+		"search" : "900033",
+		"name" : "1P/Halley",
+		"displayFuture" : false,
+		"links" : ["http://en.wikipedia.org/wiki/1P/Halley"],
+		"type" : "comet",
+		"enabled" : true,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2023-12-09)}",
+				"title" : "Aphelion"
+			},
+			{
+				"date" : "{toJulianDate(2061-07-28)}",
+				"title" : "Perihelion; Closest approach to the Sun"
+			}
+		
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "7d",
+			"center" : "500@sun",
+			"start" : "2000-01-01 12:00",
+			"stop" : "2075-04-01 12:00"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "encke",
+		"search" : "900092",
+		"name" : "2P/Encke",
+		"displayFuture" : false,
+		"links" : ["http://en.wikipedia.org/wiki/Comet_Encke"],
+		"type" : "comet",
+		"enabled" : true,
+		"start" : 2455197.500000,
+		"stop" : 2457023.50000,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2013-11-21)}",
+				"title" : "Perihelion; Closest approach to the Sun"
+			}
+		
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "1d",
+			"center" : "500@sun",
+			"start" : "2010-08-06",
+			"stop" : "2013-11-22"
+		},
+		"elements" : {
+			"center" : "10",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	},
+
+	{
+		"id" : "iss",
+		"search" : "-125544",
+		"name" : "International Space Station",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "spacecraft",
+		"enabled" : true,
+		"orbiting" : "Earth",
+		"initialEyeDistance" : 0.00007323694650526584,
+		"model" : {
+			"file" : "iss",
+			"scale" : 0.05
+		},
+		"datesOfInterest" : [
+			
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "2d",
+			"center" : "500@sun",
+			"start" : "2013-11-05 09:55",
+			"stop" : "{NOW}"
+		},
+		"elements" : {
+			"interval" : "1h",
+			"center" : "399",
+			"referencePlane" : "eclip",
+			"orbiting" : "Earth",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "ladee",
+		"search" : "-12",
+		"name" : "LADEE",
+		"displayFuture" : true,
+		"links" : ["http://www.nasa.gov/LADEE/", "http://www.spaceflight101.com/ladee-science-overview.html"],
+		"type" : "spacecraft",
+		"enabled" : false,
+		"orbiting" : "Moon",
+		"initialEyeDistance" : 0.00007323694650526584,
+		"model" : {
+			"file" : "generic",
+			"scale" : 0.05
+		},
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2013-09-07 03:27)}",
+				"title" : "Launch"
+			},
+			{
+				"date" : "{toJulianDate(2013-10-06 10:57)}",
+				"title" : "Moon orbital insertion"
+			
+			}
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "2h",
+			"center" : "500@399",
+			"start" : "2013-09-07 04:05",
+			"stop" : "2013-10-18 12:00"
+		},
+		"elements" : {
+			"interval" : "1h",
+			"center" : "301",
+			"orbiting" : "Moon",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	
+	
+	{
+		"id" : "mro",
+		"search" : "-74",
+		"name" : "Mars Reconnaissance Orbiter",
+		"displayFuture" : true,
+		"links" : ["http://marsprogram.jpl.nasa.gov/mro/"],
+		"type" : "spacecraft",
+		"orbiting" : "Mars",
+		"applyParentObliquity" : true,
+		"enabled" : true,
+		"initialEyeDistance" : 7.32369465053e-05,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2005-08-12 11:43)}",
+				"title" : "Launch"
+			},
+			{
+				"date" : "{toJulianDate(2006-03-10 21:24)}",
+				"title" : "Mars orbital insertion"
+			}
+		],
+		"model" : {
+			"file" : "mro",
+			"scale" : 0.05
+		},
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "499",
+			"orbiting" : "Mars",
+			"referencePlane" : "body",
+			"start" : "2015-01-01",
+			"stop" : "2015-01-02"
+		}
+	},
+	
+	{
+		"id" : "mrx",
+		"search" : "-41",
+		"name" : "Mars Express",
+		"displayFuture" : true,
+		"links" : ["http://sci.esa.int/marsexpress/", "http://space.about.com/od/spacemissions/p/beagle2.htm"],
+		"type" : "spacecraft",
+		"orbiting" : "Mars",
+		"enabled" : true,
+		"applyParentObliquity" : true,
+		"initialEyeDistance" : 7.32369465053e-05,
+		"datesOfInterest" : [
+
+		],
+		"model" : {
+			"file" : "mro",
+			"scale" : 0.05
+		},
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "499",
+			"orbiting" : "Mars",
+			"referencePlane" : "body",
+			"start" : "2015-01-01",
+			"stop" : "2015-01-02"
+		}
+	},
+
+	{
+		"id" : "messenger",
+		"search" : "-236",
+		"name" : "MESSENGER",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "spacecraft",
+		"orbiting" : "Mercury",
+		"enabled" : false,
+		"initialEyeDistance" : 7.32369465053e-05,
+		"datesOfInterest" : [
+
+		],
+		"model" : {
+			"file" : "mro",
+			"scale" : 0.05
+		},
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "199",
+			"orbiting" : "Mercury",
+			"start" : "{YESTERDAY}",
+			"stop" : "{NOW}"
+		}
+	},
+	
+	{
+		"id" : "odyssey",
+		"search" : "-53",
+		"name" : "Mars Odyssey",
+		"displayFuture" : true,
+		"links" : ["http://mgs-www.jpl.nasa.gov/"],
+		"type" : "spacecraft",
+		"orbiting" : "Mars",
+		"enabled" : true,
+		"applyParentObliquity" : true,
+		"initialEyeDistance" : 7.32369465053e-05,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2001-04-07 15:02)}",
+				"title" : "Launch"
+			},
+			{
+				"date" : "{toJulianDate(2001-10-24 02:18)}",
+				"title" : "Mars orbital insertion"
+			}
+		],
+		"model" : {
+			"file" : "generic",
+			"scale" : 0.05
+		},
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2001-04-07 16:25",
+			"stop" : "2001-11-01 12:00"
+		},
+		"elements" : {
+			"center" : "499",
+			"referencePlane" : "body",
+			"orbiting" : "Mars",
+			"start" : "2001-10-30 12:00",
+			"stop" : "2001-10-31 12:00"
+		}
+	},
+	
+	
+	
+	
+	
+	
+	{
+		"id" : "frasercain",
+		"search" : "158092",
+		"name" : "158092 Frasercain",
+		"displayFuture" : true,
+		"links" : ["http://www.universetoday.com/17928/announcing-asteroid-158092-frasercain/"],
+		"type" : "asteroid",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 8,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2008-08-21)}",
+				"title" : "Named for Fraser Cain"
+			}
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	
+	{
+		"id" : "panstarrs",
+		"search" : "C/2012 K1",
+		"name" : "PANSTARRS (C/2012 K1)",
+		"displayFuture" : false,
+		"links" : [],
+		"type" : "comet",
+		"enabled" : true,
+		"start" : "{toJulianDate(2012-05-19)}",
+		"stop" : "{toJulianDate(2016-05-19)}",
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2014-08-27)}",
+				"title" : "Perihelion; Closest approach to the Sun"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2012-05-19",
+			"stop" : "2016-05-19"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "2013nj",
+		"search" : "2013 NJ",
+		"name" : "2013 NJ",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "asteroid",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2013-11-26)}",
+				"title" : "Near approach to Earth (.006338 AU)"
+			}
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "Moon",
+		"search" : "301",
+		"name" : "Moon",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "asteroid",
+		"orbiting" : "Earth",
+		"enabled" : false,
+		"initialEyeDistance" : 2,
+		"datesOfInterest" : [
+
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "2h",
+			"center" : "500@sun",
+			"start" : "2013-01-01 12:00",
+			"stop" : "2014-01-01 12:00"
+		},
+		"elements" : {
+			"center" : "399",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "2011YD29",
+		"search" : "2011 YD29",
+		"name" : "2011 YD29",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "asteroid",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2013-12-28)}",
+				"title" : "Near approach to Earth (.0157 AU, 6.1 LD)"
+			}
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "2012BX34",
+		"search" : "2012 BX34",
+		"name" : "2012 BX34",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "asteroid",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2014-01-28)}",
+				"title" : "Near approach to Earth (.0247 AU, 9.6 LD)"
+			}
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "2006DP14",
+		"search" : "2006 DP14",
+		"name" : "2006 DP14",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "asteroid",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2014-02-10)}",
+				"title" : "Near approach to Earth (.0160 AU, 6.2 LD)"
+			}
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "2010JO33",
+		"search" : "2010 JO33",
+		"name" : "2010 JO33",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "asteroid",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2014-05-17)}",
+				"title" : "Near approach to Earth (.0103 AU, 4.0 LD)"
+			}
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "2013RZ53",
+		"search" : "2013 RZ53",
+		"name" : "2013 RZ53",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "asteroid",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2014-09-09)}",
+				"title" : "Near approach to Earth (.0049 AU, 1.9 LD)"
+			}
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "2009RR",
+		"search" : "2009 RR",
+		"name" : "2009 RR",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "asteroid",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2014-09-16)}",
+				"title" : "Near approach to Earth (.0025 AU, 1.0 LD)"
+			}
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "2012SL50",
+		"search" : "2012 SL50",
+		"name" : "2012 SL50",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "asteroid",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2014-10-01)}",
+				"title" : "Near approach to Earth (.0008 AU, 0.3 LD)"
+			}
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "1993F2A",
+		"search" : "901825",
+		"name" : "Shoemaker-Levy 9 (D/1993 F2-A)",
+		"displayFuture" : false,
+		"links" : ["http://en.wikipedia.org/wiki/Comet_Shoemaker%E2%80%93Levy_9"],
+		"type" : "comet",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(1992-07-07)}",
+				"title" : "Near Jupiter Approach Within 40,000 km (25,000 mi)"
+			},
+			{
+				"date" : "{toJulianDate(1993-03-24)}",
+				"title" : "Discovered by the Shoemakers and David Levy"
+			},
+			{
+				"date" : "{toJulianDate(1994-07-16 20:13)}",
+				"title" : "Fragment A impact with Jupiter"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "1985-01-01",
+			"stop" : "1994-07-16 20:13"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "C2013A1",
+		"search" : "C/2013 A1",
+		"name" : "Siding Spring (C/2013 A1)",
+		"displayFuture" : false,
+		"links" : [],
+		"type" : "comet",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2014-10-19)}",
+				"title" : "Near Approach to Mars"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2010-01-01",
+			"stop" : "2018-01-01"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "67P",
+		"search" : "900645",
+		"name" : "67P/Churyumov-Gerasimenko",
+		"displayFuture" : false,
+		"links" : ["http://en.wikipedia.org/wiki/67P/Churyumov%E2%80%93Gerasimenko", "http://www.esa.int/export/SPECIALS/Rosetta/"],
+		"type" : "comet",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2014-08-01)}",
+				"title" : "Arrival of ESA Rosetta Spacecraft"
+			},
+			{
+				"date" : "{toJulianDate(2015-08-13)}",
+				"title" : "Near Approach to the Sun (perihelion)"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2004-03-02",
+			"stop" : "2016-06-25"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	{
+		"id" : "2014AA53",
+		"search" : "2014 AA53",
+		"name" : "2014 AA53",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "asteroid",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	{
+		"id" : "wise",
+		"search" : "-163",
+		"name" : "WISE Spacecraft",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "spacecraft",
+		"orbiting" : "Earth",
+		"enabled" : true,
+		"initialEyeDistance" : 0.00007323694650526584,
+		"datesOfInterest" : [
+
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "399",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	{
+		"id" : "2012VP113",
+		"search" : "2012 VP113",
+		"name" : "2012 VP113",
+		"displayFuture" : true,
+		"links" : [],
+		"type" : "asteroid",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 40,
+		"datesOfInterest" : [
+
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2005-08-12 12:45",
+			"stop" : "2006-Sep-12 06:45"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "C2014LOVEJOY",
+		"search" : "C/2014 Q2",
+		"name" : "Lovejoy (C/2014 Q2)",
+		"displayFuture" : false,
+		"links" : ["http://en.wikipedia.org/wiki/C/2014_Q2_(Lovejoy)"],
+		"type" : "comet",
+		"orbiting" : "Sun",
+		"enabled" : true,
+		"initialEyeDistance" : 4,
+		"datesOfInterest" : [
+			{
+				"date" : "{toJulianDate(2015-01-30)}",
+				"title" : "Near Approach to the Sun (perihelion)"
+			}
+		],
+		"vectors" : {
+			"fetch" : true,
+			"interval" : "5d",
+			"center" : "500@sun",
+			"start" : "2012-03-02",
+			"stop" : "2016-06-25"
+		},
+		"elements" : {
+			"center" : "10",
+			"interval" : "1h",
+			"start" : "{NOW}",
+			"stop" : "{NOW+1}"
+		}
+	},
+	
+	{
+		"id" : "msl",
+		"search" : "-76",
+		"name" : "Mars Science Laboratory",
+		"displayFuture" : true,
+		"links" : ["http://mars.jpl.nasa.gov/msl/mission/", "http://www.youtube.com/watch?v=P4boyXQuUIw"],
+		"type" : "rover",
+		"roverstatus" : "landedactive",
+		"enabled" : false,
+		"orbiting" : "Mars",
+		"datesOfInterest" : [
+		
+		],
+		"vectors" : {
+			"fetch" : false,
+			"interval" : "1d",
+			"center" : "500@499",
+			"start" : "2015-01-27 13:00",
+			"stop" : "{NOW}"
+		},
+		"elements" : {
+			"center" : "499",
+			"orbiting" : "Mars",
+			"start" : "{NOW}",
+			"stop" : "{TOMORROW}"
+		}
+	}
+
+]

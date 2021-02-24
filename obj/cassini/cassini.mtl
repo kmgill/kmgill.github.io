@@ -1,0 +1,124 @@
+# Blender MTL File: 'Cassini_no_Huygens_03.blend'
+# Material Count: 12
+
+newmtl None
+Ns 0
+Ka 0.200000 0.200000 0.200000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+
+newmtl aluminum
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.396276 0.396276 0.396276
+Ks 1.000000 1.000000 1.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl black_krinkle
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.147451 0.147451 0.147451
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd tex_01_.png
+map_Bump foil_n_2.png
+
+newmtl black_krinkle_NONE
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.147451 0.147451 0.147451
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump foil_n.png
+
+newmtl black_krinkle_cassini_01_n.psd.001
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.147451 0.147451 0.147451
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd tex_01_.png
+map_Bump foil_n_2.png
+
+newmtl dish_AO
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd dish_AO.png
+
+newmtl dish_AO_dish_AO.png.001
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd dish_AO.png
+
+newmtl foil_gold
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.557647 0.412941 0.056471
+Ks 0.866667 0.850980 0.658824
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump foil_n_2.png
+map_Kd tex_01_.png
+refl foil_gold_ramp.png
+
+newmtl foil_gold_2
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump foil_n_2.png
+map_Kd tex_01_.png
+refl foil_gold_ramp.png
+
+newmtl plastic_dark
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.166077 0.166077 0.166077
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl plastic_white
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.741584 0.741584 0.741584
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl tex_01
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump foil_n_2.png
+map_Kd tex_01_.png

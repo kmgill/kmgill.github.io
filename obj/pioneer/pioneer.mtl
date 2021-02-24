@@ -1,0 +1,173 @@
+# Blender MTL File: 'Pioneer.blend'
+# Material Count: 16
+
+newmtl None
+Ns 0
+Ka 0.200000 0.200000 0.200000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+
+newmtl Pioneer_silver_01
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.578934 0.578934 0.578934
+Ks 0.294118 0.294118 0.294118
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd foil_silver_ramp.png
+map_Bump box.png
+refl foil_silver_ramp.png
+
+newmtl Pioneer_silver_02
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.578934 0.578934 0.578934
+Ks 0.699346 0.699346 0.699346
+Ni 1.000000
+d 1.000000
+illum 2
+refl foil_silver_ramp.png
+map_Kd foil_silver_ramp.png
+
+newmtl Pioneer_tex_01
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Pioneer_tex_01.png
+
+newmtl RTG_AO_new
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd RTG_AO_new.png
+
+newmtl RTG_AO_new_NONE
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd RTG_AO_new.png
+
+newmtl Tex_black
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.578934 0.578934 0.578934
+Ks 0.019608 0.019608 0.019608
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Tex_black.png
+
+newmtl dish_AO
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd dis_AO.png
+
+newmtl foil_gold
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd foil_gold_ramp.png
+map_Bump foil_n.png
+refl foil_gold_ramp.png
+
+newmtl foil_gold_NONE
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump foil_n.png
+refl foil_gold_ramp.png
+map_Kd foil_gold_ramp.png
+
+newmtl foil_silver
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd foil_silver_ramp.png
+map_Bump foil_n.png
+refl foil_silver_ramp.png
+
+newmtl foil_silver_NONE
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump foil_n.png
+refl foil_silver_ramp.png
+map_Kd foil_silver_ramp.png
+
+newmtl norm_trans
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 0.296748
+illum 2
+map_Bump foil_n.png
+map_d Pioneer_tex_01.png
+map_Kd Pioneer_tex_01.png
+
+newmtl other_AO
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd other_AO.png
+
+newmtl pioneer_tex_02
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.578934 0.578934 0.578934
+Ks 0.228758 0.228758 0.228758
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Pioneer_tex_02.png
+
+newmtl pioneer_tex_02_NONE
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.578934 0.578934 0.578934
+Ks 0.228758 0.228758 0.228758
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Pioneer_tex_02.png

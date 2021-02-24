@@ -1,0 +1,259 @@
+[
+	{
+		"output" : {
+			"standard" : "../planetmaker.js",
+			"minified" : "../planetmaker.min.js"
+		},
+		"includes" : [
+			"PlanetMaker.js",
+			"Math.js",
+			"Util.js",
+			"AstroDate.js",
+			"Astronomy.js",
+			"UserLocationController.js",
+			"StarFlares.js",
+			"Backgrounds.js",
+			"Clouds.js",
+			"Textures.js",
+			"Rings.js",
+			"NightLights.js",
+			"DefaultConfig.js",
+			"ImageUtils.js",
+			"TextureMap.js",
+			"MoonCalc.js",
+			"Procession.js",
+			"Orbit.js",
+			"VSOP87Orbits.js",
+			"CustomOrbits.js",
+			"IAURotation.js",
+			"BaseObject.js",
+			"SurfaceObject.js",
+			"CloudObject.js",
+			"RingObject.js",
+			"CatalogStarsObject.js",
+			"ConstellationLines.js",
+			"StarsObject.js",
+			"StarGroupObject.js",
+			"StarMapSphereObject.js",
+			"BackgroundImageSphereObject.js",
+			"BackgroundImageSpriteObject.js",
+			"BackgroundObject.js",
+			"HaloObject.js",
+			"FogObject.js",
+			"LocalStarObject.js",
+			"LensFlareObject.js",
+			"CometObject.js",
+			"MoonObject.js",
+			"BillboardTextObject.js",
+			"TexturedSphereObject.js",
+			"SunObject.js",
+			"AxisLinesObject.js",
+			"OrbitLineShader.js",
+			"OrbitPathLine.js",
+			"VectorPathLine.js",
+			"FadingVectorPathLine.js",
+			"BasicAsteroidBeltObject.js",
+			"DotPlotObject.js",
+			"StandardComposer.js",
+			"FilmPassComposer.js",
+			"BlurPassComposer.js",
+			"DynamicEffectsComposer.js",
+			"Engine.js",
+			"Planet.js",
+			"RingGeometry2.js",
+			"EllipsoidGeometry.js",
+			"Vector3.js",
+			"ConfigWrapper.js",
+			"AnimateController.js",
+			"SunlightPositioning.js",
+			"HaloShader.js",
+			"ExtendedNormalMapShader.js",
+			"ExamineControls.js",
+			"OrbitControls.js",
+			"GUI.js",
+			"WebCam.js",
+			"AppEnv.js",
+			"ObjectRotator.js",
+			"EllipticalOrbiter.js",
+			"EphemerisOrbiter.js",
+			"TickController.js",
+			"SceneScript.js",
+			"KeyCommandBindManager.js",
+			"ConfigPersistenceService.js"
+		]
+	
+	},
+	{
+		"output" : {
+			"standard" : "../postprocessing.js",
+			"minified" : "../postprocessing.min.js"
+		},
+		"includes" : [
+			"postprocessing/BloomPass.js",
+			"postprocessing/DotScreenPass.js",
+			"postprocessing/EffectComposer.js",
+			"postprocessing/FilmPass.js",
+			"postprocessing/MaskPass.js",
+			"postprocessing/RenderPass.js",
+			"postprocessing/SavePass.js",
+			"postprocessing/ShaderPass.js",
+			"postprocessing/TexturePass.js",
+			"postprocessing/GodRaysPass.js"
+		]
+	},
+	{
+		"output" : {
+			"standard" : "../shaders.js",
+			"minified" : "../shaders.min.js"
+		},
+		"includes" : [
+			"shaders/CopyShader.js",
+			"shaders/FilmShader.js",
+			"shaders/BleachBypassShader.js",
+			"shaders/ColorifyShader.js",
+			"shaders/ConvolutionShader.js",
+			"shaders/DotScreenShader.js",
+			"shaders/HorizontalBlurShader.js",
+			"shaders/SepiaShader.js",
+			"shaders/VerticalBlurShader.js",
+			"shaders/VignetteShader.js",
+			"shaders/ShaderGodRays.js",
+			"shaders/FXAAShader.js"
+		]
+	},
+	{
+		"output" : {
+			"standard" : "../loaders.js",
+			"minified" : "../loaders.min.js"
+		},
+		"includes" : [
+			"loaders/OBJLoader.js",
+			"loaders/MTLLoader.js",
+			"loaders/OBJMTLLoader.js"
+		]
+	},
+	{
+		"output" : {
+			"standard" : "../pha.js",
+			"minified" : "../pha.min.js"
+		},
+		"includes" : [
+			"CentralSun.js",
+			"Asteroid.js"
+		]
+	},
+	{
+		"output" : {
+			"standard" : "../orbitviewer.js",
+			"minified" : "../orbitviewer.min.js"
+		},
+		"includes" : [
+			"OrbitingObject.js",
+			"OrbitingPlanet.js",
+			"CentralSun.js"
+		]
+	},
+	{
+		"output" : {
+			"standard" : "../moonphases.js",
+			"minified" : "../moonphases.min.js"
+		},
+		"includes" : [
+			"DistanceLineObject.js",
+			"MoonOrbitRing.js",
+			"MoonOrbitTrack.js",
+			"SunlightPositionIndicator.js"
+		]
+	},
+	{
+		"output" : {
+			"standard" : "../solarsystem.js",
+			"minified" : "../solarsystem.min.js"
+		},
+		"includes" : [
+			"PlanetMaker.js",
+			"Math.js",
+			"Util.js",
+			"tle.js",
+			"AstroDate.js",
+			"Astronomy.js",
+			"UserLocationController.js",
+			"StarFlares.js",
+			"Backgrounds.js",
+			"Clouds.js",
+			"Textures.js",
+			"Rings.js",
+			"TextureMap.js",
+			"MoonCalc.js",
+			"Procession.js",
+			"Orbit.js",
+			"VSOP87Orbits.js",
+			"CustomOrbits.js",
+			"IAURotation.js",
+			"BaseObject.js",
+			"RingObject.js",
+			"CatalogStarsObject.js",
+			"ConstellationLines.js",
+			"CometObject.js",
+			"BillboardTextObject.js",
+			"TexturedSphereObject.js",
+			"OrbitLineShader.js",
+			"OrbitPathLine.js",
+			"VectorPathLine.js",
+			"FadingVectorPathLine.js",
+			"CoordinateGrid.js",
+			"SurfaceHorizonPanorama.js",
+			"DotPlotObject.js",
+			"RingGeometry2.js",
+			"EllipsoidGeometry.js",
+			"Vector3.js",
+			"ConfigWrapper.js",
+			"SunlightPositioning.js",
+			"ExamineControls.js",
+			"OrbitControls.js",
+			"GUI.js",
+			"AppEnv.js",
+			"EllipticalOrbiter.js",
+			"EphemerisOrbiter.js",
+			"TickController.js",
+			"KeyCommandBindManager.js",
+			"CentralSun.js",
+			"SolarSystem.js",
+			"SolarSystemObject.js",
+			"SolarSystemPlanet.js"
+		]
+	},
+	{
+		"output" : {
+			"standard" : "../node/libapoapsys.js",
+			"minified" : "../node/libapoapsys.min.js"
+		},
+		"includes" : [
+			"LibApoapsysTop.js",
+			"Math.js",
+			"Util.js",
+			"AstroDate.js",
+			"Astronomy.js",
+			"MoonCalc.js",
+			"Procession.js",
+			"Orbit.js",
+			"VSOP87Orbits.js",
+			"CustomOrbits.js",
+			"IAURotation.js",
+			"Vector3.js",
+			"SunlightPositioning.js",
+			"tle.js",
+			"LibApoapsys.js"
+		]
+	},
+	{
+		"output" : {
+			"standard" : "../satellitetracker.js",
+			"minified" : "../satellitetracker.min.js"
+		},
+		"includes" : [
+			"SatelliteMapRenderer.js"
+		]
+	}
+
+]

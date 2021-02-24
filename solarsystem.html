@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Apoapsys Solar</title>
+		<meta charset="utf-8">
+		
+		
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<meta name="description" content="Orbit Viewer is an interactive display of spacecraft orbits and realtime locations."/>
+		<meta property="og:description" content="Orbit Viewer is an interactive display of spacecraft orbits and realtime locations." />
+		
+		<link rel="image_src" type="image/png" href="/ApoapsysSolarSnapshot0.png" />
+		<meta property="og:image" content="/ApoapsysSolarSnapshot0.png" />
+		
+		
+		<link href='http://fonts.googleapis.com/css?family=Average+Sans|Rationale' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="/lib/jquery/css/custom-theme/jquery-ui-1.10.2.custom.min.css">
+		<link href="/lib/jquery/plugins/jquery.colorpicker.css" rel="stylesheet" type="text/css"/>
+		<link rel="stylesheet" href="/planet.css">
+		
+		<script src="/lib/three.min.js"></script>
+		<script src="/lib/moment.min.js"></script>
+		<script src="/lib/Detector.js"></script>
+		<script src="/lib/stats.min.js"></script>
+		<script src="/lib/json.js"></script>
+		<script src="/lib/modernizr.js"></script>
+		<script src="/lib/spin.min.js"></script>
+		<script src="/lib/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+		<script src="/lib/jquery/js/jquery-1.9.1.min.js"></script>
+		<script src="/lib/jquery/js/jquery-ui-1.10.2.custom.min.js"></script>
+		<script src="/lib/jquery/plugins/jquery.colorpicker.js"></script>
+		
+		
+		<script src="/lib/jquery/plugins/swatches/jquery.ui.colorpicker-pantone.js"></script>
+		<script src="/lib/jquery/plugins/parts/jquery.ui.colorpicker-rgbslider.js"></script>
+		<script src="/lib/jquery/plugins/parts/jquery.ui.colorpicker-memory.js"></script>
+		
+		<script src="/lib/THREEx.screenshot.js"></script>
+		<script src="/lib/THREEx.FullScreen.js"></script>
+		<script src="/lib/THREEx.WindowResize.js"></script>
+
+		<script src="/loaders.js"></script>
+		
+		<!-- Access /solarsystem.js for the unminified version -->
+		<script src="/solarsystem.js"></script>
+		
+		
+		<script src="/tracker-presets.js"></script>
+		<style>
+#loading-screen {
+	background: #000000;
+	
+}
+
+#loading-content {
+	text-align: center;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	width: 300px;
+	height: 250px;
+	margin-top: -100px;
+	margin-left: -150px;
+	z-index: 10000;
+}
+
+.spinner {
+	width: 100px;
+	height: 100px;
+	margin: 0px;
+}
+
+
+#loading-label {
+	font-size: 1.5em;
+	font-weight: bold;
+	font-style: italic;
+	font-family: 'Average Sans', sans-serif;
+	vertical-align: bottom;
+	margin-top: 100px;
+}
+
+#loading-status {
+	font-size: 2.0em;
+	font-weight: bold;
+	font-family: 'Average Sans', sans-serif;
+	vertical-align: bottom;
+}
+
+
+#loading-screen-graphic {
+	vertical-align: middle;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#date-container {
+	position: absolute;
+	top: 20px;
+	right: 10px;
+	color: #FFFFFF;
+	width: 250px;
+	font-size: 1.6em;
+}
+
+#asteroid-list {
+	position: absolute;
+	top: 45px;
+	right: 10px;
+	color: #FFFFFF;
+	width: 250px;
+	font-size: .9em;
+	z-index: 1000;
+	padding: 10px;
+}
+
+
+.control-sidebar-right .control-container li  {
+	margin: 2px;
+	height: 1.3em;
+}
+
+
+
+#event-container {
+	position: absolute;
+	display: none;
+	text-align: center;
+	margin-top: 20px;
+	background-color: #252525;
+	opacity: 0.9;
+	padding: 5px;
+	-webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow:    0px 0px 5px rgba(0, 0, 0, 0.75);
+	box-shadow:         0px 0px 5px rgba(0, 0, 0, 0.75);
+	border-radius: 10px;
+}
+
+#event-container .event-date {
+	font-weight: bold;
+}
+
+#event-container .event-title {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+
+.scene-object-label {
+	position: absolute;
+	text-align: center;
+	margin-top: 5px;
+	background: transparent;
+	padding: 0px;
+	font-weight: normal;
+	color: #FFFFFF;
+}
+
+#open-load-dialog-button {
+	position: absolute;
+	top: 70px;
+	right: 70px;
+}
+
+.control-sidebar-right .control-container .control-label {
+	width: 190px;
+
+}
+
+.control-sidebar-right {
+	margin-top: 30px;
+}
+
+.control-sidebar-left {
+	width: 310px;
+}
+
+.control-sidebar-left .control-container {
+	width: 300px;
+}
+
+.control-sidebar-left .control-container ul {
+	width: 300px;
+}
+
+.control-sidebar-left .control-container-scrollbar-vertical {
+	width: 300px;
+}
+.control-container .control-label{
+	width: 130px;
+
+}
+
+#share-text {
+	width: 500px;
+	border: 0px;
+	font-size: 1.1em;
+	height: 1.5em;
+}
+
+.link-icon-track {
+	height: 0.8em;
+}
+
+.ui-autocomplete-loading {
+	background: white url('/img/spinners/ui-anim_basic_16x16.gif') right center no-repeat;
+}
+
+.found-items {
+	width: 200px;
+	vertical-align: middle;
+}
+
+#tle-entry {
+	width: 500px;
+	height: 4.0em;
+}
+
+.load-dialog-help-block {
+	padding: 10px;
+	margin-bottom: 20px;
+}
+		</style>
+		<script>
+
+
+
+
+
+var solarSystem;
+var spinner;
+
+var appOptions = {
+	guiOpacity : 0.9	
+};
+
+var viewConfig = {};
+var modelOptions = {
+
+	kmScalar : 0.00001,
+	startDate : (new Date()).getTime() + (new Date()).getTimezoneOffset() * 60000,
+	focusPoint : "Sun",
+	lookingFrom : "Free",
+	timeWarp : 1,
+	//animationSpeedMultiple : 0.005,//0.25,
+	fieldOfView : 45.0,//0.205, //45.0
+	saveFrames : false,
+	starNamesVisible : false,
+	
+	allOrbits : false,
+	majorPlanetOrbits : true,
+	minorPlanetOrbits : false,
+	moonOrbits : false,
+	focusOrbits : true,
+	
+	viewFromType : "Geocentric", // Or Topocentric
+	viewFromLatitude : 0, //42.989722, // 250 Commercial St, Manchester, NH
+	viewFromLongitude : 0,//71.468889,
+	
+	eclipticVisible : false,
+	equatorialVisible : false,
+	azimuthalVisible : false,
+	
+	orientUpToEcliptic : false,
+	
+	loadedObjects : [],
+	customObjects : [],
+	customLoaded : []
+};	
+
+
+
+
+
+function isObjectIdInLoadedList(id) {
+	for (var i = 0; i < modelOptions.loadedObjects.length; i++) {
+		if (modelOptions.loadedObjects[i] == id) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function addLoadedObject(id) {
+	if (!isObjectIdInLoadedList(id)) {
+		modelOptions.loadedObjects.push(id);
+	}
+};
+
+function removeLoadedObject(id) {
+	var lst = [];
+	for (var i = 0; i < modelOptions.loadedObjects.length; i++) {
+		if (modelOptions.loadedObjects[i] != id) {
+			lst.push(modelOptions.loadedObjects[i]);
+		}
+	}
+	
+	modelOptions.loadedObjects = lst;
+};
+
+
+
+
+
+
+
+function isCustomIdInLoadedList(id) {
+	for (var i = 0; i < modelOptions.customObjects.length; i++) {
+		if (modelOptions.customObjects[i] == id) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function addCustomLoaded(id) {
+	if (!isCustomIdInLoadedList(id)) {
+		modelOptions.customObjects.push(id);
+	}
+};
+
+function removeCustomLoaded(id) {
+	var lst = [];
+	for (var i = 0; i < modelOptions.customObjects.length; i++) {
+		if (modelOptions.customObjects[i] != id) {
+			lst.push(modelOptions.customObjects[i]);
+		}
+	}
+	
+	modelOptions.customObjects = lst;
+};
+
+
+
+
+
+
+
+
+
+function setLoadingStatus(status)
+{
+	$( "#loading-status" ).html(status);
+}
+
+function displayErrorMessage(title, body)
+{
+	console.error("Error: " + title + ": " + body);
+	
+	$( "#error-message-dialog" ).attr("title", title);
+	$( "#error-message-title" ).text(title);
+	$( "#error-message-body" ).text(body);
+	
+	$( "#error-message-dialog" ).dialog( "open" );
+	
+}
+
+
+$(function() {
+
+	var opts = {
+		lines: 13,
+		length: 20, 
+		width: 10, 
+		radius: 30,
+		corners: 1,
+		rotate: 0, 
+		direction: 1, 
+		color: '#FFF', 
+		speed: 1,
+		trail: 60, 
+		shadow: false, 
+		hwaccel: false,
+		className: 'spinner',
+		zIndex: 2e9, 
+		top: 'auto', 
+		left: 'auto' 
+	};
+	var target = document.getElementById('loading-content');
+	spinner = new Spinner(opts).spin(target);
+	
+	if (KMG.Tracker.isTrackerPresetRequested()) {
+		// First, attempt to load preset options if we are displaying a predefined tracker
+		
+
+		KMG.Tracker.onTracker(modelOptions, viewConfig, function() {
+			initialization();
+		}, 
+		function(presetName) {
+			displayErrorMessage("Unrecognized Object", "The requested object is not recognized");
+		});
+		
+		
+	} else {
+		// If we're not displaying a tracker, parse query string options
+
+		for (var name in modelOptions) {
+			var v = AppEnv.getUrlVar(name);
+			if (v) {
+				modelOptions[name] = KMG.Util.stringToDataType(v);
+			}
+		};
+
+		if (!(modelOptions.loadedObjects instanceof Array)) {
+			modelOptions.loadedObjects = [modelOptions.loadedObjects];
+		}
+		if (!(modelOptions.customObjects instanceof Array)) {
+			modelOptions.customObjects = [modelOptions.customObjects];
+		}
+		
+		function getUrlParam(name) {
+			var v = AppEnv.getUrlVar(name);
+			if (v && v != "null") {
+				return KMG.Util.stringToDataType(v);
+			} else {
+				return null;
+			}
+		}
+
+		viewConfig.distance = getUrlParam("distance");
+		viewConfig.pitch = getUrlParam("pitch");
+		viewConfig.roll = getUrlParam("roll");
+		viewConfig.yaw = getUrlParam("yaw");
+		viewConfig.scale = getUrlParam("scale");
+		viewConfig.orientation = getUrlParam("orientation");
+		
+		initialization();
+	}
+
+
+
+
+
+});
+
+
+var visibleDialogSection = function(prefix, sections) {
+	
+	for (var i = 0; i < sections.length; i++) {
+		var id = "#" + prefix + "-dialog-" + sections[i];
+		if ($( id ).css("display") === "block") {
+			return $( id );
+		}
+	}
+	
+	return null;
+};
+
+var onDialogSection = function(section, prefix, sections) {
+
+	var visibleSection = visibleDialogSection(prefix, sections);
+	if (visibleSection !== null) {
+		var options = {};
+		visibleSection.hide( "fade", 200, function() {
+			$( "#" + prefix + "-dialog-"+section ).removeAttr( "style" ).hide().fadeIn(200);
+		});
+	} else {
+		$( "#" + prefix + "-dialog-"+section ).removeAttr( "style" ).hide().fadeIn(200);
+	}
+};
+
+function showSaveAttachmentDialog() {
+	
+	
+	if (modelOptions.customObjects.length > 0) {
+		var lastAddedObject = modelOptions.customObjects[modelOptions.customObjects.length - 1];
+		$( "#attach-id" ).val(lastAddedObject);
+	}
+	
+	$( "#save-to-attachment-dialog" ).dialog("open");
+}
+
+function initialization() {	
+	setLoadingStatus("Setting up viewport&hellip;");
+
+	
+	var visibleAboutDialogSection = function() {
+		return visibleDialogSection("about", ["about", "instructions", "changes"]);
+	};
+	
+	var onAboutDialogSection = function(section) {
+		return onDialogSection(section, "about", ["about", "instructions", "changes"]);
+	};
+	
+	$( "#about-dialog-radios" ).buttonset();
+	$( "#radio_about" ).change(function(e) {
+		onAboutDialogSection("about");
+	});
+	$( "#radio_instructions" ).change(function(e) {
+		onAboutDialogSection("instructions");
+	});
+	$( "#radio_changes" ).change(function(e) {
+		onAboutDialogSection("changes");
+	});
+	$( "#about-dialog-about" ).css("display", "none");
+	$( "#about-dialog-instructions" ).css("display", "none");
+	$( "#about-dialog-changes" ).css("display", "none");
+	onAboutDialogSection("about");
+	$("input:radio[name='about_dialog_radio'][value='about']").prop("checked", true);
+	
+	
+	
+	$( "#dialog" ).dialog({
+		width: 600,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		}
+	});
+	
+	$( "#share-dialog" ).dialog({
+		width: 600,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		}
+	});
+	
+	$( "#about-link" ).click(function() {
+		$( "#dialog" ).dialog( "open" );
+	});
+	
+	$( "#share-link" ).click(function(e) {
+		e.preventDefault();
+		$( "#share-text" ).val(document.location.href);
+		$( "#share-dialog" ).dialog( "open" );
+		$( "#share-text" ).select();
+	});
+
+
+
+	// Objects find/load dialog
+
+	var visibleLoadDialogSection = function() {
+		return visibleDialogSection("load", ["satellites", "asteroids", "tle"]);
+	};
+	
+	var onLoadDialogSection = function(section) {
+		return onDialogSection(section, "load", ["satellites", "asteroids", "tle"]);
+	};
+	
+	$( "#load-dialog-satellits" ).css("display", "none");
+	$( "#load-dialog-asteroids" ).css("display", "none");
+	$( "#load-dialog-tle" ).css("display", "none");
+	onLoadDialogSection("satellites");
+	$("input:radio[name='load_dialog_radio'][value='satellites']").prop("checked", true);
+	
+	$( "#load-dialog" ).dialog({
+		width: 550,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		},
+		close : function(event, ui) {
+			KMG.keyCommandBindManager.bindAll();
+		},
+		open: function( event, ui ) {
+			KMG.keyCommandBindManager.unbindAll();
+		}
+	});
+	$( "#load-dialog-radios" ).buttonset();
+	$( "#radio_satellites" ).change(function(e) {
+		onLoadDialogSection("satellites");
+	});
+	$( "#radio_asteroids" ).change(function(e) {
+		onLoadDialogSection("asteroids");
+	});
+	$( "#radio_tle" ).change(function(e) {
+		onLoadDialogSection("tle");
+	});
+	
+	
+	// Save attachments stuff
+
+	$( "#save-to-attachment-dialog" ).dialog({
+		width: 450,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		}
+	});
+	$( "#attach-submit" ).click(function(e) {
+		$( "#save-to-attachment-dialog" ).dialog("close");
+		
+		var objectId = $( "#attach-id" ).val();
+		var credit = $( "#attach-credit" ).val();
+		var authorization = $( "#attach-authorization" ).val();
+		
+		solarSystem.saveAttachment(objectId, credit, "", authorization, function(result) {
+			console.info("Save result: " + result);
+		});
+		
+	});
+	$( "#attach-cancel" ).click(function(e) {
+		$( "#save-to-attachment-dialog" ).dialog("close");
+	});
+	
+	
+	// Satellites search form
+	
+	
+	$( "#satellite-items" ).autocomplete({
+		source: "/api/satellites/list/",
+		minLength: 0,
+		delay : 0,
+		data: {
+			max: 15
+		},
+		select: function( event, ui ) {
+			$("#load-satellite-item").button({disabled:false});
+		},
+		change: function( event, ui ) {
+			
+		},
+		search: function( event, ui ) {
+			$("#load-satellite-item").button({disabled:true});
+		}
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+		item.value = item.id + " - " + item.name;
+		item.label = item.id + " - " + item.name;
+		return $( "<li>" )
+			.attr( "data-value", item.value )
+			.append( $( "<a>" ).text( item.label ) )
+			.appendTo( ul );
+    };
+    
+    
+    $("#load-satellite-item").button({disabled:true}).click(function(e) {
+		console.info("Load: " + $( "#satellite-items" ).val());
+		
+		var fullname = $( "#satellite-items" ).val();
+		var id = fullname.split(" - ")[0];
+		var name = fullname.split(" - ")[1];
+		solarSystem.load(id);
+		//addLoadedObject(id);
+		addCustomLoaded(id);
+		
+		addCustomLoadable(id, fullname, true);
+		
+		navState.pushState();
+		updateSelectableLists();
+		$( "#load-dialog" ).dialog("close");
+	});
+    
+
+	
+	// Asteroids/NEO search form
+	
+	$( "#asteroids-items" ).autocomplete({
+		source: "/api/neo/list/",
+		minLength: 0,
+		delay : 0,
+		data: {
+			max: 15
+		},
+		select: function( event, ui ) {
+			$("#load-asteroids-item").button({disabled:false});
+		},
+		change: function( event, ui ) {
+			
+		},
+		search: function( event, ui ) {
+			$("#load-asteroids-item").button({disabled:true});
+		}
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+		item.value = item.id + " - " + item.name;
+		item.label = item.id + " - " + item.name;
+		return $( "<li>" )
+			.attr( "data-value", item.value )
+			.append( $( "<a>" ).text( item.label ) )
+			.appendTo( ul );
+    };
+    
+    
+    $("#load-asteroids-item").button({disabled:true}).click(function(e) {
+		console.info("Load: " + $( "#asteroids-items" ).val());
+
+		var fullname = $( "#asteroids-items" ).val();
+		var id = fullname.split(" - ")[0];
+		var name = fullname.split(" - ")[1];
+		
+		solarSystem.load(id);
+		
+		addCustomLoaded(id);
+		addCustomLoadable(id, fullname, true);
+		navState.pushState();
+		updateSelectableLists();
+		$( "#load-dialog" ).dialog("close");
+	});
+    
+	$("#load-tle-item").button({disabled:true}).click(function(e) {
+		var tleText = $("#tle-entry").val();
+		console.info(tleText);
+		
+		var tle;
+		
+		try {
+			tle = KMG.tle.parseTle(tleText);
+		} catch (ex) {
+			displayErrorMessage("TLE Error", "Failed to parse TLE. Please Try Again");
+			return;
+		}
+		var id = tle.satelliteNumber;
+		console.info(tle);
+		
+		solarSystem.loadTleBased(tle);
+		
+		//addCustomLoaded(id);
+		//addCustomLoadable(id, tle.name, true);
+		//updateSelectableLists();
+		$( "#load-dialog" ).dialog("close");
+	});
+	
+    $(".cancel-load-dialog").button().click(function(e) {
+		$( "#load-dialog" ).dialog("close");
+	});
+    
+    function openLoadDialog() {
+		$( "#satellite-items" ).val("");
+		$("#load-satellite-item").button({disabled:true});
+		
+		$( "#asteroids-items" ).val("");
+		$("#load-asteroids-item").button({disabled:true});
+		
+		$( "#tle-entry" ).val("");
+		$("#load-tle-item").button({disabled:false});
+		
+		$( "#load-dialog" ).dialog( "open" );
+	}
+    
+    $( "#open-load-dialog-button").button().click(function(e) {
+		e.preventDefault();
+		openLoadDialog();
+	});
+    
+	$( "#load-link" ).click(function(e) {
+		e.preventDefault();
+		openLoadDialog();
+	});
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	$( "#error-message-dialog" ).dialog({
+		width: 600,
+		autoOpen: false,
+		modal: true,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		},
+		buttons: {
+			Ok : function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+
+	if (!window.WebGLRenderingContext || !Detector.webgl) {
+		Detector.addGetWebGLMessage();
+	}
+
+	// User Interface
+	
+	
+	function updateOrbitVisibility(solarSystem) {
+		var orbitVisibility = 0;
+		
+		if (modelOptions.allOrbits)
+			orbitVisibility |= KMG.OrbitDisplay.All;
+		if (modelOptions.majorPlanetOrbits)
+			orbitVisibility |= KMG.OrbitDisplay.MajorPlanets;
+		if (modelOptions.minorPlanetOrbits) 
+			orbitVisibility |= KMG.OrbitDisplay.MinorPlanets;
+		if (modelOptions.moonOrbits) 
+			orbitVisibility |= KMG.OrbitDisplay.Moons;
+		if (modelOptions.focusOrbits)
+			orbitVisibility |= KMG.OrbitDisplay.Focus;
+		
+		solarSystem.setOrbitLinesVisibility(orbitVisibility);
+	}
+	
+	
+	var navState = new KMG.SolarSystemNavigationController(modelOptions);
+	navState.setEnabled(!KMG.Tracker.isTrackerPresetRequested());
+	
+	navState.addConfig(viewConfig);
+	
+	var startOnJd = AppEnv.getUrlVar("jd");
+	if (startOnJd) {
+		startOnJd = parseFloat(startOnJd);
+		modelOptions.startDate = KMG.Util.julianToDate(startOnJd).getTime();
+	}
+
+
+	var guiChangeListener = function() {
+		
+	};
+	gui = new KMG.GUI(config, guiChangeListener);
+		
+	gui.onVisibilityChanged = function(visible) {
+		var setDisplay = visible ? "block" : "none";
+		$("#page-title-container").css("display", setDisplay);
+		$("#inline-instructions").css("display", setDisplay);
+		$("#instructions-link-container").css("display", setDisplay);
+		$("#stats").css("display", setDisplay);
+		$("#share-buttons").css("display", setDisplay);
+		$("#ce-left").css("display", setDisplay);
+	};
+	
+	var optionsGui = gui.left.createBlock("Options", appOptions, function() {
+		gui.setOpacity(appOptions.guiOpacity);
+	});
+	optionsGui.setExpandedState(KMG.Closed);
+	optionsGui.addAction('Hide Controls', function() {
+		gui.setVisible(false);
+	});
+	optionsGui.addRange('guiOpacity', 'GUI Transparency:', 0.0, 1.0, 0.01);
+	
+	
+	var modelGui = gui.left.createBlock("Model", modelOptions, function() {
+		navState.pushState();
+	});
+	modelGui.addDateTime('startDate', 'Start Date (UTC):');
+	modelGui.addAction('Reset to Start Date', function(e) {
+		solarSystem.setToDateMillis(modelOptions.startDate);
+	});
+	modelGui.addAction('Start Animation', function(e, btn) {
+		if (solarSystem.isActive()) {
+			btn.button( "option", "label", "Resume" );
+			solarSystem.stop();
+		} else {
+			btn.button( "option", "label", "Pause" );
+			solarSystem.start();
+		}
+	});
+
+	modelGui.addSelect('timeWarp', "Time Warp:", [1, 10, 100, 1000, 10000, 100000, 1000000, 10000000]).addChangeListener(function(property, title, oldValue, newValue) {
+		solarSystem.setTimeWarp(newValue);
+	});
+
+
+	modelGui.addRange('fieldOfView', 'Field of View:', 0.01, 90, 0.0001).addChangeListener(function(property, title, oldValue, newValue) {
+		solarSystem.setFieldOfView(newValue);
+	});
+	
+	modelGui.addToggle('starNamesVisible', 'Star Names Visible:').addChangeListener(function(property, title, oldValue, newValue) {
+		solarSystem.setStarNameVisibility(newValue);
+	});
+	
+	var focusPointController = modelGui.addSelect('focusPoint', "Focus Point:", []).addChangeListener(function(property, title, oldValue, newValue) {
+		solarSystem.setLookingAt(newValue.replace(/\.\.\./g, ""));
+	});
+			
+	
+	var viewLocationController = modelGui.addSelect('lookingFrom', "Viewer Location:", []).addChangeListener(function(property, title, oldValue, newValue) {
+		solarSystem.setLookingFrom(newValue.replace(/\.\.\./g, ""));
+	});
+	
+	
+	
+	
+	
+	modelGui.addSelect('viewFromType', 'View Type:', ["Geocentric", "Topocentric"]).addChangeListener(function(property, title, oldValue, newValue) {
+		solarSystem.setViewFromType(newValue);
+	});
+	var viewerLatitudeController = modelGui.addRange('viewFromLatitude', 'Viewer Latitude:', -90, 90, 0.001).addChangeListener(function(property, title, oldValue, newValue) {
+		solarSystem.setTopocentricLatitude(newValue);
+	});
+	
+	var viewerLongitudeController = modelGui.addRange('viewFromLongitude', 'Viewer Longitude:', -180, 180, 0.001).addChangeListener(function(property, title, oldValue, newValue) {
+		solarSystem.setTopocentricLongitude(newValue);
+	});
+	
+
+	modelGui.addAction('Set My Location', function() {
+		KMG.Location.getPreciseLocation(function(position) {
+			console.info(position);
+			modelOptions.viewFromLatitude = position.coords.latitude;
+			viewerLatitudeController.update();
+			
+			modelOptions.viewFromLongitude = position.coords.longitude;
+			viewerLongitudeController.update();
+		});
+	});
+	
+	
+	modelGui.addToggle("eclipticVisible", "Show Ecliptic:").addChangeListener(function(property, title, oldValue, newValue) {
+		solarSystem.setEclipticVisibility(newValue);
+	});
+	modelGui.addToggle("equatorialVisible", "Show Equatorial:").addChangeListener(function(property, title, oldValue, newValue) {
+		solarSystem.setEquatorialVisibility(newValue);
+	});
+	modelGui.addToggle("azimuthalVisible", "Show Azimuthal:").addChangeListener(function(property, title, oldValue, newValue) {
+		solarSystem.setAzimuthalVisibility(newValue);
+	});
+	modelGui.addToggle("orientUpToEcliptic", "Orient Up To Ecliptic:").addChangeListener(function(property, title, oldValue, newValue) {
+		solarSystem.setOrientUpToEcliptic(newValue);
+	});
+	
+	//
+	
+	//modelGui.addToggle('saveFrames', 'Save Frames:').addChangeListener(function(property, title, oldValue, newValue) {
+	//	solarSystem.setSavingFrames(newValue);
+	//});	
+
+	
+	var orbitsGui = gui.left.createBlock("Orbits", modelOptions, function() {
+		navState.pushState();
+		
+		updateOrbitVisibility(solarSystem);
+		
+	});
+	orbitsGui.addToggle('allOrbits', 'Show All Orbits:');
+	orbitsGui.addToggle('majorPlanetOrbits', 'Show Planet Orbits');
+	orbitsGui.addToggle('minorPlanetOrbits', 'Show Minor Planet Orbits:');
+	orbitsGui.addToggle('moonOrbits', 'Show Moon Orbits:');
+	orbitsGui.addToggle('focusOrbits', 'Show Focus Orbit:');
+
+	//var loadablesGui = gui.right.createBlock("Objects", modelOptions);
+	
+
+	
+	var loadableConfig = {};
+	var spacecraftGui = gui.right.createBlock("Spacecraft", loadableConfig);
+	var cometsGui = gui.right.createBlock("Comets", loadableConfig);
+	var asteroidsGui = gui.right.createBlock("Asteroids", loadableConfig);
+	
+	var customConfig = {};
+	var customGui = gui.right.createBlock("Custom Objects", customConfig);
+
+	
+	function objectToggleHandler(property, title, oldValue, newValue) {
+		if (newValue) {
+			solarSystem.load(property);
+			addCustomLoaded(property);
+			//addLoadedObject(property)
+		} else {
+			solarSystem.unload(property);
+			removeCustomLoaded(property);
+			//removeLoadedObject(property);
+			//removeLoadedObject(property)
+		}
+		
+		updateSelectableLists();
+		navState.pushState();
+	}
+	
+	
+	function addCustomLoadable(id, name, force) {
+		customConfig[id] = isCustomIdInLoadedList(id) || force === true;
+		customGui.addToggle(id, name).addChangeListener(objectToggleHandler);
+	}
+
+	//addLoadableSatellite("20580", "Hubble Space Telescope");
+	//addLoadableSatellite("25544", "International Space Station");
+	//addLoadableSatellite("25937", "DIRECTV 1R");
+	//satellitesGui.addAction("Full Satellite List", function() {
+	//	
+	//});
+
+	// If we're displaying as a tracker, let's retract some of the control blocks
+	if (KMG.Tracker.isTrackerPresetRequested()) {
+		modelGui.setExpandedState(KMG.Closed);
+		orbitsGui.setExpandedState(KMG.Closed);
+	}
+	
+	spacecraftGui.setExpandedState(KMG.Closed);
+	cometsGui.setExpandedState(KMG.Closed);
+	asteroidsGui.setExpandedState(KMG.Closed);
+	customGui.setExpandedState(KMG.Closed);
+	
+	
+	function updateSelectableLists() {
+		var objects = solarSystem.getObjects();
+			
+		var names = [];
+		for (var i = 0; i < objects.length; i++) {
+			names.push(prepend(objects[i].name, objects[i].level));
+		}
+		
+		focusPointController.setValues(names);
+		names.unshift("Free");
+		viewLocationController.setValues(names);
+		
+	}
+
+
+
+	// Scene Objects
+
+	function prepend(s, n) {
+		
+		for (var i = 0; i < n; i++) {
+			s = "..." + s;
+		}
+		return s;
+	}
+
+	var sceneCallbacks = {
+		sceneReadyCallback : function() {
+			
+		},
+		contextLostCallback : function(event) {
+			console.error("UI: WebGL Context Lost, displaying notification");
+			displayErrorMessage("WebGL Error", "WebGL Context Lost! Please refresh to restart the application");
+		},
+		onPlanetsLoaded : function(solarSystem) {
+			solarSystem.setLookingAt(modelOptions.focusPoint);
+			solarSystem.setLookingFrom(modelOptions.lookingFrom);
+			
+			updateOrbitVisibility(solarSystem);
+			updateSelectableLists();
+			
+			console.info("Loading custom objects");
+			if (modelOptions.customObjects.length > 0) {
+				for (var i = 0; i < modelOptions.customObjects.length; i++) {
+					var id = modelOptions.customObjects[i];
+					solarSystem.load(id);
+					console.info("Adding custom with id " + id);
+					addCustomLoadable(id, id, true);
+				}
+				updateSelectableLists();
+				navState.pushState();
+			}
+			
+			// Planets take the longest to load (generally). Present the scene once this point has been reached.
+			console.info("Scene Ready");
+			$( "#loading-screen" ).css("display", "none");
+			spinner.stop();
+		},
+		onRender : function(solarSystem, context) {
+			$("#date-container").html(moment(context.tickController.tickDate).format("LLL")); 
+			
+		},
+		onLoadableObjectsListLoaded : function(loadableObjects) {
+			for (var i = 0; i < loadableObjects.length; i++) {
+				var loadable = loadableObjects[i];
+				
+				var gui = null;
+				if (loadable.type == "spacecraft")
+					gui = spacecraftGui;
+				else if (loadable.type == "comet")
+					gui = cometsGui;
+				else if (loadable.type == "asteroid")
+					gui = asteroidsGui;
+				
+				loadableConfig[loadable.id] = isObjectIdInLoadedList(loadable.id);
+				
+				if (gui) {
+					
+					var toggleLabel = loadable.name + " <a href='/track/" + loadable.id + "' title='Track'><img class='link-icon-track' src='/img/external_link.png' alt='↪'/></a>";
+					
+					gui.addToggle(loadable.id, toggleLabel).addChangeListener(function(property, title, oldValue, newValue) {
+						if (newValue) {
+							solarSystem.load(property);	
+							addLoadedObject(property);
+						} else {
+							solarSystem.unload(property);
+							removeLoadedObject(property);	
+						}
+						updateSelectableLists();
+						navState.pushState();
+					});
+				}
+			}
+			
+			if (modelOptions.loadedObjects.length > 0) {
+				for (var i = 0; i < modelOptions.loadedObjects.length; i++) {
+					solarSystem.load(modelOptions.loadedObjects[i]);	
+				}
+				updateSelectableLists();
+				navState.pushState();
+			}
+			
+			solarSystem.setLookingAt(modelOptions.focusPoint);
+		
+		},
+		onConstellationsLoaded : function(scope, instance) {
+			
+		},
+		onStarsLoaded : function(scope, instance) {
+			solarSystem.setStarNameVisibility(modelOptions.starNamesVisible);
+		},
+		onViewChanged : function(scope, controls) {
+			
+			var config = controls.toConfig();
+			viewConfig.distance = config.distance;
+			viewConfig.pitch = config.pitch;
+			viewConfig.roll = config.roll;
+			viewConfig.yaw = config.yaw;
+			viewConfig.scale = config.scale;
+			viewConfig.orientation = config.orientation[0] + "," + config.orientation[1] + "," + config.orientation[2] + "," + config.orientation[3];
+
+			navState.pushState();
+		},
+		onObjectLoaded : function(scope, data, object) {
+			updateSelectableLists();
+		},
+		onObjectClicked : function(scope, object) {
+			if (object) {
+				console.info("Object Clicked: " + object.name);
+			}
+		},
+		onObjectDoubleClicked : function(scope, object) {
+			if (object) {
+				console.info("Object Doubleclicked: " + object.name);
+				
+				modelOptions.focusPoint = object.name;
+				updateSelectableLists();
+				solarSystem.setLookingAt(object.name);
+				navState.pushState();
+			}
+		},
+		onLoadableSatellitesListLoaded : function(loadableSatellites) {
+			console.info("Loaded list of " + loadableSatellites.length + " satellites");
+		}
+	};
+
+	setLoadingStatus("Building Solar System...");
+	
+	
+	
+
+	var config = KMG.Util.extend({kmScalar : modelOptions.kmScalar, view : viewConfig}, KMG.DefaultSolarSystemConfig);
+	
+	solarSystem = new KMG.SolarSystem(document.getElementById( 'container' ), config, sceneCallbacks);
+	
+	solarSystem.setFieldOfView(modelOptions.fieldOfView);
+	//solarSystem.setAnimationSpeed(1 + (1000000 * modelOptions.animationSpeedMultiple));
+	solarSystem.setToDateMillis(modelOptions.startDate);
+	solarSystem.setTimeWarp(modelOptions.timeWarp);
+
+	solarSystem.setViewFromType(modelOptions.viewFromType);
+	solarSystem.setTopocentricLatitude(modelOptions.viewFromLatitude);
+	solarSystem.setTopocentricLongitude(modelOptions.viewFromLongitude);
+	
+	solarSystem.setEclipticVisibility(modelOptions.eclipticVisible);
+	solarSystem.setEquatorialVisibility(modelOptions.equatorialVisible);
+	solarSystem.setAzimuthalVisibility(modelOptions.azimuthalVisible);
+	solarSystem.setOrientUpToEcliptic(modelOptions.orientUpToEcliptic);
+	navState.pushState();
+	
+	
+	KMG.keyCommandBindManager.engine = solarSystem;
+	var bindResult = KMG.keyCommandBindManager.bindAll();
+	if (bindResult.screenshot) {
+		document.getElementById('inline-instructions').innerHTML	+= ", <i>f</i> for fullscreen.";
+	}
+
+};
+	</script>
+		
+	</head>
+	<body>
+		
+		
+		<div id="scene">
+			<div id="container"></div>
+			<div id="date-container"></div>
+		</div>
+		
+		<div id="debug-message"></div>
+		
+		
+		
+		
+		<div id="event-container"></div>
+
+		<div id="no-webgl-for-you">
+			<div id="h5p-message"></div>
+			<script>window.h5please=function(a){ document.getElementById("h5p-message").innerHTML=a.html }</script>
+			<script async src="http://api.html5please.com/webgl+canvas.json?callback=h5please&texticon&html"></script>
+		</div>
+		
+		
+		
+		<div id="page-title-container" class="hide-on-embedded">
+			<a href="http://solar.apoapsys.com/" id="page-title-link">Apoapsys Solar [beta]</a>
+		</div>
+		
+		<div id="instructions-link-container" class="hide-on-embedded">
+			<a href="#" id="about-link">[ About/Instructions ]</a>
+			<a href="#" id="share-link">[ Share ]</a>
+			<a href="/" id="reset-link">[ Reset ]</a>
+			<a href="#" id="load-link">[ Load ]</a>
+		</div>
+
+		<div id="inline-instructions" class="hide-on-embedded">
+			Press <i>p</i> for screenshot
+		</div>
+		
+		<div id="error-message-dialog" title="Error">
+			<div class="dialog-section">
+				<p>
+					<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 50px 0;"></span>
+					<div id="error-message-title">Title</div>
+					<div id="error-message-body">Body</div>
+				</p>
+			</div>
+		</div>
+		
+		
+		<div id="share-dialog" title="Share This View">
+			<h1>Share This View</h1>
+			
+			<div class="dialog-section">
+				Copy &amp; paste the following link to share this view with others:
+			</div>
+			
+			<div class="dialog-section">
+				<input type="text" value="" id="share-text"/>
+			</div>
+		</div>
+		
+		
+		<div id="save-to-attachment-dialog" title="Attach Screenshot">
+			<h1>Attach Screenshot</h1>
+		
+			<div class="dialog-section">
+				<label for="attach-id">Object ID:</label>
+				<input type="text" value="" id="attach-id" />
+			</div>
+			
+			<div class="dialog-section">
+				<label for="attach-credit">Credit:</label>
+				<input type="text" value="Kevin M. Gill; Data: NASA/JPL" id="attach-credit" />
+			</div>
+			
+			<div class="dialog-section">
+				<label for="attach-authorization">Authorization:</label>
+				<input type="text" value="" id="attach-authorization" />
+			</div>
+			
+			<div class="dialog-section">
+				<input type="button" value="OK" id="attach-submit" />
+				<input type="button" value="Cancel" id="attach-cancel" />
+			</div>
+			
+		</div>
+		
+		
+		<input type="button" value="Load Satellites, Asteroids, &amp; TLEs" id="open-load-dialog-button"/>
+		<div id="load-dialog" title="Find Object">
+			<h1>Find Objects to Load</h1>
+			
+			
+			<div id="load-dialog-radios">
+				<input type="radio" id="radio_satellites" name="load_dialog_radio" value="Satellites" checked="checked"/><label for="radio_satellites">Satellites</label>
+				<input type="radio" id="radio_asteroids" name="load_dialog_radio" value="Asteroids" /><label for="radio_asteroids">Asteroids</label>
+				<input type="radio" id="radio_tle" name="load_dialog_radio" value="TLE" /><label for="radio_tle">TLE</label>
+			</div>
+			
+			<div id="load-dialog-satellites" class="dialog-section">
+				<label for="satellite-items">Satellites: </label>
+				<input id="satellite-items" class="found-items"/>
+				<input type="button" id="load-satellite-item" value="Load" />
+				<input type="button" value="Cancel" class="cancel-load-dialog"/>
+			</div>
+			
+			<div id="load-dialog-asteroids" class="dialog-section">
+				<label for="asteroids-items">Asteroids: </label>
+				<input id="asteroids-items" class="found-items"/>
+				<input type="button" id="load-asteroids-item" value="Load" />
+				<input type="button" value="Cancel" class="cancel-load-dialog"/>
+			</div>
+			
+			<div id="load-dialog-tle" class="dialog-section">
+				<label for="tle-entry">TLE: </label>
+				<textarea id="tle-entry"></textarea>
+				<div class="load-dialog-help-block">
+					Enter a two or three line TLE, including line-breaks. Trajectory will be shown as Earth-orbiting.
+				</div>
+				<input type="button" id="load-tle-item" value="Load" />
+				<input type="button" value="Cancel" class="cancel-load-dialog"/>
+			</div>
+		</div>
+		
+		<div id="dialog" title="About Apoapsys Solar">
+			<h1><a href="/">Apoapsys Solar</a></h1>
+			
+			<div class="dialog-section">
+				
+				
+				<div id="about-dialog-radios">
+					<input type="radio" id="radio_about" name="about_dialog_radio" value="about" checked="checked"/><label for="radio_about">About</label>
+					<input type="radio" id="radio_instructions" name="about_dialog_radio" value="instructions" /><label for="radio_instructions">Instructions</label>
+				</div>
+				
+				<div id="about-dialog-about">
+					<div class="dialog-subsection">
+						<b><em>About:</em></b> 
+						
+						<p>
+						Apoapsys Solar is an interactive testbed for the Solar System visualization engine. Expect bugs.
+						</p>
+
+						
+						<p>
+						This is built as a WebGL experiment using <a href="http://threejs.org/" target="_BLANK">Three.js</a> and is expected
+						to work in the latest versions of Google Chrome, Firefox, & Internet Explorer 11.
+						</p>
+					</div>
+					
+					<div class="dialog-subsection">
+						<p>
+							<b>Uses algorithms from:</b>
+							<p>
+								Meeus, Jean. <i><a href="http://amzn.com/0943396611" target="_BLANK">Astronomical Algorithms</a></i><br/>
+								Richmond, Virg.: Willmann-Bell, 2009.<br/>
+								ISBN: 978-0943396613<br/>
+								<li>Chapter 13: Transformation of Coordinates</li>
+								<li>Chapter 22: Nutation and the Obliquity of the Ecliptic</li>
+								<li>Chapter 25: Solar Coordinates</li>
+								<li>Chapter 47: Position of the Moon</li>
+								<li>Chapter 48: Illuminated Fraction of the Moon's Disk</li>
+								<li>Chapter 49: Phases of the Moon</li>
+								<br/>
+								
+							</p>
+							
+							<p>
+								Duffet-Smith, Peter. <i><a href="http://amzn.com/0521356997" target="_BLANK">Practical Astronomy with Your Calculator</a></i><br/>
+								Cambridge University Press; 3 edition (March 31, 1988)<br/>
+								ISBN: 978-0521356992
+							</p>
+							
+							
+							
+							Duffet-Smith, Peter: Practical Astronomy with Your Calculator
+						</p>
+					</div>
+					
+					<div class="dialog-subsection">
+						<ul>
+							<li><a href="/src/MoonCalc.js" target="_BLANK">Implementation Source Code for Meeus Algorithms</a></li>
+							<li><a href="/src/VSOP87Orbits.js" target="_BLANK">Implementation Source Code for VSOP87 Alogrithms</a></li>
+							<li><a href="/src/CustomOrbits.js" target="_BLANK">Implementation Source Code for Custom Orbits</a></li>
+						</ul>
+						
+					</div>
+					<div class="dialog-subsection">
+						<b><em>Sources:</em></b> 
+						<ul>
+							<li>Moon Texture: <a href="http://laps.noaa.gov/albers/sos/sos.html" target="_BLANK">Planetary Maps by Steve Albers, processed by Jens Meyer</a></li>
+							<li>Constellation Lines: <a href="http://www.midnightkite.com/index.aspx?AID=0&URL=StarChartFAQ" target="_BLANK">Dan Bruton, Star Chart</a></li>
+							<li>Orbital Elements: <a href="http://ssd.jpl.nasa.gov/sbdb_query.cgi" target="_BLANK">NASA/JPL</a></li>
+							<li>Planet Textures: <a href="http://www.shatters.net/celestia/" target="_BLANK">Celestia</a>, NASA</li>
+							<li>Sun Texture: <a href="http://www.celestiamotherlode.net/catalog/show_addon_details.php?addon_id=629" target="_BLANK">Runar Thorvaldsen</a></li>
+							<li>Stars: Bright Star Catalogue, 5th Revised Ed., Hoffleit D., Warren Jr W.H., 1991</li>
+						</ul>
+					</div>
+
+
+					
+					<div class="dialog-section">
+						&copy; 2014 <a href="https://plus.google.com/113761354606401247247/about" target="_BLANK">Kevin M. Gill</a>. All Rights Reserved.
+					</div>
+				</div>
+				
+				<div id="about-dialog-instructions">
+					<div class="dialog-subsection">
+						<b><em>Instructions:</em></b> 
+						
+						<p>
+					
+						</p>
+						
+						<ul>
+							<li> Click 'Start' to begin the animation, then control with 'Pause' and 'Resume'.</li>
+							<li> To move to a specific date, set the 'Start Date', then click 'Reset to Start Date'.</li>
+							<li> Adjust the animation speed using 'Animation Speed'.</li>
+							<li> Use 'Targeted Planet' to change which planet is being watched. Note that the asteroid list is optimized
+								for Earth resulting in possibly incomplete lists for other planets.</li>
+						</ul>
+						
+							<b><em>View Controls:</em></b>
+						Orbit Viewer uses mouse and keyboard based navigation controls, similar to those in Google Earth.
+						<ul>
+							<li><b>Rotating:</b> Rotate the scene by left-clicking and dragging with the mouse</li>
+							<li><b>Pitch/Roll:</b> Control the pitch & roll of the scene by holding down shift while left-clicking and
+					dragging with the mouse.</li>
+							<li><b>Panning:</b> Pan the scene (offsetting the planet from the center, similar to turning your head away from
+					the object of focus) by holding down Ctrl while left-clicking and dragging with the mouse.</li>
+							<li><b>Zooming:</b> Zoom either with the scroll-wheel or by right-clicking and dragging the mouse up or down.</li>
+						</ul>
+					</div>
+				</div>
+				
+				
+				
+				
+				
+				
+			</div>
+			
+			
+		</div>
+		
+		
+		<!--
+		<div id="share-buttons" class="hide-on-embedded">
+			
+			<div class="share-button">
+			
+			
+				<div id="fb-root"></div>
+				<script> if (!AppEnv.isDevMode()) {(function(d, s, id) {
+				  var js, fjs = d.getElementsByTagName(s)[0];
+				  if (d.getElementById(id)) return;
+				  js = d.createElement(s); js.id = id;
+				  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+				  fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));}</script>
+			
+				<div class="fb-like" data-href="http://solar.apoapsys.com" data-send="false" data-layout="button_count" data-width="300" data-show-faces="true" data-colorscheme="dark"></div>
+			
+			
+			</div>
+			
+			<div class="share-button">
+				<a href="https://twitter.com/share" class="twitter-share-button" data-via="kevinmgill" id="tweet-href"></a>
+				<script>
+				if (!AppEnv.isDevMode()) {
+					$("#tweet-href").text("Tweet");
+					!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+				}	
+				</script>
+			</div>
+
+			<div class="share-button">
+	
+				<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="150"></div>
+				<script type="text/javascript">
+				
+				  (function() {
+				  if (!AppEnv.isDevMode()) {
+					var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+					po.src = 'https://apis.google.com/js/plusone.js';
+					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+					}
+				  })();
+				
+				</script>
+			</div>
+			
+		</div>
+		-->
+		
+		<!--
+		<a id="ce-left" href="http://www.chromeexperiments.com/detail/orbit-viewer/" class="hide-on-embedded" alt="This is a Chrome Experiment" title="This is a Chrome Experiment">
+			<span>This is a Chrome Experiment</span>
+		</a>
+		-->
+		
+		<div id="loading-screen">
+		
+			<div id="loading-content">
+				<!--<img src="/img/spinners/preloader_4.gif" id="loading-screen-graphic" title="" />-->
+				<div id="loading-label">Loading&hellip;</div>
+				<div id="loading-status">Initializing&hellip;</div>
+			</div>
+
+		</div>
+
+		<script>
+			
+if (!AppEnv.isDevMode() && !AppEnv.noAnalytics()) {
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-3932152-11', 'apoapsys.com');
+  ga('send', 'pageview', {
+	'dimension1' : 'Apoapsys Solar'
+  });
+
+}
+
+	</script>
+		
+	</body>
+</html>
+	
+	

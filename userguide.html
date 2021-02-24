@@ -1,0 +1,1066 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>User Guide | PlanetMaker</title>
+
+	<script src="/lib/jquery/js/jquery-1.9.1.min.js"></script>
+	
+    <!-- Bootstrap core CSS -->
+	<link href="/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/lib/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="userguide.css" rel="stylesheet">
+	
+	<script src="/lib/google-code-prettify/run_prettify.js?autoload=true" defer="defer"></script>
+	
+	<script>
+$(function() {
+	
+	$( ".prettyprint" ).html(function() {
+		return this.innerHTML.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+	});
+	
+});	
+	</script>
+	
+	<style>
+	</style>
+  </head>
+
+  <body>
+
+		
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">PlanetMaker</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+	
+    <div class="container">
+		<div class="row">
+			
+			<div class="col-md-3  sidebar nav-sidebar">
+				<div class="list-group affix">
+					<a href="#top" class="list-group-item">Top</a>
+					<a href="#overview" class="list-group-item">Overview</a>
+					<a href="#navigation" class="list-group-item">Navigation</a>
+					<a href="#scene" class="list-group-item">Scene</a>
+					<a href="#surface" class="list-group-item">Surface</a>
+					<a href="#clouds" class="list-group-item">Clouds</a>
+					<a href="#localstar" class="list-group-item">Local Star</a>
+					<a href="#atmosphere" class="list-group-item">Atmosphere</a>
+					<a href="#ring" class="list-group-item">Ring</a>
+					<a href="#background" class="list-group-item">Background</a>
+					<a href="#moons" class="list-group-item">Moons</a>
+					<a href="#effects" class="list-group-item">Effects</a>
+					<a href="#customtextures" class="list-group-item">Custom Textures</a>
+					<a href="#scenescript" class="list-group-item">Scene Script</a>
+					<a href="#credits" class="list-group-item">Credits</a>
+					<a href="#changes" class="list-group-item">Changes</a>
+				</div>
+			</div>
+
+		
+			<div class="content-container col-md-9">
+				<h1>PlanetMaker User Guide</h1>
+				
+	
+				<p class="lead">Get to know PlanetMaker and get the most out of it to make the perfect planets</p>
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="overview">Overview</h2>
+					</div>
+					<p class="lead">Quickly get started using PlanetMaker</p>
+					
+					<h3>Requirements</h3>
+PlanetMaker is a graphics intensive application which makes use of the latest WebGL technology available in some modern browsers. It requires the use
+of the latest versions of either <a href="https://www.google.com/intl/en/chrome/browser/" target="_BLANK">Google Chrome</a> 
+or <a href="http://www.mozilla.org/en-US/firefox/new/" target="_BLANK">Mozilla Firefox</a> (though it has been reported to work in Safari) and have accelerated graphics
+capabilities. 
+					<h3>Interface</h3>
+					<img src="/img/userguide/controls-block-options.png" class="img-figure thumbnail" />
+					<h4>Hide Controls</h4>
+					Allows for hiding of the on-screen control elements along with the page title and other items.
+					A link will appear in the top right labels 'Show Controls' which will redisplay the hidden controls.
+					
+					<h4>GUI Transparency</h4>
+					Adjust the transparency of the control elements for increases visibility of the scene.
+				</div>
+				
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="navigation">Navigation</h2>
+					</div>
+					<p class="lead">PlanetMaker uses mouse and keyboard based navigation controls, similar to those in Google Earth.</p>
+					
+					<h4>Rotating</h4>
+					Rotate the scene by left-clicking and dragging with the mouse
+					
+					<h4>Pitch/Roll</h4>
+					Control the pitch & roll of the scene by holding down shift while left-clicking and
+					dragging with the mouse.
+					
+					<h4>Panning</h4>
+					Pan the scene (offsetting the planet from the center, similar to turning your head away from
+					the object of focus) by holding down Ctrl while left-clicking and dragging with the mouse.
+					
+					<h4>Zooming</h4>
+					Zoom either with the scroll-wheel or by right-clicking and dragging the mouse up or down.
+				</div>
+				
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="scene">Scene</h2>
+					</div>
+					<p class="lead">Scene options control general effects such as source image resolutions, lighting, and shadows.</p>
+					<img src="/img/userguide/controls-block-scene.png" class="img-figure thumbnail" />
+					
+					<h4>Texture Resolution</h4>
+					Controls the resolution (detail level) of the source images. Higher values mean enhanced detail, but
+					are subject to memory and GPU limits. 
+					<h4>Lighting Type</h4>
+					Switch between directional and point lighting. Directional simulates a planet which receives
+					most of it's light from a local star. Point lighting makes the light emit from the planet itself.
+					<h4>Sunlight Direction</h4>
+					The direction from which "directional" light will flow, in degrees.
+					<h4>Date/Time Sunlight</h4>
+					Automatically determine sunlight direction using the "Sunlight Date" option.
+					<h4>Sunlight Date (UTC)</h4>
+					Date to use when determining sunlight direction if "Date/Time Sunlight" option is checked, based on 
+					Coordinated Universal Time (UTC).
+					This is an approximation, true sunlight azimuth &amp; declination may differ some.
+					<h4>Enable Shadows</h4>
+					Enable shadows on objects.
+					<h4>Shadow Darkness</h4>
+					Darkness of shadows on objects (amount of blocked sunlight). 
+					<h4>SceneScript Editor</h4>
+					Open the <a href="#scenescript">SceneScript</a> editor dialog.
+					<h4>Reset</h4>
+					Reload the page and set the model back to it's original state.
+					<!--
+					<h4>Create Permalink</h4>
+					-->
+					<h4>Planet Gallery</h4>
+					View a list of example planets.
+				</div>
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="surface">Surface</h2>
+					</div>
+					<p class="lead">Surface options control the planet itself and its physical properties.</p>
+					<img src="/img/userguide/controls-block-surface.png" class="img-figure thumbnail" />
+					<h4>Texture</h4>
+					Select the base texture for the planet surface.
+					<h4>Set Custom Texture</h4>
+					Open the <a href="#customtextures">Custom Texture</a> dialog.
+					<h4>Hue/Saturation/Lightness</h4>
+					Modify the surface color by applying HSL adjustments. By default, the
+					saturation is at the minimum so no color shading is applied.
+					<h4>Color Mode</h4>
+					Invert and/or force greyscale color transformations on the surface image.
+					<h4>Detail Level</h4>
+					Adjust the level of detail with which surface features are shaded using normal mapping.
+					<h4>Elevation Scale</h4>
+					Adjust the scale with which elevations are derived from the height map.
+					<h4>Flattening</h4>
+					Adjust the level of planetary <a href="http://en.wikipedia.org/wiki/Flattening" target="_BLANK">flattening</a>.
+					<h4>Axial Tilt</h4>
+					Adjust the <a href="http://en.wikipedia.org/wiki/Axial_tilt" target="_BLANK">axial tilt</a> of the planet, in degrees.
+					<h4>Shininess</h4>
+					Adjust the shininess of the surface. Higher values result in a more focused reflection. 
+					The minimum value of 0 results in a uniform, matte, distribution of light.
+					<h4>Specular Light</h4>
+					The intensity of light that contributes to the shininess of the surface.
+					<h4>Diffuse Wrap Around</h4>
+					Degree of diffuse (normal) lighting which is visible on surfaces facing away 
+					from the light source.
+					<h4>Ambient Light</h4>
+					Intensity of scattered, non-directional light present in the surface.
+					<h4>Emissive Light</h4>
+					Intensity of light being emitted by the planet.
+					<h4>City Lights</h4>
+					Enable the visibility of city lights in low-light portions of the planet.
+					<h4>City Light Level</h4>
+					Intensity of visibility of city lights.
+				</div>
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="clouds">Clouds</h2>
+					</div>
+					<p class="lead">Clouds options control the clouds and their physical properties such as texture,
+					thickness, altitude, and coloring.</p>
+					<img src="/img/userguide/controls-block-clouds.png" class="img-figure thumbnail" />
+					<h4>Display Clouds</h4>
+					Enable or disable the display of the cloud layer.
+					<h4>Texture</h4>
+					Select the base texture for the planets clouds.
+					<h4>Hue/Saturation/Lightness</h4>
+					Modify the cloud color by applying HSL adjustments. By default, the
+					saturation is at the minimum so no color shading is applied.
+					<h4>Detail Level</h4>
+					Adjust the level of detail with which surface features are shaded using normal mapping.
+					<h4>Altitude</h4>
+					Adjust the altitude above the surface in which the clouds reside (Cloud base/Ceiling).
+					<h4>Thickness</h4>
+					Adjust the scale with which elevations are derived from the height map.
+					<h4>Opacity</h4>
+					Adjust the opacity, or transparency, of the cloud layer.
+					<h4>Cast Shadows</h4>
+					Enable or disable cloud shadows on the surface.
+					<h4>Shadow Level</h4>
+					Adjust the amount of light blocked by the clouds in the surface shadows.
+					<h4>Specular Light</h4>
+					The intensity of light that contributes to the shininess of the clouds.
+					<h4>Ambient Light</h4>
+					Intensity of scattered, non-directional light present in the clouds.
+				</div>
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="localstar">Local Star</h2>
+					</div>
+					<p class="lead">A star, local to your planet, which is the source of light.</p>
+					<img src="/img/userguide/controls-block-localstar.png" class="img-figure thumbnail" />
+					<h4>Display Local Star</h4>
+					Enable or disable the visibility of the local star. When enabled, the camera must
+					be pointed towards the light source for the star to be visible.
+					<h4>Size</h4>
+					Adjust the size of the local star.
+					<h4>Texture</h4>
+					Select the image used to represent the local star.
+					<h4>Color</h4>
+					Adjust the color emitted by the star.
+					<h4>Planet Lighting</h4>
+					Toggle whether the color of the light reaching the planet is affected by
+					that of the local star.
+					<h4>Lens Flare</h4>
+					Enable or disable lens flare when the local star is in view.
+				</div>
+
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="atmosphere">Atmosphere</h2>
+					</div>
+					<p class="lead">Control the altitude, density and color of the planet's atmosphere</p>
+					<img src="/img/userguide/controls-block-atmosphere.png" class="img-figure thumbnail" />
+					
+					
+					<h4>Display Atmosphere</h4>
+					Toggle the visibility of the planets atmosphere.
+					<h4>Color</h4>
+					Adjust the color of the atmosphere.
+					
+					<h4>Altitude</h4>
+					Adjust the high (altitude) of the atmospheric halo.
+					<h4>Density</h4>
+					Adjusts the density of the atmosphere as it approaches the horizon.
+					<img src="/img/userguide/atmosphere-height-and-density.png" class="img-figure thumbnail" />
+				
+					<div class="height-waster-200"></div>
+				
+				</div>
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="ring">Rings</h2>
+					</div>
+					<p class="lead">Display and adjust the appearance, size, and coloring of a planetary ring system</p>
+					<img src="/img/userguide/controls-block-ring.png" class="img-figure thumbnail" />
+					<h4>Display Rings</h4>
+					Toggle the visibility of a planetary ring system.
+					<h4>Hue/Saturation/Lightness</h4>
+					Modify the ring color by applying HSL adjustments. By default, the
+					saturation is at the minimum so no color shading is applied.
+					<h4>Inner Radius</h4>
+					Adjust the inner radius of the ring system.
+					<h4>Outter Radius</h4>
+					Adjust the outter radius of the ring system. This must be greater than the inner
+					radius for the rings to be visible.
+					<h4>Angle</h4>
+					Adjust the angle, or <a href="http://en.wikipedia.org/wiki/Inclination" target="_BLANK">inclination</a>, in degrees that the rings move along 
+					<h4>Opacity</h4>
+					Adjust the opacity, or transparency, of the ring layer.
+				</div>
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="background">Background</h2>
+					</div>
+					<p class="lead">Change and customize the background</p>
+					<img src="/img/userguide/controls-block-background.png" class="img-figure thumbnail" />
+					<h4>Type</h4>
+					Switch between background types. The default is "Stars" which provides a simulated
+					stellar neighborhood with a configurable density. "Image" allows for the use
+					of image textures as backgrounds.
+					<h4>Image</h4>
+					Select the image texture to use as the background when the type is set to "Image".
+					<h4>Projection</h4>
+					Toggle the image background projection between a static flat display and a wrapped "spherical"
+					projection.
+					<h4>Fit Type</h4>
+					Adjusts how a flat background image is fit to the scene.
+					<h4>Set Custom Texture</h4>
+					Open the <a href="#customtextures">Custom Texture</a> dialog.
+					<h4>Star Quantity</h4>
+					Adjust the amount of stars visible in the background when the type is set to "Stars".
+				</div>
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="moons">Moons</h2>
+					</div>
+					<p class="lead">Add moons and control their physical properties and locations</p>
+					<img src="/img/userguide/controls-block-moons-create.png" class="img-figure thumbnail" />
+					<h3>Adding a Moon</h3>
+					<h4>Create Moon</h4>
+					Adds a moon to the scene and creates a configuration box.
+					
+					<img src="/img/userguide/controls-block-moon.png" class="img-figure thumbnail" />
+					<h3>Adjusting Moon</h3>
+					<h4>Display Moon</h4>
+					Toggle the visibility of the moon object.
+					<h4>Delete Moon</h4>
+					Deletes the moon from the scene.
+					<h4>Texture</h4>
+					Select the base texture for the moon surface.
+					<h4>Hue/Saturation/Lightness</h4>
+					Modify the surface color by applying HSL adjustments. By default, the
+					saturation is at the minimum so no color shading is applied.
+					<h4>Color Mode</h4>
+					Invert and/or force greyscale color transformations on the surface image.
+					<h4>Detail Level</h4>
+					Adjust the level of detail with which surface features are shaded using normal mapping.
+					<h4>Elevation Scale</h4>
+					Adjust the scale with which elevations are derived from the height map.
+					<h4>Shininess</h4>
+					Adjust the shininess of the surface. Higher values result in a more focused reflection. 
+					The minimum value of 0 results in a uniform, matte, distribution of light.
+					<h4>Specular Light</h4>
+					The intensity of light that contributes to the shininess of the surface.
+					<h4>Ambient Light</h4>
+					Intensity of scattered, non-directional light present in the surface.
+					<h4>Emissive Light</h4>
+					Intensity of light being emitted by the planet.
+					<h4>Size</h4>
+					Adjust the size of the moon
+					<h4>Distance</h4>
+					Adjust the distance of the moon from the center of the planet (semimajor axis)
+					<h4>Rotation</h4>
+					The rotation of the moon relative to the planet, in degrees.
+					<h4>Orbit Position</h4>
+					The angular position of the moon in it's orbit (true anomaly). Currently, moons are positioned
+					along a purely circular orbit.
+				</div>
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="effects">Effects</h2>
+					</div>
+					<p class="lead">Apply and customize dynamic effects</p>
+					<img src="/img/userguide/controls-block-effects.png" class="img-figure thumbnail" />
+					
+					<h4>Enable Blur</h4>
+					<span class="label label-warning">todo</span>
+					<h4>Blur Amount</h4>
+					<span class="label label-warning">todo</span>
+					<h4>Enable Bloom</h4>
+					<span class="label label-warning">todo</span>
+					<h4>Bloom Strength</h4>
+					<span class="label label-warning">todo</span>
+					<h4>Enable Bleach</h4>
+					<span class="label label-warning">todo</span>
+					<h4>Bleach Amount</h4>
+					<span class="label label-warning">todo</span>
+					<h4>Enable Sepia</h4>
+					<span class="label label-warning">todo</span>
+					<h4>Sepia Amount</h4>
+					<span class="label label-warning">todo</span>
+					<h4>Enable Film</h4>
+					<span class="label label-warning">todo</span>
+					<h4>Noise Intensity</h4>
+					<span class="label label-warning">todo</span>
+					<h4>Scanlines Intensity</h4>
+					<span class="label label-warning">todo</span>
+					<h4>Scanlines Count</h4>
+					<span class="label label-warning">todo</span>
+					<h4>Grayscale</h4>
+					<span class="label label-warning">todo</span>
+					
+				</div>
+				
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="customtextures">Custom Textures</h2>
+					</div>
+					<p class="lead">Upload and apply your own custom texture images</p>
+					
+					<p>Textures for use as a planet surface are recommended to be 2x1 (equirectangular) aspect
+					ratio such as 1024x512, 2048x1024, or 4096x2048. Note that the size may be limited by your
+					system and browser memory and graphics capabilities.
+					</p>
+					
+					<span class="label label-warning">todo</span>
+					
+				</div>
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="scenescript">Scene Script</h2>
+					</div>
+					<p class="lead">SceneScript provides a basic API for creating deep customizations to the 
+					PlanetMaker scene. Also exposed are the PlanetMaker internals, Three.js, and jQuery APIs.</p>
+					
+					<h3>Script Data Objects</h3>
+					
+					<h4>planet</h4>
+					This is the primary PlanetMaker engine which provides access into the internals of the application.
+					
+					
+					<h4>config</h4>
+					The primary configuration map used by PlanetMaker. 
+					
+					<h4>context</h4>
+					A map of application data including configurations and scene objects.
+
+					<ul>
+						<li><i>camera : <a href="http://threejs.org/docs/#Reference/Cameras/PerspectiveCamera">THREE.PerspectiveCamera</a></i></li>
+						<li><i>primaryScene : <a href="http://threejs.org/docs/#Reference/Scenes/Scene">THREE.Scene</a></i></li>
+						<li><i>secondaryScene : <a href="http://threejs.org/docs/#Reference/Scenes/Scene">THREE.Scene</a></i></li>
+						<li><i>renderer : <a href="http://threejs.org/docs/#Reference/Renderers/WebGLRenderer">THREE.WebGLRenderer</a></i></li>
+						<li><i>controls : KMG.ExamineControls</i></li>
+						<li><i>objects : Array&lt;KMG.BaseObject&gt;</i></li>
+						<li><i>configChanged : boolean</i></li>
+						<li><i>moons : Array&lt;KMG.MoonObject&gt;</i></li>
+						<li><i>script : KMG.SceneScript</i></li>
+						<li><i>lights.ambient : <a href="http://threejs.org/docs/#Reference/Lights/AmbientLight">THREE.AmbientLight</a></i></li>
+						<li><i>lights.primaryDirectional : <a href="http://threejs.org/docs/#Reference/Lights/DirectionalLight">THREE.DirectionalLight</a></i></li>
+						<li><i>lights.primaryPoint : <a href="http://threejs.org/docs/#Reference/Lights/PointLight">THREE.PointLight</a></i></li>
+						<li><i>lights.secondaryDirectional : <a href="http://threejs.org/docs/#Reference/Lights/DirectionalLight">THREE.DirectionalLight</a></i></li>
+						<li><i>lights.secondaryPoint : <a href="http://threejs.org/docs/#Reference/Lights/PointLight">THREE.PointLight</a></i></li>
+					</ul>
+					
+					<h3>Script Callbacks</h3>
+					
+					<h4>onFrame(planet, config, context)</h4>
+					Called prior to the scene object update routine which is invoked before each frame is rendered
+
+					<ul>
+						<li><i>planet</i>: The primary PlanetMaker scene container</li>
+						<li><i>config</i>: Scene configuration</li>
+						<li><i>context</i>: THREE.js and environmental context objects</li>
+						<li><i>returns</i>: True if changes are made to the scene objects that will need to be addressed by their internal update methods. </li>
+					</ul>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Template:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">function onFrame(planet, config, context) {
+	return false; 
+}</pre>
+						</div>
+					</div>
+					
+					
+					
+					
+					<h4>onRender(planet, config, context)</h4>
+					Called prior the the scene being rendered to the screen.
+
+					<ul>
+						<li><i>planet</i>: The primary PlanetMaker scene container</li>
+						<li><i>config</i>: Scene configuration</li>
+						<li><i>context</i>: THREE.js and environmental context objects</li>
+					</ul>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Template:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">function onRender(planet, config, context) {
+	
+}</pre>
+						</div>
+					</div>					
+					
+					
+					
+					
+					
+					
+					
+					<h4>onScriptInitialize(planet, config, context)</h4>
+					Called within renderer the first time it encounters this script instance to allow in-context initialization.
+ 
+ 					<ul>
+						<li><i>planet</i>: The primary PlanetMaker scene container</li>
+						<li><i>config</i>: Scene configuration</li>
+						<li><i>context</i>: THREE.js and environmental context objects</li>
+						<li><i>returns</i>: True if changes are made to the scene objects that will need to be addressed by their internal update methods. </li>
+					</ul>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Template:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">function onScriptInitialize(planet, config, context) {
+	return false; 
+}</pre>
+						</div>
+					</div>
+ 
+					<h4>onScriptDestroy(planet, config, context)</h4>
+					Called within renderer if/when the script instance is replaced by a new version 
+					(such as when 'Apply Changes' is clicked). Allows for clean-up of any resources 
+					which may be specific to the script instance.
+					
+ 					<ul>
+						<li><i>planet</i>: The primary PlanetMaker scene container</li>
+						<li><i>config</i>: Scene configuration</li>
+						<li><i>context</i>: THREE.js and environmental context objects</li>
+						<li><i>returns</i>: True if changes are made to the scene objects that will need to be addressed by their internal update methods. </li>
+					</ul>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Template:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">function onScriptDestroy(planet, config, context) {
+	return false; 
+}</pre>
+						</div>
+					</div>					
+					
+					
+					
+					
+					
+					<h3>Methods</h3>
+					
+					<h4>radians( degrees ) : number</h4>
+					Converts degrees to radians. Shortcut for <code>degrees * (Math.PI / 180)</code>.
+					
+					<h4>degrees( radians ) : number</h4>
+					Converts radians to degrees. Shortcut for <code>radians * (180 / Math.PI)</code>.
+					
+					<h4>rotatePlanet( rotationInDegrees )</h4>
+					Sets the rotation of the planet in degrees. This is an absolute rotation and not incremental to the previous rotation.
+					
+					<h4>rotateScene( rotationInDegrees )</h4>
+					Sets the rotation of the scene in degrees. This is an absolute rotation and not incremental to the previous rotation.
+					
+					<h4>rotateMoon( moonIndex, rotationInDegrees )</h4>
+					Sets the rotation of the moon at 'moonIndex' in degrees. This is an absolute rotation and not incremental to the previous rotation.
+					
+					<h4>rotateMoons( rotationInDegrees|Array )</h4>
+					
+					Sets the rotation of all moons in degrees. The parameter can be either numerical, which is applied to all moons, or an array
+					with a rotation value for each moon.
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Using a Single Rotation Value:</h3>
+						</div>
+						<div class="panel-body panel-body-code">
+							<pre class="prettyprint">rotateMoons(90); // Sets rotation of all moons to 90&deg;</pre>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Using an Array With Rotation Values:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">rotateMoons([45, 90, 135]); // Applies rotations to first three moons in scene</pre>
+						</div>
+					</div>
+					
+					
+					<h4>advanceMoonOrbit( moonIndex, rotationInDegrees )</h4>
+					Advances the moons orbital position in degrees. This value is incremental to the last call and positive values 
+					will move the moon counter-clockwise as viewed from above.
+					
+					<h4>advanceMoonOrbits( rotationInDegrees|Array )</h4>
+					Advances all moons orbital positions in degrees. This value is incremental to the last call and positive values 
+					will move the moon counter-clockwise as viewed from above. The parameter can be either numerical, which is applied to
+					all moons, or an array with a rotation value for each moon.
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Using a Single Rotation Value:</h3>
+						</div>
+						<div class="panel-body panel-body-code">
+							<pre class="prettyprint">advanceMoonOrbits(90); // Sets orbit movement of all moons to 90&deg;</pre>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Using an Array With Rotation Values:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">advanceMoonOrbits([45, 90, 135]); // Applies orbit movement to first three moons in scene</pre>
+						</div>
+					</div>
+					
+					<h4>addToPrimaryScene( object )</h4>
+					Adds a <code>KMG.BaseObject</code> derived object to the primary (foreground) scene.
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Example:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">
+var belt = new KMG.BasicAsteroidBeltObject(context, {
+	innerRadius : 260,
+	outterRadius : 400
+});
+addToPrimaryScene(belt);</pre>
+						</div>
+					</div>
+					
+					<h4>addToSecondaryScene( object )</h4>
+					Adds a <code>KMG.BaseObject</code> derived object to the secondary (background) scene.
+					
+					<h3>Examples</h3>
+					
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Create Several Moons:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">
+function onScriptInitialize(planet, config, context) {
+	planet.addMoon({moonDistance : 1.0, moonScale : 0.25});
+	planet.addMoon({moonDistance : 1.5, moonScale : 0.25});
+	planet.addMoon({moonDistance : 2.0, moonScale : 0.25});
+	planet.addMoon({moonDistance : 2.5, moonScale : 0.25});
+	planet.addMoon({moonDistance : 3.0, moonScale : 0.25});
+	planet.addMoon({moonDistance : 3.5, moonScale : 0.25});
+	
+	return true;
+}	</pre>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Adding an Asteroid Belt:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">
+function onScriptInitialize(planet, config, context) {
+	var belt = new KMG.BasicAsteroidBeltObject(context, {
+		innerRadius : 260,
+		outterRadius : 400
+	});
+	addToPrimaryScene(belt);	
+	return true;
+}	</pre>
+						</div>
+					</div>
+
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Adding a Moon with an Asteroid Belt:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">
+function onScriptInitialize(planet, config, context) {
+	var moon = planet.addMoon({moonDistance : 1.0, moonScale : 0.25});
+	
+	var belt = new KMG.BasicAsteroidBeltObject(context, {
+		innerRadius : 100,
+		outterRadius : 160,
+		targetObject : moon.object
+	});
+	addToPrimaryScene(belt);	
+	return true;
+}		</pre>
+						</div>
+					</div>
+				
+					
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Add a Rotator to the Planet:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">
+function onScriptInitialize(planet, config, context) {
+	var rotator = new KMG.ObjectRotator(context, 
+										[context.surfaceObject, context.cloudObject],
+										1.0 // Rotation speed, degrees per tick
+										);
+	rotator.start();
+	return true;
+}
+							</pre>
+						</div>
+					</div>
+					
+					
+
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Adding a Rotating Moon:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">
+function onScriptInitialize(planet, config, context) {
+	var moon = planet.addMoon({moonDistance : 1.0, moonScale : 1.0});
+	var rotator = new KMG.ObjectRotator(context,
+										moon.object, // Object being rotated
+										1.0 		 // Rotation speed, degrees per tick
+										);
+	rotator.start();
+	return true;
+}
+							</pre>
+						</div>
+					</div>
+
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Adding an Orbiting Moon:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">
+function onScriptInitialize(planet, config, context) {
+	var moon = planet.addMoon({moonScale : 1.0});
+	var orbiter = new KMG.BasicOrbiter(context, 
+										moon.object, // Object doing the orbiting
+										1.0,         // Orbit distance (semimajor axis)
+										1.0          // Orbit speed
+										);
+	return true;
+}	
+							</pre>
+						</div>
+					</div>
+					
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Stacking Animators - Rotating and Orbiting Moon:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">
+function onScriptInitialize(planet, config, context) {
+	var moon = planet.addMoon({moonScale : 1.0});
+	var rotator = new KMG.ObjectRotator(context,
+										moon.object, // Object being rotated
+										1.0 		 // Rotation speed, degrees per tick
+										);
+	rotator.start();
+	var orbiter = new KMG.BasicOrbiter(context, 
+										moon.object, // Object doing the orbiting
+										1.0,         // Orbit distance (semimajor axis)
+										1.0          // Orbit speed
+										);
+	return true;
+}
+							</pre>
+						</div>
+					</div>
+					
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Add Moon With Basic Orbit Line:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">
+function onScriptInitialize(planet, config, context) {
+	var moon = planet.addMoon({moonScale : 1.0, moonDistance : 1.0});
+	var orbit = new KMG.BasicOrbitPathLine(context, {distance : 1.0});
+	addToPrimaryScene(orbit);
+	return true;
+}
+							</pre>
+						</div>
+					</div>					
+					
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Add a moon on Pluto's Orbit:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">
+function onScriptInitialize(planet, config, context) {
+	var moon = planet.addMoon({moonScale : 1.0});
+	var orbiter = new KMG.EllipticalOrbiter(context, 
+											moon.object,
+											30.0,                       // Orbit multiplier (scale)
+											1.0,                       // Orbit speed
+											KMG.OrbitDefinitions.pluto // Orbital properties
+											);
+	
+	var orbitConfig = KMG.Util.clone(KMG.OrbitDefinitions.pluto);
+	orbitConfig.scale = 30;
+	orbitConfig.segments = 256;
+	
+	addToPrimaryScene(new KMG.OrbitPathLine(context, orbitConfig));
+	return true;
+}
+							</pre>
+						</div>
+					</div>
+					
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Solar System Animation:</h3>
+						</div>
+						<div class="panel-body">
+							<img src="/img/userguide/solar-system-animation-screenshot.png" alt="The planets orbit the sun in this animation." title="The planets orbit the sun in this animation." style="width:100%"/>
+						</div>
+						
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">
+
+function onScriptInitialize(engine, config, context) {
+	
+	config.lightingType = "Point";
+	config.lensFlareEnabled = false;
+	config.displayLocalStar = false;
+	
+	config.displayClouds = false;
+	config.displayAtmosphere = false;
+	config.scaleSurface = .02;
+	config.texture = "Sun";
+	config.ambientIntensity = 255.0;
+	config.emissiveIntensity = 255.0;
+	config.enableCityLights = false;
+	config.shininess = 0;
+	config.flattening = 0;
+	
+	var sunRotator = new KMG.ObjectRotator(engine.context, engine.context.surfaceObject, 3.0);
+	sunRotator.start();
+	var tex = {
+		name : "",
+		texture : "",
+		bumpMap : "",
+		normalMap : "",
+		specularMap : "",
+		enabled : true
+	};
+
+	KMG.textures.push(KMG.Util.extend({ name : "mercury", texture : "/img/planets_small/mercury.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "venus", texture : "/img/planets_small/venus.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "earth", texture : "/img/planets_small/earth.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "mars", texture : "/img/planets_small/mars.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "jupiter", texture : "/img/planets_small/jupiter.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "saturn", texture : "/img/planets_small/saturn.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "uranus", texture : "/img/planets_small/uranus.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "neptune", texture : "/img/planets_small/neptune.jpg"}, tex));
+	KMG.textures.push(KMG.Util.extend({ name : "pluto", texture : "/img/planets_small/pluto.jpg"}, tex));
+	
+	function addOrbitingPlanet(orbitConfig, objectScale, texName, showRing) {
+		var scale = 35;
+		var planetConfig = KMG.Util.clone(orbitConfig);
+		planetConfig.scale = scale;
+		planetConfig.segments = 256;
+		planetConfig.opacity = 0.4;
+		addToPrimaryScene(new KMG.OrbitPathLine(engine.context, planetConfig));
+
+		var planet = engine.addMoon({moonScale : objectScale, moonTexture : texName});
+		var orbiter = new KMG.EllipticalOrbiter(engine.context, planet.object, scale, 10000000.0, planetConfig);
+		var rotator = new KMG.ObjectRotator(engine.context, planet.object, 3.0);
+		rotator.start();
+		if (showRing) {
+			var ring = new KMG.RingObject(context, {
+				ringInnerRadius : 90 * objectScale,
+				ringOutterRadius : 130 * objectScale,
+				targetObject : planet.object,
+				displayRing : true
+			});
+			addToPrimaryScene(ring);
+			var orbiter = new KMG.EllipticalOrbiter(engine.context, ring, scale, 10000000.0, planetConfig);
+		}
+	}
+	
+	var planetScale = .05;
+	addOrbitingPlanet(KMG.OrbitDefinitions.mercury, planetScale * .2, "mercury");
+	addOrbitingPlanet(KMG.OrbitDefinitions.venus, planetScale * .4, "venus");
+	addOrbitingPlanet(KMG.OrbitDefinitions.earth, planetScale * .4, "earth");
+	addOrbitingPlanet(KMG.OrbitDefinitions.mars, planetScale * .25, "mars");
+	addOrbitingPlanet(KMG.OrbitDefinitions.jupiter, planetScale, "jupiter");
+	addOrbitingPlanet(KMG.OrbitDefinitions.saturn, planetScale, "saturn", true);
+	addOrbitingPlanet(KMG.OrbitDefinitions.neptune, planetScale, "neptune");
+	addOrbitingPlanet(KMG.OrbitDefinitions.uranus, planetScale, "uranus");
+	addOrbitingPlanet(KMG.OrbitDefinitions.pluto, planetScale, "pluto");
+	
+	
+	var belt = new KMG.BasicAsteroidBeltObject(context, {
+		innerRadius : 100,
+		outterRadius : 160,
+		color : 0xC0C0C0,
+		size : 0.7
+	});
+	addToPrimaryScene(belt);
+
+	return true;
+}
+							</pre>
+						</div>
+					</div>
+					<!--
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Title:</h3>
+						</div>
+						<div class="panel-body  panel-body-code">
+							<pre class="prettyprint">
+function onFrame(planet, config, context) {
+	return false; 
+}
+							</pre>
+						</div>
+					</div>
+					-->
+					
+				</div>
+				
+				
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="credits">Credits</h2>
+					</div>
+					<p class="lead">People and organizations that created and/or own some of the resources used in PlanetMaker.</p>
+					
+					
+					<ul>
+							<li>Planet Textures: <a href="http://www.shatters.net/celestia/" target="_BLANK">Celestia</a>, NASA</li>
+							<li>Sun Texture: <a href="http://www.celestiamotherlode.net/catalog/show_addon_details.php?addon_id=629" target="_BLANK">Runar Thorvaldsen</a></li>
+							<li><a href="http://earthobservatory.nasa.gov/Features/BlueMarble/" target="_BLANK">Blue Marble NG, NASA Earth Observatory</a></li> 
+							<li><a href="http://xplanet.sourceforge.net/clouds.php" target="_BLANK">xPlanet Global Clouds</a></li>
+							<li>Earth Altimetry Data: <a href="http://www.gebco.net" target="_BLANK">The GEBCO_08 Grid, version 20100927</a></li>
+							<li>Mars Altimetry Data: <a href="http://mola.gsfc.nasa.gov/" target="_BLANK">Mars Orbiter Laser Altimeter (Mars Global Surveyor)</a></li>
+							<li>Moon Altimetry Data: <a href="http://lunar.gsfc.nasa.gov/lola/index.html" target="_BLANK">NASA Lunar Orbiter Laser Altimeter</a></li>
+							<li><a href="http://threejs.org/" target="_BLANK">three.js JavaScript 3D Library</a></li>
+							<li><a href="http://opengameart.org/content/lens-flares-and-particles" target="_BLANK">Lens Flare: Public Domain Donation by hackcraft.de</a></li>
+							<li>Background Images: <a href="http://apod.nasa.gov/apod/" target="_BLANK">Astronomy Picture of the Day</a></li>
+							<li>Vegetation as Seen by Suomi NPP: <a href="http://www.nasa.gov/mission_pages/NPP/news/vegetation.html" target="_BLANK">NASA/NOAA</a></li>
+							<li>Tycho Star Map: <a href="http://maps.jpl.nasa.gov/stars.html" target="_BLANK">Caltech/JPL</a></li>
+							<li>Hipparcos Star Map: <a href="http://maps.jpl.nasa.gov/stars.html" target="_BLANK">Caltech/JPL</a></li>
+							<li>Yale Bright Star Map: <a href="http://maps.jpl.nasa.gov/stars.html" target="_BLANK">Caltech/JPL</a></li>
+							<li>Cylindrical Maps of Venus: <a href="http://maps.jpl.nasa.gov/venus.html" target="_BLANK">NASA/JPL</a></li>
+						</ul>
+				</div>
+				
+				
+				<div class="guide-section">
+					<div class="page-header">
+						<h2 id="changes">Changes</h2>
+					</div>
+					<p class="lead">List of changes and modifications to PlanetMaker</p>
+					
+					<ul>
+						<li><em>October 30, 2013:</em>
+							<ul>
+								<li>Rendering improvements</li>
+								<li>Added scripting via SceneScript</li>
+								<li>New User Guide</li>
+								<li>New Postprocessing Effects</li>
+								<li>New View Controls (like Google Earth)</li>
+								<li>User Interface Improvements</li>
+								<li>New Textures (Venus, etc...)</li>
+							</ul>
+						</li>
+						<li><em>July 29, 2013:</em>
+							<ul>
+								<li>Improved atmosphere</li>
+								<li>New textures (A gas giant, banded clounds, a ring, & the Sun)</li>
+								<li>Redesigned custom texture dialog</li>
+								<li>Texture color modes (greyscale, inverted)</li>
+								<li>Multiple moons</li>
+								<li>Point light option (Main object is the one emitting light)</li>
+								<li>Improved background stars</li>
+								<li>Bug fixes and misc tweaks </li>
+							</ul>
+						</li>
+						<li><em>July 5, 2013:</em> Fixed alphatest for ring opacity, Moon texture load defect</li>
+						<li><em>July 3, 2013:</em> Added ability to use a WebCam for textures</li>
+						<li><em>June 27, 2013:</em> Rolled out a <a href="https://plus.google.com/u/0/113761354606401247247/posts/ip5iZJWxXJQ" target="_BLANK">new User Interface. </a></li>
+						<li><em>June 21, 2013:</em> HSL levels for surface and moon textures, some sample <a href="http://libnoise.sourceforge.net/" target="_BLANK">libnoise</a> textures, and a gas giant texture. </li>
+						<li><em>June 18, 2013:</em> Fixed shadow bug </li>
+						<li><em>June 17, 2013:</em> Improved cloud shading</li>
+						<li><em>June 12, 2013:</em> Ability to adjust cloud shadow level (darkness), better city light adjustment, atmosphere improvements</li>
+						<li><em>June 11, 2013:</em> Adding a moon, planet flatting, misc fixes</li>
+						<li><em>June 6, 2013:</em> Ring opacity level</li>
+						<li><em>June 5, 2013:</em> Custom texture shading fix; Emissive lighting</li>
+						<li><em>June 4, 2013:</em> Ability to change local star texture and color</li>
+						<li><em>June 3, 2013:</em> Ability to switch between flat &amp spherical background images; Some extra error handling</li>
+						<li><em>June 2, 2013:</em> Added a local star</li>
+						<li><em>May 31, 2013:</em> Added ability to select or upload background images.</li>
+						<li><em>May 30, 2013:</em> Added ability to change the quantity of stars, enhanced "about" dialog.</li>
+						<li><em>May 29, 2013:</em> Added new surface textures for Earth &amp; Jupiter</li>
+					
+					</ul>
+					
+					
+				</div>
+				
+			</div>
+			
+			
+			
+		</div>
+    </div><!-- /.container -->
+
+	<div id="footer">
+		<div class="container">
+			<p class="pull-left">
+				&copy; <a href="http://www.wthr.us">Kevin M. Gill</a> 2013
+			</p>
+			<p class="pull-right">
+				<a href="#">Back to top</a>
+			</p>
+		</div>
+	</div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/lib/jquery/js/jquery-1.9.1.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

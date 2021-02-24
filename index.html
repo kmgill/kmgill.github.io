@@ -1,355 +1,1650 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
-	<title>Apoapsys.com - Kevin M. Gill</title>
-	<meta charset="utf-8">
+<html lang="en">
+	<head>
+		<title>PlanetMaker</title>
+		<meta charset="utf-8">
 		
-	<link href='http://fonts.googleapis.com/css?family=Average+Sans|Rationale' rel='stylesheet' type='text/css'>
 		
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	
-	<meta name="description" content="Apoapsys - WebGL Experiments From Kevin M. Gill"/>
-	<meta property="og:description" content="Apoapsys - WebGL Experiments From Kevin M. Gill" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		
-	<link rel="image_src" type="image/png" href="/img/logos/ApoapsysLogo.png" />
-	<meta property="og:image" content="/img/logos/ApoapsysLogo.png" />
-	
-	
-    <!-- Bootstrap core CSS -->
-	<link href="/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/lib/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
-	
-	<link href="/lib/animate.css" rel="stylesheet">
-	
-	<script src="/lib/jquery/js/jquery-1.9.1.min.js"></script>
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		
-	<style>
-body {
-	margin: 10px;
-	background: #111111;
+		<meta name="description" content="PlanetMaker - Create your own planet, real or imaginary"/>
+		<meta property="og:description" content="PlanetMaker - Create your own planet, real or imaginary" />
+		
+		<link rel="image_src" type="image/png" href="/PlanetMakerSnapshot2.png" />
+		<meta property="og:image" content="/PlanetMakerSnapshot2.png" />
+		
+		
+		<link href='http://fonts.googleapis.com/css?family=Average+Sans|Rationale' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="lib/jquery/css/custom-theme/jquery-ui-1.10.2.custom.min.css">
+		<link rel="stylesheet" href="planet.css">
+		
+		<script src="lib/three.min.js"></script>
+		<script src="lib/Detector.js"></script>
+		<script src="lib/moment.min.js"></script>
+		<script src="lib/stats.min.js"></script>
+		<script src="lib/json.js"></script>
+		<script src="lib/webtoolkit.base64.js"></script>
+		<script src="lib/modernizr.js"></script>
+		<script src="/lib/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+		<script src="lib/jquery/js/jquery-1.9.1.min.js"></script>
+		<script src="lib/jquery/js/jquery-ui-1.10.2.custom.min.js"></script>
+		<script src="lib/jquery/plugins/jquery.colorpicker.js"></script>
+		<link href="lib/jquery/plugins/jquery.colorpicker.css" rel="stylesheet" type="text/css"/>
+		
+		<script src="lib/jquery/plugins/swatches/jquery.ui.colorpicker-pantone.js"></script>
+		<script src="lib/jquery/plugins/parts/jquery.ui.colorpicker-rgbslider.js"></script>
+		<script src="lib/jquery/plugins/parts/jquery.ui.colorpicker-memory.js"></script>
+		
+		<script src="lib/THREEx.screenshot.js"></script>
+		<script src="lib/THREEx.FullScreen.js"></script>
+		<script src="lib/THREEx.WindowResize.js"></script>
+		
+		<script src="postprocessing.js"></script>
+		<script src="shaders.js"></script>
+		<script src="planetmaker.js"></script>
+		
+<style type="text/css" media="screen">
+
+</style>
+		<script id="sceneScriptTemplate" type="x-scene-script/x-scene-script-template">	
+/** Called prior to the scene object update routine which is called before each frame is rendered
+ * 
+ * @param planet The primary PlanetMaker scene container
+ * @param config Scene configuration
+ * @param context THREE.js and environmental context objects
+ * @return True if changes are made to the scene objects that will 
+ *         need to be addressed by their internal update methods. 
+ */
+function onFrame(planet, config, context) {
+
+	return false; 
 }
 
-.title-text {
-	font-family: 'Rationale', sans-serif;
-	color: #AAAAAA;
-	font-size: 4em;;
-	margin-top: -20px;
-}
-.subtitle-text {
-	color: #AAAAAA;
-	padding-left: 20px;
-	max-width: 90%;
-}
-.row {
-	margin: 20px;
-}
-.thumbnail {
-		box-shadow: 3px 3px 5px #000000;
+/** Called prior the the scene being rendered to the screen.
+ * 
+ * @param planet The primary PlanetMaker scene container
+ * @param config Scene configuration
+ * @param context THREE.js and environmental context objects
+ * @return True if changes are made to the scene objects that will 
+ *         need to be addressed by their internal update methods. 
+ */
+function onRender(planet, config, context) {
+
 }
 
-.share-buttons {
+/** Called within renderer the first time it encounters this
+ * script instance to allow in-context initialization.
+ *
+ * @return True if changes are made to the scene objects that will 
+ *         need to be addressed by their internal update methods. 
+ */
+function onScriptInitialize(planet, config, context) {
+
+	return false; 
+}
+
+/** Called within renderer if/when the script instance
+ * is replaced by a new version (such as when 'Apply Changes' 
+ * is clicked). Allows for clean-up of any resources which
+ * may be specific to the script instance.
+ *
+ * @return True if changes are made to the scene objects that will 
+ *         need to be addressed by their internal update methods. 
+ */
+function onScriptDestroy(planet, config, context) {
+	
+	return false; 
+}
+		</script>
+		
+		<script>
+
+/*
+	Note: This is quickly turning into spaghetti code. I'm sorry about that... Some real code
+	refactoring is in store for the near future...
+*/
+
+var gui = null;
+var customTextures = [];
+var planet = null;
+var animator = null;
+var webcam = null;
+
+var onControllerUpdate = function() {
+	if (planet !== null) {
+	
+		if (planet.config.texture == "Webcam" || planet.config.moonTexture == "Webcam" || planet.config.backgroundImage == "Webcam") {
+			initializeWebcam();
+		} else if (webcam) {
+			webcam.pause();
+		}
+	
+		planet.context.configChanged = true;
+	}
+};
+
+var appOptions = {
+	guiOpacity : 0.9	
+};
+
+var onOptionsUpdate = function() {
+	gui.setOpacity(appOptions.guiOpacity);
+};
+
+function displayErrorMessage(title, body)
+{
+	console.error("Error: " + title + ": " + body);
+	
+	$( "#error-message-dialog" ).attr("title", title);
+	$( "#error-message-title" ).text(title);
+	$( "#error-message-body" ).text(body);
+	
+	$( "#error-message-dialog" ).dialog( "open" );
 	
 }
 
-.share-button {
-	float: right;
-	margin-right: 5px;
-}
-.container .jumbotron {
-	height: 332px;
-	padding: 0px;
-}
 
-
-
-.jumbotron-animated {
-	background-image: url(/img/headers/experiments_jumbotron_background_stars.jpg);
-	background-repeat:no-repeat;
-	background-position:center;
-}
-
-.jumbotron-static {
-	background-image: url(/img/headers/experiments_jumbotron_background.jpg);
-	background-repeat:no-repeat;
-	background-position:center;
-}
-
-.jumbotron-content {
-	position: absolute;
-	height: 432px;
-	padding: 20px;
-	top: 0px;
-}
-.logo-img {
-	width: 475px;
-	max-width: 90%;
-}
-.share-buttons {
-	padding-top: 50px;
-}
-.thumbnail {
-	margin-top: 10px;
-}
-.animation-thumbnail {
-	width:570px;
-	margin-left:auto;
-	margin-right:auto;
-}
-.images-thumbnail {
-	width:1000px;
-	margin-left:auto;
-	margin-right:auto;
-}
-
-.images-thumbnail iframe {
-	margin-left:auto;
-	margin-right:auto;
-}
-.caption {
-	text-align: center;
-}
-
-.img-thumbnail-larger {
-	width: 500px;
-}
-
-#follow-me-on-twitter {
-	float: right;
-	background: transparent;
-	padding: 5px;
-}
-	</style>
-
-</head>
-<body>
-	<div class="container">
 		
-		<div class="jumbotron" id="jumbotron">
+
+function isUserMobile()
+{
+	return /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+}
 			
-			<div class="jumbotron-content">
 
-				<img src="/img/logos/ApoapsysLogoTrans.png" class="logo-img"/>
-				<div class="subtitle-text">
-					<p>WebGL Experiments by <a href="http://www.apoapsys.com">Kevin M. Gill</a></p>
-				</div>
-			  
-			  
-				<div class="share-buttons">
-				
-				<div class="share-button">
-				
-				
-					<div id="fb-root"></div>
-					<script>(function(d, s, id) {
-					  var js, fjs = d.getElementsByTagName(s)[0];
-					  if (d.getElementById(id)) return;
-					  js = d.createElement(s); js.id = id;
-					  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-					  fjs.parentNode.insertBefore(js, fjs);
-					}(document, 'script', 'facebook-jssdk'));</script>
-				
-					<div class="fb-like" data-href="http://experiments.wthr.us" data-send="false" data-layout="button_count" data-width="300" data-show-faces="true" data-colorscheme="dark"></div>
-				
-				
-				</div>
-				
-				<div class="share-button">
-					<a href="https://twitter.com/share" class="twitter-share-button" data-via="kevinmgill" id="tweet-href"></a>
-					<script>
-						$("#tweet-href").text("Tweet");
-						!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-					</script>
-				</div>
-				
-				<div class="share-button">
-					<a href="http://www.tumblr.com/share" title="Share on Tumblr" style="display:inline-block; text-indent:-9999px; overflow:hidden; width:81px; height:20px; background:url('http://platform.tumblr.com/v1/share_1.png') top left no-repeat transparent;">Share on Tumblr</a>
-				</div>
-				
-				<div class="share-button">
-					<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="250"></div>
 
-					<script type="text/javascript">
+jQuery.fn.center = function () {
+    this.css("position","absolute");
+    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
+                                                $(window).scrollTop()) + "px");
+    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + 
+                                                $(window).scrollLeft()) + "px");
+    return this;
+}
+
+
+
+
+
+function initializeWebcam()
+{
+	if (webcam && webcam.isActive()) { 
+		return;
+	} else if (webcam && !webcam.isActive()) { 
+		webcam.start();
+		return;
+	}
+		
+	webcam = new KMG.WebCam();
+	webcam.onError = displayErrorMessage;
+	webcam.start();
+
+	var updateWebcamSnapshot = function() {
+		webcam.capture(function(img) {
+		 
+			var t = new THREE.Texture(img);
+			t.wrapS = THREE.RepeatWrapping;
+			t.needsUpdate = true;
+			
+			var surfaceTexDef = KMG.TextureMap.getTextureDefinitionByName("Webcam");
+			surfaceTexDef.texture = t;
+			
+			var backgroundTexDef = KMG.TextureMap.getBackgroundDefinitionByName("Webcam");
+			backgroundTexDef.texture = t;
+			
+			planet.context.configChanged = true;
+			
+			setTimeout(updateWebcamSnapshot, 100);
+		 }, function() {
+			setTimeout(updateWebcamSnapshot, 1000);
+		 }, false);
+		
+	};
+	setTimeout(updateWebcamSnapshot, 1000);
+}
+
+function exportScene()
+{
+	var service = new KMG.ConfigPersistenceService({});
+	service.save(planet, function(modelId) {
+		var url = "/?model=" + modelId;
+		$( "#model-link" ).val(url);
+		$( "#model-link-dialog" ).dialog( "open" );
+	}, function(reason) {
+		displayErrorMessage("Error", "Failed to create permalink: " + reason);
+	});
+}
+
+
+
+/********************************************
+ New Custom Textures Dialog
+*********************************************/
+var customTextures = {
+
+	
+	setCustomTextureImageThumbnailFromSourceProperties : function(obj, sourceProperties) //url)
+	{
+		
+		customTextures._setCustomTextureImageThumbnail(obj
+								, sourceProperties.url
+								, sourceProperties.name
+								, sourceProperties.field
+								, sourceProperties.index
+								, sourceProperties.uploaded);
+	},
+
+	setCustomTextureImageThumbnail : function(obj, imgObj) //url)
+	{
+		var url = imgObj.prop("src");
+		var name = imgObj.attr("tex-name");
+		var field = imgObj.attr("tex-field");
+		var index = imgObj.attr("tex-index");
+		var uploaded = (imgObj.attr("tex-uploaded") == "true");
+		
+		customTextures._setCustomTextureImageThumbnail(obj, url, name, field, index, uploaded);
+	},
+
+	_setCustomTextureImageThumbnail : function(obj, url, name, field, index, uploaded) //url)
+	{
+		if (url) {
+			url = url.replace("#resolution#", "512x256");
+		}
+		
+		if (url != null && url !== "") {
+			obj.find("img").css("display", "inline");
+			obj.find("img").prop("src", url);
+			obj.find("img").attr("tex-isset", "true");
+			
+			if (!uploaded) {
+				obj.find("img").attr("tex-uploaded", "false");
+				obj.find("img").attr("tex-name", name);
+				obj.find("img").attr("tex-field", field);
+				obj.find("img").attr("tex-index", index);
+			} else {
+				obj.find("img").attr("tex-uploaded", "true");
+			}
+
+			obj.find("div").css("display", "none");
+		} else {
+			obj.find("img").prop("src", "");
+			obj.find("img").attr("tex-isset", "false");
+			obj.find("img").css("display", "none");
+			obj.find("div").css("display", "inline-block");
+		}
+
+	},
+	
+	
+	applyCustomTextures : function(fromObj, toField)
+	{
+	
+		var url = fromObj.prop("src");
+		var name = fromObj.attr("tex-name");
+		var field = fromObj.attr("tex-field");
+		var index = fromObj.attr("tex-index");
+		var uploaded = (fromObj.attr("tex-uploaded") == "true");
+		var isSet = (fromObj.attr("tex-isset") == "true");
+		
+		var customTexDef = KMG.TextureMap.getTextureDefinitionByName("Custom");
+		
+		
+		
+		if (isSet && uploaded && /^data:/i.test(url)) {
+			if (! /^data:/i.test(url)) {
+				url = "";
+			}
+			customTexDef[toField] = url;
+			customTexDef.sourceProperties[toField].uploaded = true;
+		} else if (isSet && !uploaded) {
+			var fromTexDef = KMG.TextureMap.getTextureDefinitionByName(name);
+			if (!fromTexDef) {
+				return;
+			}
+			var url = fromTexDef[field];
+			customTexDef[toField] = url;
+		}
+		
+		if (isSet) {
+			customTexDef.sourceProperties[toField].url = url;
+			customTexDef.sourceProperties[toField].name = name;
+			customTexDef.sourceProperties[toField].index = index;
+			customTexDef.sourceProperties[toField].field = field;
+			customTexDef.sourceProperties[toField].uploaded = uploaded;
+		} else {
+			customTexDef.sourceProperties[toField] = {};
+		}
+	},
+	
+	init : function() {
+	
+
+
+		$( "#new-custom-texture-dialog" ).dialog({
+			width: 800,
+			autoOpen: false,
+			modal: true,
+			show: {
+				effect: "drop",
+				duration: 400
+			},
+			hide: {
+				effect: "drop",
+				duration: 400
+			},
+			buttons: {
+				Ok : function() {
+					$( this ).dialog( "close" );
 					
-					  (function() {
-						var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-						po.src = 'https://apis.google.com/js/plusone.js';
-						var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-					  })();
+					customTextures.applyCustomTextures($( "#custom-surface-texture" ).find("img"), "texture");
+					customTextures.applyCustomTextures($( "#custom-normalmap-texture" ).find("img"), "normalMap");
+					customTextures.applyCustomTextures($( "#custom-specularmap-texture" ).find("img"), "specularMap");
+					customTextures.applyCustomTextures($( "#custom-bumpmap-texture" ).find("img"), "bumpMap");
 					
-					</script>
-				</div>
+					var backgroundTexDef = KMG.TextureMap.getBackgroundDefinitionByName("Custom");
+					backgroundTexDef.texture = $( "#custom-background-texture" ).find("img").prop("src");
+					
+					if (!/^data:/i.test(backgroundTexDef.texture)) {
+						backgroundTexDef.texture = "";
+					}
+					
+					onControllerUpdate();
+				},
+				Cancel : function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			open: function( event, ui ) {
+				var customTexDef = KMG.TextureMap.getTextureDefinitionByName("Custom");
 				
+				customTextures.setCustomTextureImageThumbnailFromSourceProperties($( "#custom-surface-texture" ), customTexDef.sourceProperties.texture);
+				customTextures.setCustomTextureImageThumbnailFromSourceProperties($( "#custom-normalmap-texture" ), customTexDef.sourceProperties.normalMap);
+				customTextures.setCustomTextureImageThumbnailFromSourceProperties($( "#custom-bumpmap-texture" ), customTexDef.sourceProperties.bumpMap);
+				customTextures.setCustomTextureImageThumbnailFromSourceProperties($( "#custom-specularmap-texture" ), customTexDef.sourceProperties.specularMap);
 				
-				
-				
-				</div>
-			</div>
-			<div id="follow-me-on-twitter">
-			<a href="https://twitter.com/kevinmgill" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @kevinmgill</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-			</div>
-		</div>
+				var backgroundTexDef = KMG.TextureMap.getBackgroundDefinitionByName("Custom");
+				customTextures._setCustomTextureImageThumbnail($( "#custom-background-texture" ), backgroundTexDef.texture);
+
+			}
+		});
+		$( "#texture-group-tabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
+		$( "#texture-group-tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" )
+		
+		$( "#fileselect" ).change(function(evt){
+			customTextures.handleFileSelect(evt);
+		});
+		
+		
+		var onDragOverLeave = function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+			e.target.className = (e.type == "dragover" ? "hover" : ""); 
+		};
+		
+		var onDragDrop = function(e) {
+			onDragOverLeave(e);
+			customTextures.handleFileSelect(e);
+		};
 	
-	</div>
+		document.getElementById('filedrag').addEventListener("dragover", onDragOverLeave, false);
+		document.getElementById('filedrag').addEventListener("dragleave", onDragOverLeave, false);
+		document.getElementById('filedrag').addEventListener("drop", onDragDrop, false);
+		document.getElementById('filedrag').style.display = "block";
+		
+		customTextures.createTextureThumbnailList("texture", "surface-thumbnail-list");
+		customTextures.createTextureThumbnailList("normalMap", "normals-thumbnail-list");
+		customTextures.createTextureThumbnailList("specularMap", "specular-thumbnail-list");
+		customTextures.createTextureThumbnailList("bumpMap", "height-thumbnail-list");
+		
+		
+		$( ".custom-texture-div" ).droppable({
+			drop: function( event, ui ) {
+				customTextures.setCustomTextureImageThumbnail($( this ), ui.draggable);//.prop("src"));
+			}
+		});
+		
+		
+		
+		
+		$( "#texture-remove-surface" ).click(function() { customTextures.onRemoveLinkClicked("surface"); });
+		$( "#texture-remove-normals" ).click(function() { customTextures.onRemoveLinkClicked("normals"); });
+		$( "#texture-remove-specular" ).click(function() { customTextures.onRemoveLinkClicked("specular"); });
+		$( "#texture-remove-bumpmap" ).click(function() { customTextures.onRemoveLinkClicked("bumpmap"); });
+		$( "#texture-remove-background" ).click(function() { customTextures.onRemoveLinkClicked("background"); });
+		
+
+
+
+
+	},
 	
-	<div class="container">
-		<ul class="nav nav-pills">
-			<li id="pill-visualizations" class="active"><a href="#">WebGL Visualizations</a></li>
-			<li id="pill-animations"><a href="https://www.youtube.com/channel/UCkGggNDHP58Vb-b_cd31Scg">Animations</a></li>
-			<li id="pill-images"><a href="https://www.flickr.com/photos/kevinmgill/">Graphics</a></li>
-			<li id="pill-blog"><a href="http://blog.apoapsys.com">Blog</a></li>
-		</ul>
-	</div>
+	onRemoveLinkClicked : function(which) {
+		console.info("Clicked: " + which);
+		
+		var customTexDef = KMG.TextureMap.getTextureDefinitionByName("Custom");
+		
+		if (which == "surface") {
+			customTexDef.texture = null;
+			customTexDef.sourceProperties.texture = {};
+			customTextures.setCustomTextureImageThumbnailFromSourceProperties($( "#custom-surface-texture" ), customTexDef.sourceProperties.texture);
+		} else if (which == "normals") {
+			customTexDef.normalMap = null;
+			customTexDef.sourceProperties.normalMap = {};
+			customTextures.setCustomTextureImageThumbnailFromSourceProperties($( "#custom-normalmap-texture" ), customTexDef.sourceProperties.normalMap);
+		} else if (which == "specular") {
+			customTexDef.specularMap = null;
+			customTexDef.sourceProperties.specularMap = {};
+			customTextures.setCustomTextureImageThumbnailFromSourceProperties($( "#custom-specularmap-texture" ), customTexDef.sourceProperties.specularMap);
+		} else if (which == "bumpmap") { 
+			customTexDef.bumpMap = null;
+			customTexDef.sourceProperties.bumpMap = {};
+			customTextures.setCustomTextureImageThumbnailFromSourceProperties($( "#custom-bumpmap-texture" ), customTexDef.sourceProperties.bumpMap);
+		} else if (which == "background") {
+			
+			var backgroundTexDef = KMG.TextureMap.getBackgroundDefinitionByName("Custom");
+			backgroundTexDef.texture = null;
+			customTextures._setCustomTextureImageThumbnail($( "#custom-background-texture" ), backgroundTexDef.texture);
+			
+		}
+		
+	},
+
+	createTextureThumbnailList : function(field, targetId) {
+		var texSet = {};
+		
+		for (var i = 0; i < KMG.textures.length; i++) {
+			if (KMG.textures[i].enabled && KMG.textures[i].name != "Custom" && KMG.textures[i][field]) {
+				var url = KMG.textures[i][field];
+				url = url.replace("#resolution#", "512x256");
+				texSet[url] = {url : url, name : KMG.textures[i].name, field : field, index : i};
+			}
+		}
+		
+		$.each(texSet, function(index, value) {
+			var url = value.url;
+			var name = value.name;
+			var field = value.field;
+			var index = value.index;
+			
+			var id = KMG.GUID.guid();
+			var span = document.createElement('span');
+			span.innerHTML = ['<img class="texture-thumbnail-img" src="', url,
+									'" title="', name, '"', ' id="texture_', id, '" tex-field="',
+									field, '" tex-index="', index, '" tex-uploaded="false" tex-name="', name, '" />'
+									].join('');
+			document.getElementById(targetId).insertBefore(span, null);
+			$( "#texture_"+id ).draggable({revert: true, helper: "clone", revertDuration: 0});
+		});
+
+	},
 	
-	<div id="visualizations" class="container">
+	//http://www.html5rocks.com/en/tutorials/file/dndfiles/
+	//http://blogs.sitepointstatic.com/examples/tech/filedrag/1/index.html
+	handleFileSelect : function(evt) {
+    
+		var files = evt.target.files || evt.dataTransfer.files;
 		
-		<div class="row">
-			<div class="col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<img src="/img/thumbnails/planetmaker.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
-					<div class="caption">
-						<h3>PlanetMaker</h3>
-						<p>Create your own planet, real or imaginary</p>
-						<p><a href="http://planetmaker.apoapsys.com" class="btn btn-primary" role="button">Launch</a></p>
-					</div>
-				</div>
-			</div>
+		for (var i = 0, f; f = files[i]; i++) {
+
+			if (!f.type.match('image.*')) {
+				continue;
+			}
 			
-			<div class="col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<img src="/img/thumbnails/apoapsyssolar.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
-					<div class="caption">
-						<h3>Apoapsys Solar</h3>
-						<p>Advanced solar system simulation (in development)</p>
-						<p><a href="http://solar.apoapsys.com" class="btn btn-primary" role="button">Launch</a></p>
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<img src="/img/thumbnails/moonphases.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
-					<div class="caption">
-						<h3>Moon Phaser</h3>
-						<p>Realtime Moon positional, phase, & librations.</p>
-						<p><a href="http://moon.apoapsys.com" class="btn btn-primary" role="button">Launch</a></p>
-					</div>
-				</div>
-			</div>
-			
-			
-		</div>
-		
-		<div class="row">
-			<div class="col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<img src="/img/thumbnails/solarsyssim.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
-					<div class="caption">
-						<h3>Solar System Simulator</h3>
-						<p>Alternative interface to the NASA/JPL Solar System Simulator.</p>
-						<p><a href="http://solar.apoapsys.com/nasasolarsysfe.html" class="btn btn-primary" role="button">Launch</a></p>
-					</div>
-				</div>
-			</div>
-			
-			
-			<div class="col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<img src="/img/thumbnails/orbitviewer.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
-					<div class="caption">
-						<h3>Orbit Viewer</h3>
-						<p>An interactive display of spacecraft trajectories and realtime locations.</p>
-						<p><a href="http://orbits.apoapsys.com" class="btn btn-primary" role="button">Launch</a></p>
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<img src="/img/thumbnails/sattracker.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
-					<div class="caption">
-						<h3>Satellite Tracker</h3>
-						<p>Real-time and simulated satellite positions and tracking</p>
-						<p><a href="http://solar.apoapsys.com/satellitetracker.html" class="btn btn-primary" role="button">Launch</a></p>
-					</div>
-				</div>
-			</div>
-			
-			
-			
-			
-		</div>
-		
-		
-		<div class="row">
-			
-			<div class="col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<img src="/img/thumbnails/lookuptool.jpg" alt="..." class="img-thumbnail img-thumbnail-larger">
-					<div class="caption">
-						<h3>Small Body Lookup Tool</h3>
-						<p>Detailed information on near-Earth asteroids</p>
-						<p><a href="http://solar.apoapsys.com/smallbodylookup.html" class="btn btn-primary" role="button">Launch</a></p>
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<img src="/img/thumbnails/satellites.jpg" alt="..." class="img-thumbnail">
-					<div class="caption">
-						<h3>Satellites Viewer</h3>
-						<p>A realtime simulation of all tracked artificial satellites currently in Earth orbit</p>
-						<p><a href="http://satellites.apoapsys.com" class="btn btn-primary" role="button">Launch</a></p>
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<img src="/img/thumbnails/pha.jpg" alt="..." class="img-thumbnail">
-					<div class="caption">
-						<h3>PHAntom Viewer</h3>
-						<p>An interactive display of known asteroids and comets designated as 
-						Potentially Hazardous Objects Each of the 1400+ objects is on an orbit which takes it within a very close approach to Earth at some point in time and, in
-						the case of an impact, carry the potential to cause significant or catastrophic damage.</p>
-						<p><a href="http://pha.apoapsys.com" class="btn btn-primary" role="button">Launch</a></p>
-					</div>
-				</div>
-			</div>
-			
-			
-			
-		</div>
-		
-		<div class="row">
-			<div class="col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<img src="/img/thumbnails/scaleplanets.jpg" alt="..." class="img-thumbnail">
-					<div class="caption">
-						<h3>Scale Planets</h3>
-						<p>An interactive model of the Sun, planets, and moons of our solar system, all to scale</p>
-						<p><a href="http://planets.wthr.us" class="btn btn-primary" role="button">Launch</a></p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+			var reader = new FileReader();
+
+			reader.onload = (function(theFile) {
+				return function(e) {
+					
+					var id = KMG.GUID.guid();
+					
+					console.info("Creating custom uploaded texture with id " + id);
+					var span = document.createElement('span');
+					span.innerHTML = ['<img class="texture-thumbnail-img" src="', e.target.result,
+									'" title="', escape(theFile.name), '"', ' id="custom_texture_', id, '" tex-uploaded="true" tex-isset="true" />'].join('');
+					document.getElementById('custom-list').insertBefore(span, null);
+
+					$( "#custom_texture_"+id ).draggable({revert: true, helper: "clone", revertDuration: 0});
+				};
+			})(f);
+
+			reader.readAsDataURL(f);
+		}
+	}
+
+};
+
+
+
+
+$(function() {
+	
+
+	if (AppEnv.isDevMode()) {
+		$( "#page-title-link" ).css("color", "#FF0000");
+		$( "#page-title-link" ).text($( "#page-title-link" ).text() + " (devmode)");
+		$( "#share-buttons" ).css("display", "none");
+		$( "#ce" ).css("display", "none");
+	}
+	
+	if (AppEnv.isEmbedded()) {
+		$( ".hide-on-embedded" ).css("display", "none");
+	}
+	
+	$( "#loading-progressbar" ).progressbar({
+      value: false
+    });
+	
+	$( "#loading-progressbar" ).center();
+	$( "#progress-label" ).center();
+	
+	
+	var visibleAboutDialogSection = function() {
+		if ($( "#about-dialog-about" ).css("display") === "block") {
+			return $( "#about-dialog-about" );
+		} else if ($( "#about-dialog-instructions" ).css("display") === "block") {
+			return $( "#about-dialog-instructions" );
+		} else if ($( "#about-dialog-changes" ).css("display") === "block") {
+			return $( "#about-dialog-changes" );
+		} else {
+			return null;
+		}
+	};
+	
+	var onAboutDialogSection = function(section) {
+	
+		var visibleSection = visibleAboutDialogSection();
+		if (visibleSection !== null) {
+			var options = {};
+			visibleSection.hide( "fade", 200, function() {
+				$( "#about-dialog-"+section ).removeAttr( "style" ).hide().fadeIn(200);
+			});
+		} else {
+			$( "#about-dialog-"+section ).removeAttr( "style" ).hide().fadeIn(200);
+		}
+	};
+	
+	$( "#about-dialog-radios" ).buttonset();
+	$( "#radio_about" ).change(function(e) {
+		onAboutDialogSection("about");
+	});
+	$( "#radio_instructions" ).change(function(e) {
+		onAboutDialogSection("instructions");
+	});
+	$( "#radio_changes" ).change(function(e) {
+		onAboutDialogSection("changes");
+	});
+	$( "#about-dialog-about" ).css("display", "none");
+	$( "#about-dialog-instructions" ).css("display", "none");
+	$( "#about-dialog-changes" ).css("display", "none");
+	onAboutDialogSection("about");
+	$("input:radio[name='about_dialog_radio'][value='about']").prop("checked", true);
+	
+	if (isUserMobile()) {
+		$( ".hide-from-mobile" ).css("display", "none");
+	}
+	
+	var config = KMG.Util.extend({}, KMG.DefaultConfig);
+	config.textureResolution = (isUserMobile() ? "1024x512" : "2048x1024");
+	
+	
+	var editor = ace.edit("scene-script-editor");
+	var editorInitialized = false;
+	$( "#script-dialog" ).dialog({
+		width: 700,
+		height: 500,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		},
+		close : function(event, ui) {
+			KMG.keyCommandBindManager.bindAll();
+		},
+		open: function( event, ui ) {
+			KMG.keyCommandBindManager.unbindAll();
+			if (!editorInitialized) {
+				editor.setTheme("ace/theme/monokai");
+				editor.getSession().setMode("ace/mode/javascript");
+				editor.gotoLine(0);
+				editorInitialized = true;
+			}
+		}
+	});
+	
+	editor.setValue($( "#sceneScriptTemplate" ).text());
+
+	$( "#use-script" ).button().click(function(e) {
+		console.info("Checked: " + $(this).prop('checked'));
+	});
+	$( "#close-script" ).button().click(function(e) {
+		$( "#script-dialog" ).dialog( "close" );
+	});
+	
+	$( "#apply-script" ).button().click(function(e) {
+		// TODO:  Add some error handling...
+		//
+
+		try {
+			var script = new KMG.SceneScript(editor.getValue());
+			planet.applySceneScriptInstance(script);
+		} catch (ex) {
+			displayErrorMessage("Script Compilation Error", ex);
+		}
+	});
 
 	
-	<div id="footer">
-		<div class="container">
-			<p class="pull-left">
-				&copy; <a href="http://www.apoapsys.com">Kevin M. Gill</a> 2015
-			</p>
-			<p class="pull-right">
-				<a href="#">Back to top</a>
-			</p>
-		</div>
-	</div>
+	$( "#dialog" ).dialog({
+		width: 600,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		}
+	});
+	$( "#about-link" ).click(function() {
+		
+		$( "#dialog" ).dialog( "open" );
+
+	});
+	$( "#model-link-dialog" ).dialog({
+		width: 600,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		}
+	});
 	
-	<script>
+	$( "#examples-dialog" ).dialog({
+		width: 600,
+		height: 500,
+		autoOpen: false,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		},
+		buttons: {
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+	
+	$( "#error-message-dialog" ).dialog({
+		width: 600,
+		autoOpen: false,
+		modal: true,
+		show: {
+			effect: "drop",
+			duration: 400
+		},
+		hide: {
+			effect: "drop",
+			duration: 400
+		},
+		buttons: {
+			Ok : function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+
+	
+	
+	customTextures.init();
+	
+	
+	if (!window.WebGLRenderingContext || !Detector.webgl) {
+		Detector.addGetWebGLMessage();
+	}
+
+		
+	var modelId = AppEnv.getUrlVar('model');
+	if (modelId !== undefined) {
+		var service = new KMG.ConfigPersistenceService({});
+		service.load(modelId, function(config, view, camera, textures, sceneScript) {
+			
+			var texDef = KMG.TextureMap.getTextureDefinitionByName("Custom");
+			texDef.texture = textures.texture;
+			texDef.normalMap = textures.normalMap;
+			texDef.specularMap = textures.specularMap;
+			texDef.bumpMap = textures.bumpMap;
+			texDef.sourceProperties = textures.sourceProperties;
+
+			var bgTexDef = KMG.TextureMap.getBackgroundDefinitionByName("Custom");
+			bgTexDef.texture = textures.background;
+			
+			editor.setValue(sceneScript);
+			initializeModelAsync(config, view, camera, true, modelId, sceneScript);
+			
+		}, function(reason) {
+			displayErrorMessage("Error", "Failed to load model: " + reason);
+			//console.warn("Model load failed: " + reason);
+		});
+	} else {
+		initializeModelAsync(config, null, null, true, null, null);
+	}
+			
+
+
+	//	$( "#loading-screen" ).css("display", "none");
+
+	
+});
+
+
+function initializeModelAsync(config, view, cameraConfig, noAnimation, modelId, sceneScript)
+{
+
+	setTimeout(function() {
+		initializeModel(config, view, cameraConfig, noAnimation, modelId, sceneScript);
+	}, 1000);
+
+}
+
+function initializeModel(config, view, cameraConfig, noAnimation, modelId, sceneScript)
+{
+
+	if (!AppEnv.isDevMode() || AppEnv.isEmbedded()) {
+		config.enableFps = false;
+	}
+	
+	
+	$( "#use-script" ).attr("checked", config.useScript).button('refresh');
+	
+	var sceneReadyCallback = function() {
+		if (animator) {
+			animator.start();
+		}
+		
+		$( "#loading-screen" ).css("display", "none");
+		
+		
+		$('#page-title-container').removeClass().addClass("animated flipInY");
+		var wait = window.setTimeout( function(){
+			$('#page-title-container').removeClass()},
+			1300
+		);
+		
+		
+	};
+	
+	var resourceLoadingStart = function(url) {
+		$( "#loading-spinner" ).css("display", "inline");
+	};
+	
+	var resourceLoadingFinish = function(successful, remainingResources) {
+		if (remainingResources == 0) {
+			$( "#loading-spinner" ).css("display", "none");
+		}
+	};
+	
+	var webGlErrorCallback = function(ex) {
+		console.error("WebGL Exception Thrown: " + ex);
+		
+		// Disable stop until I prove this is necessary in every case
+		//planet.stop();
+	};
+
+	var animationStoppedCallback = function() {
+		console.warn("Application Animation Has Stopped!");
+	};
+	
+	var contextLostCallback = function(event) {
+		console.error("UI: WebGL Context Lost, displaying notification");
+		displayErrorMessage("WebGL Error", "WebGL Context Lost! Please refresh to restart the application");
+	};
+	
+	var sceneCallbacks = {
+		sceneReadyCallback : sceneReadyCallback,
+		resourceLoadingStart : resourceLoadingStart,
+		resourceLoadingFinish : resourceLoadingFinish,
+		webGlErrorCallback : webGlErrorCallback,
+		animationStoppedCallback : animationStoppedCallback,
+		contextLostCallback : contextLostCallback
+	};
+	
+	
+	var callbacks = {
+		setCustomTexture : function()
+		{
+			$( "#custom-texture-dialog" ).dialog( "open" );
+		},
+
+		reset : function()
+		{
+			location.reload();
+		}
+	
+	};
+	
+
+	// Check for webcam... Add to surface textures if available
+	if (KMG.WebCamUtil.isWebcamAvailable()) {
+		console.debug("Webcam is available");
+		for (var i = 0; i < KMG.textures.length; i++) {
+			if (KMG.textures[i].name === "Webcam") {
+				KMG.textures[i].enabled = true;
+			}
+		}
+		for (var i = 0; i < KMG.backgrounds.length; i++) {
+			if (KMG.backgrounds[i].name === "Webcam") {
+				KMG.backgrounds[i].enabled = true;
+			}
+		}
+	} else {
+		console.info("Webcam is NOT available");
+	}
+	
+	
+	
+	var texNames = [];
+	for (var i = 0; i < KMG.textures.length; i++) {
+		if (KMG.textures[i].enabled) {
+			texNames.push(KMG.textures[i].name);
+		}
+	}
+	
+	var ringNames = [];
+	for (var i = 0; i < KMG.rings.length; i++) {
+		ringNames[i] = KMG.rings[i].name;
+	}
+	
+	var cloudNames = [];
+	for (var i = 0; i < KMG.clouds.length; i++) {
+		cloudNames[i] = KMG.clouds[i].name;
+	}
+	
+	var backgroundNames = [];
+	for (var i = 0; i < KMG.backgrounds.length; i++) {
+		if (KMG.backgrounds[i].enabled == true) {
+			backgroundNames.push(KMG.backgrounds[i].name);
+		}
+	}
+	
+	var starFlareNames = [];
+	for (var i = 0; i < KMG.starFlares.length; i++) {
+		starFlareNames[i] = KMG.starFlares[i].name;
+	}
+	
+	var guiChangeListener = function() {
+		onControllerUpdate();
+	}
+	
+	config.camera.near = 2;
+	planet = new KMG.Planet(document.getElementById( 'container' ), config, sceneCallbacks, cameraConfig, view);
+	
+	if (!AppEnv.isEmbedded()) {
+	
+		gui = new KMG.GUI(config, guiChangeListener);
+		
+		gui.onVisibilityChanged = function(visible) {
+			var setDisplay = visible ? "block" : "none";
+			$("#page-title-container").css("display", setDisplay);
+			$("#inline-instructions").css("display", setDisplay);
+			$("#instructions-link-container").css("display", setDisplay);
+			$("#stats").css("display", setDisplay);
+			$("#share-buttons").css("display", setDisplay);
+			$("#ce").css("display", setDisplay);
+		};
+		
+		var appGui = gui.left.createBlock("Options", appOptions, onOptionsUpdate);
+		appGui.setExpandedState(KMG.Closed);
+		appGui.addAction('Hide Controls', function() {
+			gui.setVisible(false);
+		});
+		appGui.addRange('guiOpacity', 'GUI Transparency:', 0.0, 1.0, 0.01);
+		
+		var sceneGui = gui.left.createBlock("Scene");
+		sceneGui.addSelect('textureResolution', 'Texture Resolution:', [/*"8192x4096", */"4096x2048", "2048x1024", "1024x512", "512x256", "256x128"]);
+		sceneGui.addSelect('lightingType', 'Lighting Type:', ["Directional", "Point"]);
+		sceneGui.addRange('sunlightDirection', 'Sunlight Direction:', 0.0, 360.0);
+		sceneGui.addToggle('realtimeSunlight', 'Date/Time Sunlight:');
+		sceneGui.addDateTime('sunlightDate', 'Sunlight Date (UTC):');
+
+
+		sceneGui.addToggle('shadows', 'Enable Shadows:');
+		sceneGui.addRange('shadowDarkness', 'Shadow Darkness:', 0.0, 1.0, 0.01);
+		sceneGui.addAction('SceneScript Editor', function() {
+			$( "#script-dialog" ).dialog( "open" );
+		});
+		sceneGui.addAction('Reset', function() { location.reload(); });
+
+		
+		if (AppEnv.isDevMode()) {
+			sceneGui.addAction('Create Permalink', function() { exportScene(config); } );
+		}
+
+
+		sceneGui.addAction('Planet Gallery', function() { $( "#examples-dialog" ).dialog( "open" ); });
+		
+		
+		var colorModes = [
+			"Normal",
+			"Grayscale",
+			"Inverted",
+			"Inverted Grayscale"
+		];
+		
+		var surfaceGui = gui.left.createBlock("Surface");
+		surfaceGui.addSelect('texture', 'Texture:', texNames);
+		surfaceGui.addAction('Set Custom Texture', function() { $( "#new-custom-texture-dialog" ).dialog( "open" ); } );
+		surfaceGui.addRange('surfaceHue', 'Hue:', 0.0, 1.0, 0.001);
+		surfaceGui.addRange('surfaceSaturation', 'Saturation:', 0.0, 1.0, 0.001);
+		surfaceGui.addRange('surfaceLightness', 'Lightness:', 0.0, 1.0, 0.001);
+		surfaceGui.addSelect('surfaceColorMode', 'Color Mode:', colorModes);
+		surfaceGui.addRange('surfaceDetail', 'Detail Level:', 0.0, 5.0, 0.1);
+		surfaceGui.addRange('elevationScale', 'Elevation Scale:');
+		surfaceGui.addRange('flattening', 'Flattening:', 0.0, 0.1, 0.001);
+		surfaceGui.addRange('axialTilt', 'Axial Tilt:', -90.0, 90.0, 0.01);
+		surfaceGui.addRange('shininess', 'Shininess:', 0, 128);
+		surfaceGui.addRange('specularIntensity', 'Specular Light:', 0, 255);
+		surfaceGui.addRange('surfaceWrapRGB', 'Diffuse Wrap Around:', 0, 1.0, 0.001);
+		surfaceGui.addRange('ambientIntensity', 'Ambient Light:', 0, 255);
+		surfaceGui.addRange('emissiveIntensity', 'Emissive Light:', 0, 255);
+		surfaceGui.addToggle('enableCityLights', 'City Lights:');
+		surfaceGui.addRange('cityLightsIntensity', 'City Light Level:', 0, 5, 0.1);
+		
+		
+		var cloudsGui = gui.left.createBlock("Clouds");
+		cloudsGui.setExpandedState(KMG.Closed);
+		cloudsGui.addToggle('displayClouds', 'Display Clouds:');
+		cloudsGui.addSelect('cloudsTexture', 'Texture:', cloudNames);
+		cloudsGui.addRange('cloudsHue', 'Hue:', 0.0, 1.0, 0.001);
+		cloudsGui.addRange('cloudsSaturation', 'Saturation:', 0.0, 1.0, 0.001);
+		cloudsGui.addRange('cloudsLightness', 'Lightness:', 0.0, 1.0, 0.001);
+		cloudsGui.addRange('cloudsDetail', 'Detail Level:', 0.0, 5.0, 0.1);
+		cloudsGui.addRange('cloudsElevation', 'Altitude:', 0.0, 1.0, 0.25);
+		cloudsGui.addRange('cloudsThickness', 'Thickness:', 0.0, 5.0, 0.01);
+		cloudsGui.addRange('cloudsOpacity', 'Opacity:', 0.0, 3.0, 0.01);
+		cloudsGui.addToggle('cloudsCastShadows', 'Cast Shadows:');
+		cloudsGui.addRange('cloudsShadowLevel', 'Shadow Level:', 0.0, 1.0, 0.01);
+		cloudsGui.addRange('cloudsSpecularIntensity', 'Specular Light:', 0, 255);
+		cloudsGui.addRange('cloudsAmbientIntensity', 'Ambient Light:', 0, 255);
+		
+		
+		var localStarGui = gui.right.createBlock("Local Star");
+		localStarGui.setExpandedState(KMG.Closed);
+		localStarGui.addToggle('displayLocalStar', 'Display Local Star:');
+		localStarGui.addRange('localStarDistance', 'Size:', 0.0, 10.0, 0.01);
+		localStarGui.addSelect('localStarTexture', 'Texture:', starFlareNames);
+		localStarGui.addColor('localStarColor', 'Color:');
+		localStarGui.addToggle('starColorAffectsPlanetLighting', 'Planet Lighting:');
+		localStarGui.addToggle('lensFlareEnabled', 'Lens Flare:');
+		
+	
+		var atmosphereGui = gui.right.createBlock("Atmosphere");
+		atmosphereGui.setExpandedState(KMG.Closed);
+		atmosphereGui.addToggle('displayAtmosphere', 'Display Atmosphere:');
+		atmosphereGui.addColor('atmosphereColor', 'Color:');
+		atmosphereGui.addRange('atmosphereScale', 'Altitude:', -10.0, 25.0, 0.25);
+		atmosphereGui.addRange('atmosphereIntensity', 'Density:', 0.0, 2.0, 0.1);
+
+		
+		var ringGui = gui.right.createBlock("Ring");
+		ringGui.setExpandedState(KMG.Closed);
+		ringGui.addToggle('displayRing', 'Display Rings:');
+		ringGui.addSelect('ringTexture', 'Texture:', ringNames);
+		ringGui.addRange('ringHue', 'Hue:', 0.0, 1.0, 0.001);
+		ringGui.addRange('ringSaturation', 'Saturation:', 0.0, 1.0, 0.001);
+		ringGui.addRange('ringLightness', 'Lightness:', 0.0, 1.0, 0.001);
+		ringGui.addRange('ringInnerRadius', 'Inner Radius:', config.radius, 600.0);
+		ringGui.addRange('ringOutterRadius', 'Outter Radius:', config.radius, 600.0);
+		ringGui.addRange('ringAngle', 'Angle', -90, 90);
+		ringGui.addRange('ringOpacity', 'Opacity', 0.0, 1.0, 0.01);
+
+		var backgroundGui = gui.right.createBlock("Background");
+		backgroundGui.setExpandedState(KMG.Closed);
+		backgroundGui.addSelect('backgroundType', 'Type:', ['image', 'stars']);
+		backgroundGui.addSelect('backgroundImage', 'Image:', backgroundNames);
+		backgroundGui.addSelect('backgroundImageType', 'Projection:', ['flat', 'sphere']);
+		backgroundGui.addSelect('backgroundImageFitType', 'Fit Type:', ['stretch']);
+		backgroundGui.addAction('Set Custom Texture', function() { $( "#new-custom-texture-dialog" ).dialog( "open" ); }  );
+		backgroundGui.addRange('starQuantity', 'Star Strength:', 0, 10, 0.01);
+		
+		var effectsGui = gui.right.createBlock("Effects");
+		effectsGui.setExpandedState(KMG.Closed);
+		//effectsGui.addToggle('enableGodRays', 'Enable Haze'); 
+		//effectsGui.addRange('godRaysIntensity', 'Haze Intensity', 0, 1, 0.01);
+		
+		effectsGui.addToggle('enableBlur', 'Enable Blur');
+		effectsGui.addRange('blurAmount', 'Blur Amount', 0, 2, 0.01);
+		effectsGui.addToggle('enableBloom', 'Enable Bloom');
+		effectsGui.addRange('bloomStrength', 'Bloom Strength', 0, 5, 0.01);
+		effectsGui.addToggle('enableBleach', 'Enable Bleach');
+		effectsGui.addRange('bleachAmount', 'Bleach Amount', 0, 1, 0.01);
+		
+		effectsGui.addToggle('enableSepia', 'Enable Sepia');
+		effectsGui.addRange('sepiaAmount', 'Sepia Amount', 0, 1, 0.01);
+		
+		effectsGui.addToggle('enableFilm', 'Enable Film');
+		effectsGui.addRange('noiseIntensity', 'Noise Intensity', 0, 1, 0.01);
+		effectsGui.addRange('scanlinesIntensity', 'Scanlines Intensity', 0, 1, 0.01);
+		effectsGui.addRange('scanlinesCount', 'Scanlines Count', 0, 4068, 1);
+		effectsGui.addToggle('filmGrayscale', 'Grayscale');
+
+		
+		function createMoonGui(moonConfig) {
+			if (!gui.right.moonCount) {
+				gui.right.moonCount = 0;
+			}
+			
+			gui.right.moonCount++;
+		
+			var moonGui = gui.right.createBlock("Moon " + gui.right.moonCount, moonConfig);
+
+			moonGui.addToggle('displayMoon', 'Display Moon:');
+			moonGui.addAction('Delete Moon', function() {  
+				planet.removeMoon(moonConfig); 
+				gui.right.removeBlock(moonGui);
+			});
+			moonGui.addSelect('moonTexture', 'Texture:', texNames);
+			moonGui.addRange('moonHue', 'Hue:', 0.0, 1.0, 0.001);
+			moonGui.addRange('moonSaturation', 'Saturation:', 0.0, 1.0, 0.001);
+			moonGui.addRange('moonLightness', 'Lightness:', 0.0, 1.0, 0.001);
+			moonGui.addSelect('moonColorMode', 'Color Mode:', colorModes);
+			moonGui.addRange('moonSurfaceDetail', 'Detail Level:', 0.0, 5.0, 0.1);
+			moonGui.addRange('moonElevationScale', 'Elevation Scale:');
+			moonGui.addRange('moonShininess', 'Shininess:', 0, 128);
+			moonGui.addRange('moonSpecularIntensity', 'Specular Light:', 0, 255);
+			moonGui.addRange('moonAmbientIntensity', 'Ambient Light:', 0, 255);
+			moonGui.addRange('moonEmissiveIntensity', 'Emissive Light:', 0, 255);
+			moonGui.addRange('moonScale', 'Size:', 0.01, 10, 0.1);
+			moonGui.addRange('moonDistance', 'Distance:', 0.01, 10, 0.1);
+			moonGui.addRange('moonRotation', 'Rotation:', 0.0, 360.0);
+			moonGui.addRange('moonAngle', 'Orbit Position:', 0.0, 360.0);
+		}
+		
+		
+		
+		
+		var moonsGui = gui.right.createBlock("Moons");
+		moonsGui.addAction('Create Moon', function() {  
+			var moonConfig = KMG.Util.extend({}, KMG.DefaultMoonConfig);
+			createMoon(moonConfig);
+		});
+		
+		
+	}
+	
+	function createMoon(moonConfig)
+	{
+		planet.addMoon(moonConfig);
+
+		if (createMoonGui) {
+			createMoonGui(moonConfig);
+		}
+			
+		planet.context.configChanged = true;
+	};
+	
+	if (!config.version || config.version < 2.0) {
+			var moonConfig = KMG.Util.extend(KMG.DefaultMoonConfig, config);
+			createMoon(moonConfig);
+	} else if (config.moons && config.version >= 2.0) {
+		for (var i = 0; i < config.moons.length; i++) {
+			createMoon(config.moons[i]);
+		}
+	}
+	
+	
+	if (!noAnimation) {
+		animator = new KMG.AnimateController({
+			startDistance : 2000.0,
+			minDistance : config.camera.positionZ - 150,
+			integralStart : 1,
+			integralEnd : 6,
+			integralMax : 5,
+			integralMin : 0.5,
+			speed : 0.05,
+			wait : 50, //ms
+			distanceIntegral : function(x) {
+				return Math.sin(x / Math.PI + 8.4823) + Math.cos(0.477465 * x) + Math.cos(x) + 2.0;
+			},
+			rotateIntegral : function(x) {
+				return -2.5 * Math.sin(x / 3 + 4.71239) - Math.sin(x / Math.PI + 8.4823) - Math.cos(0.477465 * x) - Math.cos(x) + 0.5;
+			}
+		}, planet.context.camera);
+		planet.animators.push(animator);
+		animator.rewind();
+	}
+	
+	
+	if (sceneScript) {
+		try {
+			var script = new KMG.SceneScript(sceneScript);
+			planet.applySceneScriptInstance(script);
+		} catch (ex) {
+			displayErrorMessage("Script Compilation Error", ex);
+		}
+	}
+	
+	
+	planet.start();
+	
+	
+	
+	
+	
+	KMG.keyCommandBindManager.engine = planet;
+	var bindResult = KMG.keyCommandBindManager.bindAll();
+	if (bindResult.screenshot) {
+		document.getElementById('inline-instructions').innerHTML	+= ", <i>f</i> for fullscreen.";
+	}
+
+}
+
+
+		</script>
+	</head>
+	<body>
+	
+		
+		<style>
+#kmg-video { -webkit-transform: scaleX(1); -o-transform: scaleX( 1 ); display: none; }
+		</style>
+		<video id="kmg-video" autoplay></video> 
+		<div id="container"></div>
+	
+		<div id="debug-message"></div>
+	
+	
+		<div id="script-dialog" title="SceneScript Editor">
+			<div id="script-toolbar" class="ui-widget-header ui-corner-all">
+				<input type="checkbox" id="use-script" /><label for="use-script">Use Script</label>
+				<button id="apply-script">Apply Changes</button>
+				<button id="close-script">Close</button>
+			</div>
+			<div id="scene-script-editor"></div>
+		</div>
+	
+		
+		<div id="new-custom-texture-dialog" title="Set Custom Textures">
+			<div class="ui-widget input-form">
+				
+				<div class="custom-textures-left">
+					
+					<div id="texture-group-tabs">
+						<ul>
+							<li><a href="#uploaded-tab">Uploaded</a></li>
+							<li><a href="#surface-tab">Surface</a></li>
+							<li><a href="#normals-tab">Normals</a></li>
+							<li><a href="#height-tab">Height</a></li>
+							<li><a href="#specular-tab">Specular</a></li>
+							<!--
+							<li><a href="#lights-tab">Lights</a></li>
+							<li><a href="#background-tab">Background</a></li>
+							-->
+						</ul>
+						<div id="uploaded-tab">
+							<div>
+								<label for="fileselect">Files to upload:</label>
+								<input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
+								<div id="filedrag">or drop files here</div>
+							</div>
+							<div class="texture-thumbnail-list">
+								<output id="custom-list" ></output>
+							</div>
+						</div>
+						<div id="surface-tab">
+							<div class="texture-tab-header">Surface</div>
+							<div id="surface-thumbnail-list" class="texture-thumbnail-list">
+							
+							</div>
+						</div>
+						<div id="normals-tab">
+							<div class="texture-tab-header">Normals</div>
+							<div id="normals-thumbnail-list" class="texture-thumbnail-list">
+							
+							</div>
+						</div>
+						<div id="height-tab">
+							<div class="texture-tab-header">Height Map</div>
+							<div id="height-thumbnail-list" class="texture-thumbnail-list">
+							
+							</div>
+						</div>
+						<div id="specular-tab">
+							<div class="texture-tab-header">Specular</div>
+							<div id="specular-thumbnail-list" class="texture-thumbnail-list">
+							
+							</div>
+						</div>
+						
+						<!--
+						<div id="lights-tab">
+							<div class="texture-tab-header">City Lights</div>
+							<div id="lights-thumbnail-list" class="texture-thumbnail-list">
+							
+							</div>
+						</div>
+						<div id="background-tab">
+							<div class="texture-tab-header">Backgrounds</div>
+							<div id="background-thumbnail-list" class="texture-thumbnail-list">
+							
+							</div>
+						</div>
+						-->
+					</div>
+					
+					
+					
+				</div>
+				<div class="custom-textures-right">
+					<table>
+						<tbody>
+							<tr>
+								<td><label for="custom-surface-texture" class="custom-texture-label">Surface:</label></td>
+								<td><div id="custom-surface-texture" class="custom-texture-div"><div class="no-custom-texture">?</div><img src="" /></div></td>
+								<td><a href="#" id="texture-remove-surface"><img class="texture-remove-icon"  src="/img/texture-remove.png" /></a></td>
+							</tr>
+							<tr>
+								<td><label for="custom-normalmap-texture" class="custom-texture-label">Normals:</label></td>
+								<td><div id="custom-normalmap-texture" class="custom-texture-div"><div class="no-custom-texture">?</div><img src="" /></div></td>
+								<td><a href="#" id="texture-remove-normals"><img class="texture-remove-icon" src="/img/texture-remove.png" /></a></td>
+							</tr>
+							<tr>
+								<td><label for="custom-specularmap-texture" class="custom-texture-label">Specular:</label></td>
+								<td><div id="custom-specularmap-texture" class="custom-texture-div"><div class="no-custom-texture">?</div><img src="" /></div></td>
+								<td><a href="#" id="texture-remove-specular"><img class="texture-remove-icon"  src="/img/texture-remove.png" /></a></td>
+							</tr>
+							<tr>
+								<td><label for="custom-bumpmap-texture" class="custom-texture-label">Bump Map:</label></td>
+								<td><div id="custom-bumpmap-texture" class="custom-texture-div"><div class="no-custom-texture">?</div><img src="" /></div></td>
+								<td><a href="#" id="texture-remove-bumpmap"><img class="texture-remove-icon"  src="/img/texture-remove.png" /></a></td>
+							</tr>
+							<tr>
+								<td><label for="custom-background-texture" class="custom-texture-label">Background:</label></td>
+								<td><div id="custom-background-texture" class="custom-texture-div"><div class="no-custom-texture">?</div><img src="" /></div></td>
+								<td><a href="#" id="texture-remove-background"><img class="texture-remove-icon"  src="/img/texture-remove.png" /></a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		
+	
+	
+		
+		<div id="no-webgl-for-you">
+			<div id="h5p-message"></div>
+			<script>window.h5please=function(a){ document.getElementById("h5p-message").innerHTML=a.html }</script>
+			<script async src="http://api.html5please.com/webgl+canvas.json?callback=h5please&texticon&html"></script>
+		</div>
+		
+		
+		
+		<div id="page-title-container" class="hide-on-embedded">
+			<a href="http://planetmaker.wthr.us" id="page-title-link">PlanetMaker</a>
+		</div>
+
+		<div id="inline-instructions" class="hide-on-embedded">
+			Press <i>p</i> for screenshot
+		</div>
+		
+		<div id="instructions-link-container" class="hide-on-embedded">
+			<a href="#" id="about-link">[ About ]</a>
+			
+			<a href="/userguide.html" id="userguide-link" target="_BLANK">[ User Guide ]</a>
+		</div>
+
+		
+		<div id="model-link-dialog" title="Link">
+			<div class="dialog-section">
+				<b><em>Link to Your Planet:</em></b> 
+				<input type="text" id="model-link" value="" />
+			</div>
+		</div>
+		
+		<div id="error-message-dialog" title="Error">
+			<div class="dialog-section">
+				<p>
+					<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 50px 0;"></span>
+					<div id="error-message-title">Title</div>
+					<div id="error-message-body">Body</div>
+				</p>
+			</div>
+		</div>
+		
+		<div id="dialog" title="About PlanetMaker">
+			<h1><a href="/">PlanetMaker</a></h1>
+			
+			<div class="dialog-section">
+				
+				
+				<div id="about-dialog-radios">
+					<input type="radio" id="radio_about" name="about_dialog_radio" value="about" checked="checked"/><label for="radio_about">About</label>
+					<input type="radio" id="radio_instructions" name="about_dialog_radio" value="instructions" /><label for="radio_instructions">Instructions</label>
+				</div>
+				
+				<div id="about-dialog-about">
+					<div class="dialog-subsection">
+						<b><em>About:</em></b> 
+	
+						PlanetMaker allows you to create and tweak your own planet using image textures, lighting, and more importantly, your imagination.
+						
+						<div>
+							<b><em><a href="http://www.wthr.us/2013/05/23/bored-then-create-a-planet/" target="_BLANK">More Information</a></em></b>
+						</div>
+						
+						Use of any images generated using PlanetMaker are free for your use in any medium. I just as that attribution accompany the image
+						when used in articles or where possible. This will allow others to be able to find attribution and credits of the sources of data
+						used within PlanetMaker. 
+					</div>
+					
+					<div class="dialog-subsection">
+						<b><em>Sources:</em></b> 
+						<ul>
+							<li>Planet Textures: <a href="http://www.shatters.net/celestia/" target="_BLANK">Celestia</a>, NASA</li>
+							<li>Sun Texture: <a href="http://www.celestiamotherlode.net/catalog/show_addon_details.php?addon_id=629" target="_BLANK">Runar Thorvaldsen</a></li>
+							<li><a href="http://earthobservatory.nasa.gov/Features/BlueMarble/" target="_BLANK">Blue Marble NG, NASA Earth Observatory</a></li> 
+							<li><a href="http://xplanet.sourceforge.net/clouds.php" target="_BLANK">xPlanet Global Clouds</a></li>
+							<li>Moons of Saturn: <a href="http://www.nasa.gov/jpl/cassini/saturns-moons-what-a-difference-a-decade-makes/">NASA/JPL-Caltech/SSI/LPI</a></li>
+							<li>Earth Altimetry Data: <a href="http://www.gebco.net" target="_BLANK">The GEBCO_08 Grid, version 20100927</a></li>
+							<li>Mars Altimetry Data: <a href="http://mola.gsfc.nasa.gov/" target="_BLANK">Mars Orbiter Laser Altimeter (Mars Global Surveyor)</a></li>
+							<li>Moon Altimetry Data: <a href="http://lunar.gsfc.nasa.gov/lola/index.html" target="_BLANK">NASA Lunar Orbiter Laser Altimeter</a></li>
+							<li><a href="http://threejs.org/" target="_BLANK">three.js JavaScript 3D Library</a></li>
+							<li><a href="http://opengameart.org/content/lens-flares-and-particles" target="_BLANK">Lens Flare: Public Domain Donation by hackcraft.de</a></li>
+							<li>Background Images: <a href="http://apod.nasa.gov/apod/" target="_BLANK">Astronomy Picture of the Day</a></li>
+							<li>Vegetation as Seen by Suomi NPP: <a href="http://www.nasa.gov/mission_pages/NPP/news/vegetation.html" target="_BLANK">NASA/NOAA</a></li>
+							<li>Tycho Star Map: <a href="http://maps.jpl.nasa.gov/stars.html" target="_BLANK">Caltech/JPL</a></li>
+							<li>Hipparcos Star Map: <a href="http://maps.jpl.nasa.gov/stars.html" target="_BLANK">Caltech/JPL</a></li>
+							<li>Yale Bright Star Map: <a href="http://maps.jpl.nasa.gov/stars.html" target="_BLANK">Caltech/JPL</a></li>
+							<li>Cylindrical Maps of Venus: <a href="http://maps.jpl.nasa.gov/venus.html" target="_BLANK">NASA/JPL</a></li>
+							<li>Ceres: <a href="http://www.planetary.org/multimedia/space-images/small-bodies/ceres-20150219-dem.html" target="_BLANK">NASA / JPL / UCLA / MPS / DLR / IDA / unmannedspaceflight.com user "JohnVV"</a></li>
+							<li>True Color Earth: <a href="http://peate.ssec.wisc.edu/flo/" target="_BLANK">NOAA/NASA/University of Wisconsin Suomi NPP</a></li>
+							<li>Mercury: <a href="http://messenger.jhuapl.edu/the_mission/mosaics.html" target="_BLANK">NASA/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington</a></li>
+						</ul>
+					</div>
+					
+					
+					<div class="dialog-section">
+					
+						<!-- Place this tag where you want the badgev2 to render. -->
+						<div class="g-follow" data-annotation="bubble" data-height="24" data-href="//plus.google.com/113761354606401247247" data-rel="author"></div>
+
+						<!-- Place this tag after the last badgev2 tag. -->
+						<script type="text/javascript">
+						  (function() {
+							if (!AppEnv.isDevMode()) {
+								var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+								po.src = 'https://apis.google.com/js/plusone.js';
+								var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+							}
+						  })();
+						</script>
+					
+					</div>
+					
+					
+					<div class="dialog-section">
+						&copy; 2013 <a href="https://plus.google.com/113761354606401247247/about" target="_BLANK">Kevin M. Gill</a>. All Rights Reserved.
+					</div>
+				</div>
+				
+				<div id="about-dialog-instructions">
+					<div class="dialog-subsection">
+						<b><em>Instructions:</em></b> 
+						Create your planet using the controls on the top right. You can:
+						<ul>
+							<li>Change the surface and clouds images</li>
+							<li>Modify lighting and atmospheric properties</li>
+							<li>Add and adjust rings</li>
+							<li>Upload your own custom surface textures by clicking "setCustomTexture"</li>
+						</ul>
+						
+						<b><em>View Controls:</em></b>
+						PlanetMaker uses mouse and keyboard based navigation controls, similar to those in Google Earth.
+						<ul>
+							<li><b>Rotating:</b> Rotate the scene by left-clicking and dragging with the mouse</li>
+							<li><b>Pitch/Roll:</b> Control the pitch & roll of the scene by holding down shift while left-clicking and
+					dragging with the mouse.</li>
+							<li><b>Panning:</b> Pan the scene (offsetting the planet from the center, similar to turning your head away from
+					the object of focus) by holding down Ctrl while left-clicking and dragging with the mouse.</li>
+							<li><b>Zooming:</b> Zoom either with the scroll-wheel or by right-clicking and dragging the mouse up or down.</li>
+						</ul>
+					
+					</div>
+				</div>
+
+				
+				
+			</div>
+			
+			
+		</div>
+		
+		<div id="custom-texture-dialog" title="Set Custom Textures">
+			<div class="ui-widget input-form">
+
+				
+				
+				<div id="custom-texture-list-container">
+
+					
+				</div>
+				
+			</div>
+			
+		</div>
+		
+		<div id="examples-dialog" title="PlanetMaker Gallery">
+			<h1>PlanetMaker Gallery</h1>
+			
+			<div class="dialog-section">
+				
+				<ul class="gallery-ul">
+					
+					<li>
+						<a href="/?model=526422ae76a433.84343075">
+							<label>Earth</label>
+							<img src="/img/examples/EarthSnapshot500.jpg" class="example-image" title="Earth"/>
+						</a>
+					</li>
+
+					<li>
+						<a href="/?model=526422f78b58a7.90952241">
+							<label>Earth with Bathy</label>
+							<img src="/img/examples/EarthWithBathySnapshot500.jpg" class="example-image" title="Earth with bathy"/>
+						</a>
+					</li>
+					
+					<li>
+						<a href="/?model=526423c1cc8358.15420159">
+							<label>Sunshine &amp; City Lights</label>
+							<img src="/img/examples/LocalStarSnapshot500.jpg" class="example-image" title="Sunshine and City Lights"/>
+						</a>
+					</li>
+					
+					<li>
+						<a href="/?model=52642431a08f53.22079298">
+							<label>Earth</label>
+							<img src="/img/examples/EarthSnapshotII500.jpg" class="example-image" title="Earth"/>
+						</a>
+					</li>
+					
+					<li>
+						<a href="/?model=526424afaef1a4.90149095">
+							<label>Earth &amp; Moon</label>
+							<img src="/img/examples/EarthAndMoon500.jpg" class="example-image" title="Earth &amp; Moon"/>
+						</a>
+					</li>
+					
+					<li>
+						<a href="/?model=5264254a5b1497.47507141">
+							<label>Mars</label>
+							<img src="/img/examples/MarsSnapshot500.jpg" class="example-image" title="Mars"/>
+						</a>
+					</li>
+					
+					<li>
+						<a href="/?model=52642692266c90.78486717">
+							<label>A Living Mars</label>
+							<img src="/img/examples/LivingMarsSnapshot500.jpg" class="example-image" title="A Living Mars"/>
+						</a>
+					</li>
+					
+					<li>
+						<a href="/?model=5264266a369569.54758577">
+							<label>Moon</label>
+							<img src="/img/examples/MoonSnapshot500.jpg" class="example-image" title="Moon"/>
+						</a>
+					</li>
+					
+					<!--
+					<li class="hide-from-mobile">
+						<a href="/?model=51b8cf3741f8e9.72248009" class="hide-from-mobile">
+							<label>Europe Under the City Lights</label>
+							<img src="/img/examples/NighttimeEuropeSnapshot500.jpg" class="example-image lazy-load" title="Europe Under the City Lights"/>
+						</a>
+					</li>
+					-->
+					
+					<li>
+						<a href="/?model=526428d8dbd892.99665680">
+							<label>Saturn</label>
+							<img src="/img/examples/SaturnSnapshot500.jpg" class="example-image lazy-load" title="Saturn"/>
+						</a>
+					</li>
+					
+					<li class="hide-from-mobile">
+						<a href="/?model=526536c8758c28.61315104" class="hide-from-mobile">
+							<label>Ancient Mars with Oceans</label>
+							<img src="/img/examples/AncientWetMarsSnapshot500.jpg" class="example-image lazy-load" title="Ancient Mars with Oceans"/>
+						</a>
+					</li>
+
+
+					
+					<li>
+						<a href="/?model=52642afaa403b8.77760868">
+							<label>Gas Giant and Moons</label>
+							<img src="/img/examples/GasGiantAndMoons500.jpg" class="example-image lazy-load" title="Gas Giant and Moons"/>
+						</a>
+					</li>
+					
+					<li>
+						<a href="/?model=526538821231c5.88675476">
+							<label>Retro TV Earth</label>
+							<img src="/img/examples/RetroTVEarth500.jpg" class="example-image lazy-load" title="Retro TV Earth"/>
+						</a>
+					</li>
+					
+					<!--
+					<li>
+						<a href="/?model=52653e73039b04.80663959">
+							<label>Solar System</label>
+							<img src="/img/examples/SolarSystem500.jpg" class="example-image lazy-load" title="Solar System"/>
+						</a>
+					</li>
+					-->
+				</ul>
+				
+				
+				
+				
+				
+			</div>
+		</div>
+		
+		<div id="share-buttons" class="hide-on-embedded">
+			
+			<div class="share-button">
+			
+			
+				<div id="fb-root"></div>
+				<script> if (!AppEnv.isDevMode()) {(function(d, s, id) {
+				  var js, fjs = d.getElementsByTagName(s)[0];
+				  if (d.getElementById(id)) return;
+				  js = d.createElement(s); js.id = id;
+				  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+				  fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));}</script>
+			
+				<div class="fb-like" data-href="http://planetmaker.wthr.us" data-send="false" data-layout="button_count" data-width="300" data-show-faces="true" data-colorscheme="dark"></div>
+			
+			
+			</div>
+			
+			<div class="share-button">
+				<a href="https://twitter.com/share" class="twitter-share-button" data-via="kevinmgill" id="tweet-href"></a>
+				<script>
+				if (!AppEnv.isDevMode()) {
+					$("#tweet-href").text("Tweet");
+					!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+				}	
+				</script>
+			</div>
+			
+			<div class="share-button">
+				<a href="http://www.tumblr.com/share" title="Share on Tumblr" style="display:inline-block; text-indent:-9999px; overflow:hidden; width:81px; height:20px; background:url('http://platform.tumblr.com/v1/share_1.png') top left no-repeat transparent;">Share on Tumblr</a>
+			</div>
+			
+			<div class="share-button">
+				<!-- Place this tag where you want the +1 button to render. -->
+				<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="150"></div>
+
+				<!-- Place this tag after the last +1 button tag. -->
+				<script type="text/javascript">
+				
+				  (function() {
+				  if (!AppEnv.isDevMode()) {
+					var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+					po.src = 'https://apis.google.com/js/plusone.js';
+					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+					}
+				  })();
+				
+				</script>
+			</div>
+			
+			
+			
+			
+		</div>
+		<div id="loading-screen">
+		
+			<div id="loading-parts">
+				<div id="loading-progressbar">
+					
+				</div>
+				<div id="progress-label">Loading...</div>
+			</div>
+		</div>
+		
+
+		<div id="loading-spinner">
+			<img src/img/spinner.gif" />
+		</div>
+		
+
+		<a id="ce" href="http://www.chromeexperiments.com/detail/planetmaker/?f=" class="hide-on-embedded">
+			<span>This is a Chrome Experiment</span>
+		</a>
+
+			<!-- Google Analytics -->
+<script>
+if (!AppEnv.isDevMode() && !AppEnv.noAnalytics()) {
 
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -358,246 +1653,13 @@ body {
 
   ga('create', 'UA-3932152-11', 'wthr.us');
   ga('send', 'pageview', {
-	'dimension1' : 'Experiments'
+	'dimension1' : 'PlanetMaker'
   });
 
-
-	</script>
-	<!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-    
-    <script src="/lib/three.min.js"></script>
-	<script src="/lib/Detector.js"></script>
-    <script src="/src/loaders/MTLLoader.js"></script>
-    <script src="/src/loaders/MTLLoader.js"></script>
-    <script src="/src/loaders/OBJLoader.js"></script>
-    <script src="/src/loaders/OBJMTLLoader.js"></script>
-    <script>
-var container, camera, scene, renderer, object;
-
-	var windowHalfX = window.innerWidth / 2;
-	var windowHalfY = window.innerHeight / 2;
-
-function isUserMobile()
-{
-	return /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
 }
+</script>
 
-function animate() {
+		<script src="http://platform.tumblr.com/v1/share.js"></script>
 
-	requestAnimationFrame( animate );
-	render();
-
-}
-
-function render() {
-
-	if (object) {
-		switch (object.def.rotateOn) {
-		case "X":
-			object.rotation.x += object.def.rotateBy;
-			break;
-		case "Y":
-			object.rotation.y += object.def.rotateBy;
-			break;
-		case "Z":
-			object.rotation.z += object.def.rotateBy;
-			break;
-		}; 
-	}
-		
-	
-	
-	camera.lookAt( new THREE.Vector3(0, 0, 0));
-	renderer.render( scene, camera );
-
-}
-
-var models = [
-	
-	{
-		obj : "/obj/juno/juno.obj",
-		mtl : "/obj/juno/juno.mtl",
-		position : [17, 7, 0],
-		rotation : [0, 15 * (Math.PI / 180), 90 * (Math.PI / 180), 'YXZ'],
-		rotateOn : 'X',
-		rotateBy : 0.2  * (Math.PI / 180),
-		scale : 1.0
-	},
-	{
-		obj : "/obj/voyager/voyager.obj",
-		mtl : "/obj/voyager/voyager.mtl",
-		position : [17, 7, 0],
-		rotation : [0, 140 * (Math.PI / 180), 0 * (Math.PI / 180), 'YXZ'],
-		rotateOn : 'Z',
-		rotateBy : 0.1 * (Math.PI / 180),
-		scale : 7.0
-	},
-	{
-		obj : "/obj/cassini/cassini.obj",
-		mtl : "/obj/cassini/cassini.mtl",
-		position : [17, 7, 0],
-		rotation : [90 * (Math.PI / 180), 140 * (Math.PI / 180), -45 * (Math.PI / 180), 'XYZ'],
-		rotateOn : 'X',
-		rotateBy : 0.1 * (Math.PI / 180),
-		scale : 1.5
-	},
-	{
-		obj : "/obj/iss/iss.obj",
-		mtl : "/obj/iss/iss.mtl",
-		position : [15, 5, 0],
-		rotation : [0 * (Math.PI / 180), 0 * (Math.PI / 180), 0 * (Math.PI / 180), 'XYZ'],
-		rotateOn : 'Y',
-		rotateBy : 0.2 * (Math.PI / 180),
-		scale : 4.0
-	},
-	{
-		obj : "/obj/pioneer/pioneer.obj",
-		mtl : "/obj/pioneer/pioneer.mtl",
-		position : [17, 8, 0],
-		rotation : [0 * (Math.PI / 180), 30 * (Math.PI / 180), 0 * (Math.PI / 180), 'XYZ'],
-		rotateOn : 'Z',
-		rotateBy : 0.1 * (Math.PI / 180),
-		scale : 3.0
-	},
-	{
-		obj : "/obj/kepler/kepler.obj",
-		mtl : "/obj/kepler/kepler.mtl",
-		position : [17, 8, 0],
-		rotation : [0 * (Math.PI / 180), 30 * (Math.PI / 180), 45 * (Math.PI / 180), 'XYZ'],
-		rotateOn : 'X',
-		rotateBy : 0.1 * (Math.PI / 180),
-		scale : 3.0
-	},
-	{
-		obj : "/obj/rosetta/rosetta.obj",
-		mtl : "/obj/rosetta/rosetta.mtl",
-		position : [17, 8, 0],
-		rotation : [20 * (Math.PI / 180), 0 * (Math.PI / 180), -30 * (Math.PI / 180), 'XYZ'],
-		rotateOn : 'Y',
-		rotateBy : 0.1 * (Math.PI / 180),
-		scale : 1.0
-	}
-	
-];
-
-
-function init(modelDef) {
-	var width = 1170;
-	var height = 700;
-	container = document.getElementById( 'jumbotron' )
-	
-	camera = new THREE.PerspectiveCamera( 45, width / height, 1, 2000 );
-	camera.position.z = 40;
-
-	scene = new THREE.Scene();
-
-	var ambient = new THREE.AmbientLight( 0x303030 );
-	scene.add( ambient );
-
-	var directionalLight = new THREE.DirectionalLight( 0xFFFFFF );
-	directionalLight.position.set( -10, 3, 10 ).normalize();
-	scene.add( directionalLight );
-
-	var loader = new THREE.OBJMTLLoader();
-	loader.load( modelDef.obj, modelDef.mtl, function ( model ) {
-		object = model;
-		object.scale.set(modelDef.scale, modelDef.scale, modelDef.scale);
-		object.def = modelDef;
-		object.position.y = modelDef.position[1];
-		object.position.x = modelDef.position[0];
-		object.position.z = modelDef.position[2];
-		object.rotation.set(object.def.rotation[0], object.def.rotation[1], object.def.rotation[2], object.def.rotation[3]);
-		object.traverse(function(obj) {
-			if (obj.material) {
-				obj.material.shading = THREE.SmoothShading;
-			}
-		});
-			
-		scene.add( object );
-
-	} );
-
-	//
-
-	renderer = new THREE.WebGLRenderer({antialias:true});
-	renderer.setSize( width,  height );
-	container.appendChild( renderer.domElement );
-	$(renderer.domElement).css("z-index", "1000");
-}
-	
-$(function() {
-	
-	
-	$(".btn").on({
-		mouseenter : function(event) {
-			$(this).addClass("animated pulse");
-		},
-		mouseleave : function(event) {
-			$(this).removeClass("animated pulse");
-		}
-	});
-	
-	$(".thumbnail").on({
-		mouseenter : function(event) {
-			$(this).addClass("animated pulse");
-		},
-		mouseleave : function(event) {
-			$(this).removeClass("animated pulse");
-		}
-	});
-	
-	
-	//$(".jumbotron").css("display", "block").addClass("animated bounceIn");
-	
-	
-	
-	var currentActivePill = "visualizations";
-	
-	$("#pill-visualizations").click(function(e) {
-		$("#pill-"+currentActivePill).removeClass("active");
-		$("#pill-visualizations").addClass("active");
-		
-		$("#"+currentActivePill).css("display", "none");
-		$("#visualizations").css("display", "block");
-		currentActivePill = "visualizations";
-	});
-	
-	$("#pill-animations").click(function(e) {
-		$("#pill-"+currentActivePill).removeClass("active");
-		$("#pill-animations").addClass("active");
-		$("#"+currentActivePill).css("display", "none");
-		$("#animations").css("display", "block");
-		currentActivePill = "animations";
-	});
-	
-	$("#pill-images").click(function(e) {
-		$("#pill-"+currentActivePill).removeClass("active");
-		$("#pill-images").addClass("active");
-		$("#"+currentActivePill).css("display", "none");
-		$("#images").css("display", "block");
-		currentActivePill = "images";
-	});
-	
-	
-
-	if (!isUserMobile() && (window.WebGLRenderingContext || Detector.webgl)) {
-		$(".jumbotron").addClass("jumbotron-animated");
-		init(models[Math.floor((Math.random()*models.length))]);
-		animate();
-	} else {
-		$(".jumbotron").addClass("jumbotron-static");
-		
-	}
-	
-
-	
-	
-	
-});	
-	
-	</script>
-</body>
+	</body>
 </html>
